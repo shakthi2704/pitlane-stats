@@ -1,41 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=DM+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
-/* ─── Tailwind v4 theme ────────────────────────────────────────────────────── */
 @theme {
-  /* Colors */
-  --color-background: hsl(0 0% 4%);
+  --color-background: hsl(0 0% 5%);
   --color-foreground: hsl(0 0% 95%);
-  --color-card: hsl(0 0% 8%);
+  --color-card: hsl(0 0% 9%);
   --color-card-foreground: hsl(0 0% 95%);
-  --color-popover: hsl(0 0% 8%);
+  --color-popover: hsl(0 0% 9%);
   --color-popover-foreground: hsl(0 0% 95%);
   --color-primary: hsl(2 100% 44%);
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-secondary: hsl(0 0% 12%);
+  --color-secondary: hsl(0 0% 13%);
   --color-secondary-foreground: hsl(0 0% 90%);
-  --color-muted: hsl(0 0% 12%);
+  --color-muted: hsl(0 0% 13%);
   --color-muted-foreground: hsl(0 0% 50%);
-  --color-accent: hsl(0 0% 14%);
+  --color-accent: hsl(0 0% 15%);
   --color-accent-foreground: hsl(0 0% 95%);
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);
-  --color-border: hsl(0 0% 14%);
-  --color-input: hsl(0 0% 14%);
+  --color-border: hsl(0 0% 15%);
+  --color-input: hsl(0 0% 15%);
   --color-ring: hsl(2 100% 44%);
 
-  /* Border radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 
-  /* Fonts */
-  --font-sans: "Barlow", sans-serif;
-  --font-display: "Barlow Condensed", sans-serif;
+  /* Updated fonts */
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Russo One", sans-serif;
   --font-mono: ui-monospace, monospace;
 
-  /* Sport accent colors */
   --color-f1-red: #E10600;
   --color-motogp-orange: #FF6B00;
   --color-football-green: #00A651;
@@ -45,7 +41,6 @@
   --color-nfl-blue: #013369;
   --color-golf-emerald: #2ECC71;
 
-  /* Animations */
   --animate-fade-in: fade-in 0.4s ease-out forwards;
   --animate-spin: spin 1s linear infinite;
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -54,47 +49,38 @@
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes spin {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
   }
-
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.5; }
   }
 }
 
-/* ─── Dark mode variant ────────────────────────────────────────────────────── */
 @variant dark (&:where(.dark, .dark *));
 
-/* ─── Base styles ──────────────────────────────────────────────────────────── */
 @layer base {
   * {
     border-color: var(--color-border);
     box-sizing: border-box;
   }
-
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-
   h1, h2, h3, h4 {
     font-family: var(--font-display);
   }
 }
 
-/* ─── Component utilities ──────────────────────────────────────────────────── */
 @layer utilities {
-
   .sport-grid-card {
     position: relative;
     overflow: hidden;
-    border-radius: var(--radius-xl);
     border: 1px solid rgba(255,255,255,0.05);
     cursor: pointer;
     transition: all 0.3s ease;
@@ -108,11 +94,9 @@
   .sport-grid-card.active:hover {
     box-shadow: 0 20px 40px rgba(225,6,0,0.2);
   }
-
   .standings-row-1 { background: linear-gradient(90deg, rgba(255,215,0,0.08) 0%, transparent 100%); }
   .standings-row-2 { background: linear-gradient(90deg, rgba(192,192,192,0.06) 0%, transparent 100%); }
   .standings-row-3 { background: linear-gradient(90deg, rgba(205,127,50,0.06) 0%, transparent 100%); }
-
   .stagger-1 { animation-delay: 0.05s; opacity: 0; }
   .stagger-2 { animation-delay: 0.10s; opacity: 0; }
   .stagger-3 { animation-delay: 0.15s; opacity: 0; }
@@ -123,28 +107,17 @@
   .stagger-8 { animation-delay: 0.40s; opacity: 0; }
 }
 
-/* ─── Noise texture overlay ─────────────────────────────────────────────────── */
-.noise-bg {
-  position: relative;
-}
-.noise-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-}
-.noise-bg > * {
-  position: relative;
-  z-index: 1;
-}
-
 /* ─── Typewriter cursor ──────────────────────────────────────────────────────── */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
+}
+
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
