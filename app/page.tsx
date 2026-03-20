@@ -13,13 +13,13 @@ const sports = [
     bg: "#3d0400",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <path d="M8 36 C8 36 16 28 32 28 C48 28 56 36 56 36" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-        <ellipse cx="18" cy="38" rx="6" ry="6" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <ellipse cx="46" cy="38" rx="6" ry="6" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <path d="M12 36 L8 32 L12 26 L28 24 L36 24 L48 26 L56 30 L52 36" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" fill="none"/>
-        <path d="M28 24 L30 18 L36 18 L38 24" stroke="currentColor" strokeWidth="2" fill="none"/>
-        <circle cx="18" cy="38" r="2.5" fill="currentColor"/>
-        <circle cx="46" cy="38" r="2.5" fill="currentColor"/>
+        <path d="M8 36 C8 36 16 28 32 28 C48 28 56 36 56 36" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="18" cy="38" rx="6" ry="6" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <ellipse cx="46" cy="38" rx="6" ry="6" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M12 36 L8 32 L12 26 L28 24 L36 24 L48 26 L56 30 L52 36" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" fill="none" />
+        <path d="M28 24 L30 18 L36 18 L38 24" stroke="currentColor" strokeWidth="2" fill="none" />
+        <circle cx="18" cy="38" r="2.5" fill="currentColor" />
+        <circle cx="46" cy="38" r="2.5" fill="currentColor" />
       </svg>
     ),
   },
@@ -34,13 +34,13 @@ const sports = [
     bg: "#2d1500",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <ellipse cx="16" cy="42" rx="8" ry="8" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <ellipse cx="48" cy="42" rx="8" ry="8" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <path d="M24 42 L40 42" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M24 38 L32 26 L42 26 L48 34" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
-        <path d="M32 26 L32 20 L38 18 L40 22" stroke="currentColor" strokeWidth="2" fill="none"/>
-        <circle cx="16" cy="42" r="3" fill="currentColor"/>
-        <circle cx="48" cy="42" r="3" fill="currentColor"/>
+        <ellipse cx="16" cy="42" rx="8" ry="8" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <ellipse cx="48" cy="42" rx="8" ry="8" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M24 42 L40 42" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M24 38 L32 26 L42 26 L48 34" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" fill="none" />
+        <path d="M32 26 L32 20 L38 18 L40 22" stroke="currentColor" strokeWidth="2" fill="none" />
+        <circle cx="16" cy="42" r="3" fill="currentColor" />
+        <circle cx="48" cy="42" r="3" fill="currentColor" />
       </svg>
     ),
   },
@@ -55,12 +55,12 @@ const sports = [
     bg: "#002d18",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <polygon points="32,16 38,22 36,30 28,30 26,22" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <polygon points="38,22 46,24 48,32 42,36 36,30" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <polygon points="42,36 40,44 32,46 26,42 28,30" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <polygon points="26,42 18,42 14,34 20,28 28,30" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <polygon points="20,28 18,20 26,16 32,16 26,22" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <polygon points="32,16 38,22 36,30 28,30 26,22" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <polygon points="38,22 46,24 48,32 42,36 36,30" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <polygon points="42,36 40,44 32,46 26,42 28,30" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <polygon points="26,42 18,42 14,34 20,28 28,30" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <polygon points="20,28 18,20 26,16 32,16 26,22" stroke="currentColor" strokeWidth="1.5" fill="none" />
       </svg>
     ),
   },
@@ -75,10 +75,10 @@ const sports = [
     bg: "#00222d",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <path d="M38 14 L50 26 C52 28 52 32 50 34 L28 56 C26 58 22 58 20 56 L18 54 C16 52 16 48 18 46 L40 24 C42 22 42 18 38 14Z" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <path d="M38 14 L42 10 L54 22 L50 26" stroke="currentColor" strokeWidth="2" fill="none"/>
-        <path d="M14 50 L10 54" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-        <circle cx="28" cy="54" r="2" fill="currentColor"/>
+        <path d="M38 14 L50 26 C52 28 52 32 50 34 L28 56 C26 58 22 58 20 56 L18 54 C16 52 16 48 18 46 L40 24 C42 22 42 18 38 14Z" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M38 14 L42 10 L54 22 L50 26" stroke="currentColor" strokeWidth="2" fill="none" />
+        <path d="M14 50 L10 54" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="28" cy="54" r="2" fill="currentColor" />
       </svg>
     ),
   },
@@ -93,10 +93,10 @@ const sports = [
     bg: "#2d1800",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <path d="M12 32 L52 32M32 12 L32 52" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M14 20 C22 22 26 28 26 32 C26 36 22 42 14 44" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <path d="M50 20 C42 22 38 28 38 32 C38 36 42 42 50 44" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M12 32 L52 32M32 12 L32 52" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M14 20 C22 22 26 28 26 32 C26 36 22 42 14 44" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <path d="M50 20 C42 22 38 28 38 32 C38 36 42 42 50 44" stroke="currentColor" strokeWidth="1.5" fill="none" />
       </svg>
     ),
   },
@@ -111,10 +111,10 @@ const sports = [
     bg: "#222400",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <circle cx="28" cy="26" r="16" stroke="currentColor" strokeWidth="2.5" fill="none"/>
-        <path d="M14 26 L42 26M28 10 L28 42" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M40 38 L54 52" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-        <path d="M36 34 L40 38" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+        <circle cx="28" cy="26" r="16" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M14 26 L42 26M28 10 L28 42" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M40 38 L54 52" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <path d="M36 34 L40 38" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -129,11 +129,11 @@ const sports = [
     bg: "#00152d",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <ellipse cx="32" cy="32" rx="22" ry="14" stroke="currentColor" strokeWidth="2.5" fill="none" transform="rotate(-30 32 32)"/>
-        <line x1="28" y1="22" x2="36" y2="42" stroke="currentColor" strokeWidth="1.5"/>
-        <line x1="22" y1="30" x2="42" y2="26" stroke="currentColor" strokeWidth="1.5"/>
-        <line x1="20" y1="35" x2="40" y2="31" stroke="currentColor" strokeWidth="1.5"/>
-        <line x1="22" y1="40" x2="40" y2="36" stroke="currentColor" strokeWidth="1.5"/>
+        <ellipse cx="32" cy="32" rx="22" ry="14" stroke="currentColor" strokeWidth="2.5" fill="none" transform="rotate(-30 32 32)" />
+        <line x1="28" y1="22" x2="36" y2="42" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="22" y1="30" x2="42" y2="26" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="20" y1="35" x2="40" y2="31" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="22" y1="40" x2="40" y2="36" stroke="currentColor" strokeWidth="1.5" />
       </svg>
     ),
   },
@@ -148,10 +148,10 @@ const sports = [
     bg: "#002d18",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-        <line x1="32" y1="12" x2="32" y2="52" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-        <path d="M32 16 L44 22 L32 28Z" stroke="currentColor" strokeWidth="2" fill="none" strokeLinejoin="round"/>
-        <ellipse cx="32" cy="54" rx="10" ry="3" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-        <circle cx="32" cy="54" r="2" fill="currentColor"/>
+        <line x1="32" y1="12" x2="32" y2="52" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M32 16 L44 22 L32 28Z" stroke="currentColor" strokeWidth="2" fill="none" strokeLinejoin="round" />
+        <ellipse cx="32" cy="54" rx="10" ry="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        <circle cx="32" cy="54" r="2" fill="currentColor" />
       </svg>
     ),
   },

@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import Footer from "@/components/f1/Footer"
+
 
 export const metadata: Metadata = {
   title: "PitLane Stats — Sports Statistics",
@@ -19,8 +21,8 @@ export default function RootLayout({
             <a href="/" className="flex items-center gap-2 group">
               <div className="w-7 h-7 f1-bg rounded flex items-center justify-center">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M2 8C2 8 4 5 8 5C12 5 14 8 14 8C14 8 12 11 8 11C4 11 2 8 2 8Z" stroke="white" strokeWidth="1.5" fill="none"/>
-                  <circle cx="8" cy="8" r="1.5" fill="white"/>
+                  <path d="M2 8C2 8 4 5 8 5C12 5 14 8 14 8C14 8 12 11 8 11C4 11 2 8 2 8Z" stroke="white" strokeWidth="1.5" fill="none" />
+                  <circle cx="8" cy="8" r="1.5" fill="white" />
                 </svg>
               </div>
               <span
@@ -49,6 +51,7 @@ export default function RootLayout({
           </div>
         </header>
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   )
