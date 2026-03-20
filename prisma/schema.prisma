@@ -1,0 +1,189 @@
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../lib/generated/prisma"
+// }
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+generator client {
+  provider        = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Sync tracking ──────────────────────────────────────────────────────────
+model SyncLog {
+  id        Int       @id @default(autoincrement())
+  sport     String
+  dataType  String
+  season    String
+  round     String?
+  syncedAt  DateTime  @default(now())
+  success   Boolean   @default(true)
+  error     String?
+
+  @@index([sport, dataType, season])
+  @@index([syncedAt])
+  @@map("sync_logs")
+}
+
+// ─── F1 Reference Data ──────────────────────────────────────────────────────
+model F1Driver {
+  driverId        String  @id
+  code            String?
+  permanentNumber String?
+  givenName       String
+  familyName      String
+  nationality     String?
+  dateOfBirth     String?
+  url             String?
+
+  driverStandings F1DriverStanding[]
+  raceResults     F1RaceResult[]
+  lapTimes        F1LapTime[]
+
+  @@map("f1_drivers")
+}
+
+model F1Constructor {
+  constructorId String @id
+  name          String
+  nationality   String?
+  url           String?
+
+  constructorStandings F1ConstructorStanding[]
+  raceResults          F1RaceResult[]
+
+  @@map("f1_constructors")
+}
+
+model F1Circuit {
+  circuitId   String @id
+  circuitName String
+  locality    String?
+  country     String?
+  lat         String?
+  lng         String?
+  url         String?
+
+  races F1Race[]
+
+  @@map("f1_circuits")
+}
+
+// ─── Season Data ─────────────────────────────────────────────────────────────
+model F1DriverStanding {
+  id              Int      @id @default(autoincrement())
+  season          String
+  round           String
+  position        Int
+  points          Float
+  wins            Int
+  driverId        String
+  driver          F1Driver @relation(fields: [driverId], references: [driverId])
+  constructorId   String
+  constructorName String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([season, driverId])
+  @@index([season, position])
+  @@map("f1_driver_standings")
+}
+
+model F1ConstructorStanding {
+  id            Int           @id @default(autoincrement())
+  season        String
+  round         String
+  position      Int
+  points        Float
+  wins          Int
+  constructorId String
+  constructor   F1Constructor @relation(fields: [constructorId], references: [constructorId])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([season, constructorId])
+  @@index([season, position])
+  @@map("f1_constructor_standings")
+}
+
+model F1Race {
+  id        Int       @id @default(autoincrement())
+  season    String
+  round     Int
+  raceName  String
+  date      String
+  time      String?
+  circuitId String
+  circuit   F1Circuit @relation(fields: [circuitId], references: [circuitId])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  results   F1RaceResult[]
+  lapTimes  F1LapTime[]
+
+  @@unique([season, round])
+  @@index([season])
+  @@map("f1_races")
+}
+
+model F1RaceResult {
+  id               Int           @id @default(autoincrement())
+  raceId           Int
+  race             F1Race        @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  position         Int?
+  positionText     String
+  number           String?
+  grid             Int?
+  laps             Int?
+  status           String?
+  points           Float?
+  time             String?
+  driverId         String
+  driver           F1Driver      @relation(fields: [driverId], references: [driverId])
+  constructorId    String
+  constructor      F1Constructor @relation(fields: [constructorId], references: [constructorId])
+  fastestLapRank   Int?
+  fastestLapNumber Int?
+  fastestLapTime   String?
+  fastestLapSpeed  String?
+  createdAt        DateTime      @default(now())
+
+  @@unique([raceId, driverId])
+  @@index([raceId])
+  @@map("f1_race_results")
+}
+
+model F1LapTime {
+  id        Int      @id @default(autoincrement())
+  raceId    Int
+  race      F1Race   @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  lapNumber Int
+  driverId  String
+  driver    F1Driver @relation(fields: [driverId], references: [driverId])
+  position  Int?
+  time      String
+  timeMs    Int?
+
+  @@unique([raceId, lapNumber, driverId])
+  @@index([raceId, driverId])
+  @@index([raceId, lapNumber])
+  @@map("f1_lap_times")
+}
+
+model F1News {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  imageUrl    String?
+  source      String?
+  url         String    @unique
+  publishedAt DateTime?
+  syncedAt    DateTime  @default(now())
+
+  @@index([publishedAt])
+  @@map("f1_news")
+}
