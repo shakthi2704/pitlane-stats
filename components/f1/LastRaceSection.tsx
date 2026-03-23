@@ -1,133 +1,285 @@
+"use client"
+
 import Link from "next/link"
 import { getTeamColor, getFlagEmoji } from "@/lib/f1-api"
-import SectionHeader from "./SectionHeader"
 import type { Race, RaceResult } from "@/components/types/f1"
 
-interface LastRaceSectionProps {
-    race: Race | null
-    results: RaceResult[]
+const DRIVER_IMAGES: Record<string, string> = {
+    albon: "/F1/drivers/alexander-albon.avif",
+    lindblad: "/F1/drivers/arvid-lindblad.avif",
+    sainz: "/F1/drivers/carlos-sainz.avif",
+    leclerc: "/F1/drivers/charles-leclerc.avif",
+    ocon: "/F1/drivers/esteban-ocon.avif",
+    alonso: "/F1/drivers/fernando-alonso.avif",
+    colapinto: "/F1/drivers/franco-colapinto.avif",
+    bortoleto: "/F1/drivers/gabriel-bortoleto.avif",
+    russell: "/F1/drivers/george-russell.avif",
+    hadjar: "/F1/drivers/isack-hadjar.avif",
+    antonelli: "/F1/drivers/kimi-antonelli.avif",
+    stroll: "/F1/drivers/lance-stroll.avif",
+    norris: "/F1/drivers/lando-norris.avif",
+    hamilton: "/F1/drivers/lewis-hamilton.avif",
+    lawson: "/F1/drivers/liam-lawson.avif",
+    max_verstappen: "/F1/drivers/max-verstappen.avif",
+    hulkenberg: "/F1/drivers/nico-hulkenberg.avif",
+    bearman: "/F1/drivers/oliver-bearman.avif",
+    piastri: "/F1/drivers/oscar-piastri.avif",
+    gasly: "/F1/drivers/pierre-gasly.avif",
+    perez: "/F1/drivers/sergio-perez.avif",
+    bottas: "/F1/drivers/valtteri-bottas.avif",
+};
+
+const TEAM_LOGOS: Record<string, string> = {
+    mclaren: "/F1/logos/mclarenlogowhite.webp",
+    mercedes: "/F1/logos/mercedeslogowhite.webp",
+    red_bull: "/F1/logos/redbullracinglogowhite.webp",
+    ferrari: "/F1/logos/ferrarilogolight.webp",
+    williams: "/F1/logos/williamslogowhite.webp",
+    rb: "/F1/logos/racingbullslogowhite.webp",
+    aston_martin: "/F1/logos/astonmartinlogowhite.webp",
+    haas: "/F1/logos/haaslogowhite.webp",
+    kick_sauber: "/F1/logos/audilogowhite.webp",
+    alpine: "/F1/logos/alpinelogowhite.webp",
 }
 
-const LastRaceSection = ({ race, results }: LastRaceSectionProps) => {
-    if (!race || results.length === 0) return null
-    const rest = results.slice(3, 10)
+const FALLBACK_IMAGE = "/F1/drivers/placeholder.svg"
 
-    const podiumOrder = [
-        { r: results[1], medal: "🥈", border: "border-zinc-400/20", bg: "bg-zinc-400/10" },
-        { r: results[0], medal: "🥇", border: "border-yellow-400/20", bg: "bg-yellow-400/10" },
-        { r: results[2], medal: "🥉", border: "border-amber-600/20", bg: "bg-amber-600/10" },
-    ]
+const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
+const heights = ["280px", "250px", "240px"]
+
+// ─── Top 3 Podium Card ────────────────────────────────────────────────────────
+const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
+    const teamColor = getTeamColor(result.constructor.constructorId)
+    const imgSrc = DRIVER_IMAGES[result.driver.driverId] ?? FALLBACK_IMAGE
+    const logoSrc = TEAM_LOGOS[result.constructor.constructorId] ?? null
+    const medalColor = medalColors[rank - 1]
+    const posLabel = `P${rank}`
+    const timeDisplay = rank === 1 ? result.time : result.time
+
+    return (
+        <Link
+            href={`/sports/f1/drivers/${result.driver.driverId}`}
+            style={{ textDecoration: "none", flex: rank === 1 ? "1.2" : "1" }}
+        >
+            <div
+                style={{ position: "relative", height: heights[rank - 1], overflow: "hidden", cursor: "pointer", backgroundColor: teamColor, isolation: "isolate", transition: "transform 0.2s, box-shadow 0.2s" }}
+                onMouseEnter={e => { ; (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = `0 16px 40px ${teamColor}50` }}
+                onMouseLeave={e => { ; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "none" }}
+            >
+                {/* Dark overlay */}
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.0) 100%)", zIndex: 1 }} />
+
+                {/* Watermark position number */}
+                <div style={{ position: "absolute", right: "-10px", bottom: "-20px", fontFamily: "var(--font-display)", fontSize: "9rem", fontWeight: 900, lineHeight: 1, color: "rgba(0,0,0,0.2)", zIndex: 2, userSelect: "none", pointerEvents: "none" }}>{rank}</div>
+
+                {/* Driver image */}
+                <img
+                    src={imgSrc}
+                    alt={result.driver.familyName}
+                    style={{ position: "absolute", right: 0, bottom: 0, height: "100%", width: "auto", objectFit: "contain", objectPosition: "top right", zIndex: 3 }}
+                    onError={e => { ; (e.target as HTMLImageElement).src = FALLBACK_IMAGE }}
+                />
+
+                {/* Content */}
+                <div style={{ position: "relative", zIndex: 4, padding: "14px 16px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+                    {/* Top — logo left, position right */}
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                        {logoSrc ? (
+                            <img
+                                src={logoSrc}
+                                alt={result.constructor.name}
+                                style={{ height: "28px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.9 }}
+                                onError={e => { ; (e.target as HTMLImageElement).style.display = "none" }}
+                            />
+                        ) : (
+                            <span style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.9)", backgroundColor: "rgba(0,0,0,0.35)", padding: "2px 8px" }}>
+                                {result.constructor.name.slice(0, 3).toUpperCase()}
+                            </span>
+                        )}
+                        <span style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700, color: medalColor, letterSpacing: "0.1em" }}>
+                            {posLabel}
+                        </span>
+                    </div>
+
+                    {/* Bottom — flag + name + time */}
+                    <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "2px" }}>
+                            <span style={{ fontSize: "18px" }}>{getFlagEmoji(result.driver.nationality ?? "")}</span>
+                            <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", color: "rgba(255,255,255,0.65)", margin: 0 }}>
+                                {result.driver.givenName}
+                            </p>
+                        </div>
+                        <p style={{ fontFamily: "var(--font-display)", fontSize: rank === 1 ? "1.4rem" : "1.2rem", fontWeight: 700, color: "#ffffff", margin: 0, lineHeight: 1.1 }}>
+                            {result.driver.familyName}
+                        </p>
+                        <p style={{ fontFamily: "var(--font-display)", fontSize: "0.8rem", fontWeight: 600, color: medalColor, margin: "6px 0 0 0" }}>
+                            {timeDisplay ?? result.status}
+                            {result.fastestLapRank === 1 && (
+                                <span style={{ marginLeft: "6px", color: "#a855f7", fontSize: "0.7rem" }}>⚡ FL</span>
+                            )}
+                        </p>
+                    </div>
+
+                    {/* Info bar — grid, laps, points */}
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            paddingTop: "8px",
+                            borderTop: "1px solid rgba(255,255,255,0.1)",
+                            marginTop: "auto",
+                        }}
+                    >
+                        {[
+                            { label: "Grid", value: result.grid ? `P${result.grid}` : "—" },
+                            { label: "Laps", value: result.laps ?? "—" },
+                            { label: "Pts", value: `+${result.points ?? 0}` },
+                        ].map((item, i) => (
+                            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: i < 2 ? "10px" : 0 }}>
+                                <div style={{ textAlign: "center" }}>
+                                    <p style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.9)", margin: 0 }}>
+                                        {item.value}
+                                    </p>
+                                    <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.35)", margin: 0, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                                        {item.label}
+                                    </p>
+                                </div>
+                                {i < 2 && <div style={{ width: "1px", height: "20px", backgroundColor: "rgba(255,255,255,0.1)" }} />}
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            </div>
+        </Link>
+    )
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+const LastRaceSection = ({ race, results }: { race: Race | null; results: RaceResult[] }) => {
+    if (!race || results.length === 0) return null
+
+    // Podium order: 2nd left, 1st center, 3rd right
+    const podiumOrder = [results[1], results[0], results[2]]
+    const tableResults = results.slice(3)
 
     return (
         <div>
-            <SectionHeader
-                title="Last Race"
-                href={`/sports/f1/races/${race.round}`}
-                label="Full Results"
-            />
-
-            {/* Race info */}
-            <div className="p-4 border border-white/5 bg-white/[0.02] mb-6">
-                <p
-                    className="text-lg font-black text-white"
-                    style={{ fontFamily: "var(--font-display)" }}
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <div style={{ width: "4px", height: "24px", backgroundColor: "var(--color-f1-red)" }} />
+                    <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                        LAST RACE
+                    </h2>
+                </div>
+                <Link
+                    href={`/sports/f1/races/${race.round}`}
+                    style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", textDecoration: "none" }}
                 >
-                    {race.raceName}
-                </p>
-                <p className="text-xs text-white/30 mt-0.5">
-                    {race.circuit.locality}, {race.circuit.country} · Round {race.round} ·{" "}
-                    {new Date(race.date).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "long",
-                    })}
-                </p>
+                    Full Results →
+                </Link>
             </div>
 
-            {/* Podium */}
-            <div className="grid grid-cols-3 gap-2 mb-6">
-                {podiumOrder.map(({ r, medal, border, bg }) => {
-                    if (!r) return null
-                    const teamColor = getTeamColor(r.constructor.constructorId)
+            {/* Race info banner */}
+            <div
+                style={{ padding: "14px 16px", marginBottom: "20px", borderLeft: "3px solid var(--color-f1-red)", backgroundColor: "rgba(225,6,0,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+            >
+                <div>
+                    <p style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                        {race.raceName}
+                    </p>
+                    <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", margin: "4px 0 0 0" }}>
+                        {race.circuit.locality}, {race.circuit.country} · Round {race.round} ·{" "}
+                        {new Date(race.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                    </p>
+                </div>
+                <Link
+                    href={`/sports/f1/races/${race.round}`}
+                    style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "#ffffff", textDecoration: "none", padding: "8px 16px", border: "1px solid rgba(255,255,255,0.2)", transition: "all 0.2s", whiteSpace: "nowrap" }}
+                    onMouseEnter={e => { ; (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)" }}
+                    onMouseLeave={e => { ; (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)" }}
+                >
+                    Full Results
+                </Link>
+            </div>
 
-                    return (
-                        <div
-                            key={r.driver.driverId}
-                            className={`border ${border} ${bg} p-3 text-center`}
-                        >
-                            <div className="text-2xl mb-2">{medal}</div>
-                            <div
-                                className="w-6 h-0.5 mx-auto mb-2"
-                                style={{ backgroundColor: teamColor }}
-                            />
-                            <p
-                                className="text-sm font-black text-white"
-                                style={{ fontFamily: "var(--font-display)" }}
-                            >
-                                {r.driver.familyName}
-                            </p>
-                            <p className="text-[10px] text-white/30 mt-0.5">
-                                {r.constructor.name}
-                            </p>
-                            <p className="text-xs text-white/40 mt-1 font-mono">
-                                {r.time ?? r.status}
-                            </p>
-                        </div>
-                    )
+            {/* Top 3 podium cards */}
+            <div style={{ display: "flex", gap: "8px", marginBottom: "24px", alignItems: "flex-end" }}>
+                {podiumOrder.map((r, idx) => {
+                    if (!r) return null
+                    const rank = idx === 0 ? 2 : idx === 1 ? 1 : 3
+                    return <PodiumCard key={r.driver.driverId} result={r} rank={rank} />
                 })}
             </div>
 
-            {/* Positions 4–10 */}
-            <div className="border border-white/5">
-                {rest.map((r) => {
+            {/* Results table */}
+            <div style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+                {/* Header */}
+                <div style={{ display: "grid", gridTemplateColumns: "3rem 2.5rem 1fr 1fr 1fr 6rem", padding: "10px 16px", backgroundColor: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    {["POS.", "", "DRIVER", "NATIONALITY", "TEAM", "TIME / GAP"].map(h => (
+                        <span key={h} style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>{h}</span>
+                    ))}
+                </div>
+
+                {/* Rows */}
+                {tableResults.map((r, i) => {
                     const teamColor = getTeamColor(r.constructor.constructorId)
+                    const imgSrc = DRIVER_IMAGES[r.driver.driverId] ?? FALLBACK_IMAGE
                     const isFastest = r.fastestLapRank === 1
 
                     return (
-                        <div
-                            key={r.driver.driverId}
-                            className="flex items-center gap-4 px-4 py-2.5 border-b border-white/5 hover:bg-white/[0.03] transition-colors"
-                        >
-                            <span
-                                className="w-5 text-sm font-bold text-white/30 text-center"
-                                style={{ fontFamily: "var(--font-display)" }}
-                            >
-                                {r.positionText}
-                            </span>
-
+                        <Link key={r.driver.driverId} href={`/sports/f1/drivers/${r.driver.driverId}`} style={{ textDecoration: "none", display: "block" }}>
                             <div
-                                className="w-0.5 h-6 rounded-full shrink-0"
-                                style={{ backgroundColor: teamColor }}
-                            />
+                                style={{ display: "grid", gridTemplateColumns: "3rem 2.5rem 1fr 1fr 1fr 6rem", alignItems: "center", padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)", transition: "background-color 0.15s", cursor: "pointer" }}
+                                onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.03)"}
+                                onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"}
+                            >
+                                {/* Position */}
+                                <span style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
+                                    {r.positionText}
+                                </span>
 
-                            <div className="flex-1">
-                                <p className="text-sm font-bold text-white">
-                                    {getFlagEmoji(r.driver.nationality ?? "")}{" "}
-                                    {r.driver.givenName[0]}. {r.driver.familyName}
-                                    {isFastest && (
-                                        <span className="ml-1 text-purple-400 text-xs">⚡</span>
-                                    )}
-                                </p>
-                                <p className="text-xs text-white/25">
-                                    {r.constructor.name}
-                                </p>
-                            </div>
+                                {/* Avatar */}
+                                <div style={{ width: "28px", height: "28px", borderRadius: "50%", overflow: "hidden", backgroundColor: teamColor + "40", border: `1px solid ${teamColor}60` }}>
+                                    <img src={imgSrc} alt={r.driver.familyName} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} onError={e => (e.target as HTMLImageElement).src = FALLBACK_IMAGE} />
+                                </div>
 
-                            <div className="text-right">
-                                <p className="text-xs font-mono text-white/40">
+                                {/* Driver name */}
+                                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                    <div style={{ width: "3px", height: "20px", backgroundColor: teamColor, flexShrink: 0 }} />
+                                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700, color: "#ffffff" }}>
+                                        {r.driver.givenName[0]}. {r.driver.familyName}
+                                        {isFastest && <span style={{ marginLeft: "6px", color: "#a855f7", fontSize: "0.7rem" }}>⚡</span>}
+                                    </span>
+                                </div>
+
+                                {/* Nationality */}
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                    <span style={{ fontSize: "14px" }}>{getFlagEmoji(r.driver.nationality ?? "")}</span>
+                                    <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>{r.driver.nationality}</span>
+                                </div>
+
+                                {/* Team */}
+                                <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>{r.constructor.name}</span>
+
+                                {/* Time / gap */}
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", textAlign: "right" }}>
                                     {r.time ?? r.status}
-                                </p>
-                                <p className="text-xs text-white/25">
-                                    {r.points} pts
-                                </p>
+                                </span>
                             </div>
-                        </div>
+                        </Link>
                     )
                 })}
 
+                {/* View full results */}
                 <Link
                     href={`/sports/f1/races/${race.round}`}
-                    className="flex items-center justify-center gap-2 py-3 text-xs font-bold tracking-widest uppercase text-white/30 hover:text-white hover:bg-white/[0.03] transition-all"
-                    style={{ fontFamily: "var(--font-display)" }}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "12px", fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", textDecoration: "none", transition: "color 0.2s" }}
+                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#ffffff"}
+                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)"}
                 >
                     View Full Results →
                 </Link>
