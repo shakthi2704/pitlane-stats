@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#1a1a1a"/>
+  
+  <!-- Helmet -->
+  <ellipse cx="100" cy="72" rx="32" ry="35" fill="#2a2a2a"/>
+  
+  <!-- Visor -->
+  <path d="M72 68 Q100 58 128 68 Q128 82 100 85 Q72 82 72 68Z" fill="#111111"/>
+  
+  <!-- Neck -->
+  <rect x="88" y="104" width="24" height="16" rx="4" fill="#2a2a2a"/>
+  
+  <!-- Suit/Body -->
+  <path d="M55 200 Q55 140 100 135 Q145 140 145 200Z" fill="#2a2a2a"/>
+  
+  <!-- Suit collar detail -->
+  <path d="M85 118 Q100 125 115 118 L118 135 Q100 142 82 135Z" fill="#222222"/>
+</svg>

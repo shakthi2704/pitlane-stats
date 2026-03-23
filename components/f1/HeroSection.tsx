@@ -53,7 +53,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80')`,
+                    backgroundImage: `url('/F1/hero/hero-f1.jpg')`,
                 }}
             />
 
@@ -62,7 +62,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
                 className="absolute inset-0"
                 style={{
                     background:
-                        "linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%)",
+                        "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)",
                 }}
             />
             <div
