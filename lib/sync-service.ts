@@ -5,7 +5,7 @@ import {
     getRaceSchedule,
     getRaceResults,
     getLapTimes,
-} from "@/lib/f1-api"
+} from "@/types/f1/f1-api"
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

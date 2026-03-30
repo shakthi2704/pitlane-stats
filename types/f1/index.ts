@@ -10,6 +10,7 @@ export interface DriverStanding {
         givenName: string
         familyName: string
         nationality: string | null
+        permanentNumber: string | null  // ← add this
     }
 }
 

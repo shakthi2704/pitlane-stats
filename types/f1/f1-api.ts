@@ -142,3 +142,58 @@ export function getFlagEmoji(nationality: string): string {
     }
     return flags[nationality] ?? "🏁"
 }
+
+
+
+
+export function getCountryFlag(value: string | null): string {
+    const flags: Record<string, string> = {
+        Australia: "🇦🇺",
+        China: "🇨🇳",
+        Japan: "🇯🇵",
+        Bahrain: "🇧🇭",
+        "Saudi Arabia": "🇸🇦",
+        USA: "🇺🇸",
+        "United States": "🇺🇸",
+        Italy: "🇮🇹",
+        Monaco: "🇲🇨",
+        Spain: "🇪🇸",
+        Canada: "🇨🇦",
+        Austria: "🇦🇹",
+        UK: "🇬🇧",
+        Belgium: "🇧🇪",
+        Hungary: "🇭🇺",
+        Netherlands: "🇳🇱",
+        Azerbaijan: "🇦🇿",
+        Singapore: "🇸🇬",
+        Mexico: "🇲🇽",
+        Brazil: "🇧🇷",
+        Qatar: "🇶🇦",
+        UAE: "🇦🇪",
+        Dutch: "🇳🇱",
+        British: "🇬🇧",
+        Spanish: "🇪🇸",
+        Monegasque: "🇲🇨",
+        Mexican: "🇲🇽",
+        Australian: "🇦🇺",
+        Canadian: "🇨🇦",
+        Finnish: "🇫🇮",
+        French: "🇫🇷",
+        German: "🇩🇪",
+        Japanese: "🇯🇵",
+        Thai: "🇹🇭",
+        Chinese: "🇨🇳",
+        American: "🇺🇸",
+        Danish: "🇩🇰",
+        Italian: "🇮🇹",
+        Brazilian: "🇧🇷",
+        Argentine: "🇦🇷",
+        Swiss: "🇨🇭",
+        NewZealander: "🇳🇿",
+        Austrian: "🇦🇹",
+        Belgian: "🇧🇪",
+        Polish: "🇵🇱",
+    }
+
+    return flags[value ?? ""] ?? "🏁"
+}

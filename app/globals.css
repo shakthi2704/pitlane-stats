@@ -1,4 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+@import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 
 @theme {
@@ -30,6 +37,11 @@
   /* Updated fonts */
   --font-sans: "DM Sans", sans-serif;
   --font-display: "Russo One", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-roboto-mono: "Roboto Mono", monospace;
+  --font-roboto: "Roboto", sans-serif;
+  --font-ubuntu: "Ubuntu", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
   --font-mono: ui-monospace, monospace;
 
   --color-f1-red: #E10600;
@@ -46,16 +58,37 @@
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   @keyframes fade-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
+
   @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
+
   @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.5; }
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -66,13 +99,18 @@
     border-color: var(--color-border);
     box-sizing: border-box;
   }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
   }
 }
@@ -81,36 +119,86 @@
   .sport-grid-card {
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
     transition: all 0.3s ease;
     background: var(--color-card);
   }
+
   .sport-grid-card:hover {
-    border-color: rgba(255,255,255,0.2);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   }
+
   .sport-grid-card.active:hover {
-    box-shadow: 0 20px 40px rgba(225,6,0,0.2);
+    box-shadow: 0 20px 40px rgba(225, 6, 0, 0.2);
   }
-  .standings-row-1 { background: linear-gradient(90deg, rgba(255,215,0,0.08) 0%, transparent 100%); }
-  .standings-row-2 { background: linear-gradient(90deg, rgba(192,192,192,0.06) 0%, transparent 100%); }
-  .standings-row-3 { background: linear-gradient(90deg, rgba(205,127,50,0.06) 0%, transparent 100%); }
-  .stagger-1 { animation-delay: 0.05s; opacity: 0; }
-  .stagger-2 { animation-delay: 0.10s; opacity: 0; }
-  .stagger-3 { animation-delay: 0.15s; opacity: 0; }
-  .stagger-4 { animation-delay: 0.20s; opacity: 0; }
-  .stagger-5 { animation-delay: 0.25s; opacity: 0; }
-  .stagger-6 { animation-delay: 0.30s; opacity: 0; }
-  .stagger-7 { animation-delay: 0.35s; opacity: 0; }
-  .stagger-8 { animation-delay: 0.40s; opacity: 0; }
+
+  .standings-row-1 {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.08) 0%, transparent 100%);
+  }
+
+  .standings-row-2 {
+    background: linear-gradient(90deg, rgba(192, 192, 192, 0.06) 0%, transparent 100%);
+  }
+
+  .standings-row-3 {
+    background: linear-gradient(90deg, rgba(205, 127, 50, 0.06) 0%, transparent 100%);
+  }
+
+  .stagger-1 {
+    animation-delay: 0.05s;
+    opacity: 0;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.10s;
+    opacity: 0;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.15s;
+    opacity: 0;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.20s;
+    opacity: 0;
+  }
+
+  .stagger-5 {
+    animation-delay: 0.25s;
+    opacity: 0;
+  }
+
+  .stagger-6 {
+    animation-delay: 0.30s;
+    opacity: 0;
+  }
+
+  .stagger-7 {
+    animation-delay: 0.35s;
+    opacity: 0;
+  }
+
+  .stagger-8 {
+    animation-delay: 0.40s;
+    opacity: 0;
+  }
 }
 
 /* ─── Typewriter cursor ──────────────────────────────────────────────────────── */
 @keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 
@@ -118,6 +206,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
