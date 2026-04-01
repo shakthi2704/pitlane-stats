@@ -114,7 +114,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
           </p>
         </div>
         {nextRace && (
-          <div className="mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
+          <div className="bg-black/70 mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
             {/* Race info */}
             <div className="border-l-2 border-[var(--color-f1-red)] pl-4">
               <p className="text-[var(--color-f1-red)] text-[10px] font-semibold tracking-[0.25em] uppercase mb-1">
@@ -126,7 +126,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
               >
                 {nextRace.raceName}
               </p>
-              <p className="text-white/40 text-sm">
+              <p className="text-white/80 text-sm">
                 {nextRace.circuit.locality}, {nextRace.circuit.country} ·{" "}
                 {new Date(nextRace.date).toLocaleDateString("en-GB", {
                   day: "numeric",

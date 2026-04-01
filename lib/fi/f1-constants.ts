@@ -68,7 +68,10 @@ export const DRIVER_IMAGES: Record<string, string> = {
     gasly: "/F1/drivers/pierre-gasly.avif",
     perez: "/F1/drivers/sergio-perez.avif",
     bottas: "/F1/drivers/valtteri-bottas.avif",
-    Doohan: "/F1/drivers/jack-doohan.avif",
+    doohan: "/F1/drivers/jack-doohan.avif",
+    tsunoda: "/F1/drivers/yuki-tsunoda.avif",
+    mick_schumacher: "/F1/drivers/MickSchumacher.avif",
+
 };
 
 export const TEAM_CARS: Record<string, string> = {
@@ -82,6 +85,8 @@ export const TEAM_CARS: Record<string, string> = {
     haas: "/F1/team/2026haascarright.avif",
     kick_sauber: "/F1/team/2026audicarright.avif",
     alpine: "/F1/team/2026alpinecarright.avif",
+    audi: "/F1/team/2026audicarright.avif",
+    cadillac: "/F1/team/2026cadillaccarright.avif",
 }
 
 export const TEAM_LOGOS: Record<string, string> = {
@@ -95,10 +100,12 @@ export const TEAM_LOGOS: Record<string, string> = {
     haas: "/F1/logos/haaslogowhite.webp",
     kick_sauber: "/F1/logos/audilogowhite.webp",
     alpine: "/F1/logos/alpinelogowhite.webp",
+    audi: "/F1/logos/audilogowhite.webp",
+    cadillac: "/F1/logos/cadillaclogowhite.webp",
 }
 
 export const FALLBACK_DRIVER = "/F1/drivers/driver-placeholder.png"
-export const FALLBACK_CAR = "/F1/drivers/placeholder.svg"
+export const FALLBACK_CAR = "/F1/team/CAR.png"
 export const FALLBACK_LOGO = "/F1/logos/formula-1-log.png"
 
 export const PODIUM = {
@@ -135,8 +142,45 @@ export const CIRCUIT_COLORS: Record<string, string> = {
     madrid: "#E10600",
 }
 
-export const CURRENT_SEASON = "2025"
-export const AVAILABLE_SEASONS = Array.from({ length: 8 }, (_, i) => String(2025 - i))
+export const CIRCUIT_IMAGES: Record<string, string> = {
+    americas: "/F1/circuits/images/circuit-of-the-americas.avif",
+    miami: "/F1/circuits/images/miami-international-autodrome.avif",
+    albert_park: "/F1/circuits/images/albert-park-grand-prix-circuit.avif",
+    bahrain: "/F1/circuits/images/bahrain-international-circuit.avif",
+    interlagos: "/F1/circuits/images/autdromo-jos-carlos-pace.avif",
+    baku: "/F1/circuits/images/baku-city-circuit.avif",
+    vegas: "/F1/circuits/images/las-vegas-strip-street-circuit.avif",
+    spa: "/F1/circuits/images/circuit-de-spa-francorchamps.avif",
+    red_bull_ring: "/F1/circuits/images/red-bull-ring.avif",
+    silverstone: "/F1/circuits/images/silverstone-circuit.avif",
+    yas_marina: "/F1/circuits/images/yas-marina-circuit.avif",
+    istanbul: "/F1/circuits/images/istanbul-park.avif",
+    madring: "/F1/circuits/images/madring.avif",
+    catalunya: "/F1/circuits/images/circuit-de-barcelona-catalunya.avif",
+    villeneuve: "/F1/circuits/images/circuit-gilles-villeneuve.avif",
+    shanghai: "/F1/circuits/images/shanghai-international-circuit.avif",
+    ricard: "/F1/circuits/images/circuit-paul-ricard.avif",
+    nurburgring: "/F1/circuits/images/nrburgring.avif",
+    hockenheimring: "/F1/circuits/images/hockenheim.avif",
+    hungaroring: "/F1/circuits/images/hungaroring.avif",
+    mugello: "/F1/circuits/images/autodromo-internazionale-del-mugello.avif",
+    monza: "/F1/circuits/images/autodromo-nazionale-di-monza.avif",
+    imola: "/F1/circuits/images/autodromo-enzo-e-dino-ferrari.avif",
+    suzuka: "/F1/circuits/images/suzuka-circuit.avif",
+    rodriguez: "/F1/circuits/images/autdromo-hermanos-rodrguez.avif",
+    monaco: "/F1/circuits/images/circuit-de-monaco.avif",
+    zandvoort: "/F1/circuits/images/circuit-park-zandvoort.avif",
+    portimao: "/F1/circuits/images/autódromo-internacional-do-algarve.avif",
+    losail: "/F1/circuits/images/losail-international-circuit.avif",
+    sochi: "/F1/circuits/images/sochi-autodrom.avif",
+    jeddah: "/F1/circuits/images/jeddah-corniche-circuit.avif",
+    marina_bay: "/F1/circuits/images/marina-bay-street-circuit.avif",
 
 
+}
 
+export const CURRENT_SEASON = new Date().getFullYear().toString()
+export const AVAILABLE_SEASONS = Array.from(
+    { length: new Date().getFullYear() - 2018 + 1 },
+    (_, i) => String(new Date().getFullYear() - i)
+)

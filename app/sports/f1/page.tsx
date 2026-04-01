@@ -14,7 +14,9 @@ import type {
 } from "@/types/f1"
 import F1Loader from "@/components/f1/F1Loader"
 
-const SEASON = "2025"
+import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
+
+const SEASON = CURRENT_SEASON
 
 export default function F1Page() {
   const [loading, setLoading] = useState(true)
@@ -28,34 +30,7 @@ export default function F1Page() {
 
   const today = new Date().toISOString().split("T")[0]
 
-  // useEffect(() => {
-  //   fetch(`/api/f1/races?season=${SEASON}`)
-  //     .then((r) => r.json())
-  //     .then((data) => setRaces(data.races ?? []))
 
-  //   fetch(`/api/f1/driver-standings?season=${SEASON}`)
-  //     .then((r) => r.json())
-  //     .then((data) => setDriverStandings(data.standings ?? []))
-
-  //   fetch(`/api/f1/constructor-standings?season=${SEASON}`)
-  //     .then((r) => r.json())
-  //     .then((data) => setConstructorStandings(data.standings ?? []))
-
-  //   fetch(`/api/f1/races?season=${SEASON}`)
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       const allRaces: Race[] = data.races ?? []
-  //       setRaces(allRaces)
-  //       const pastRaces = allRaces.filter((r) => r.date < today)
-  //       const last = pastRaces[pastRaces.length - 1]
-  //       if (last) {
-  //         setLastRace(last)
-  //         fetch(`/api/f1/race-results?season=${SEASON}&round=${last.round}`)
-  //           .then((r) => r.json())
-  //           .then((data) => setLastRaceResults(data.race?.results ?? []))
-  //       }
-  //     })
-  // }, [])
   useEffect(() => {
     setLoading(true)
 

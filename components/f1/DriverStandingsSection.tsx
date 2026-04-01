@@ -128,7 +128,7 @@ const TopDriverCard = ({
             zIndex: 4,
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+            ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
           }}
         />
 
@@ -157,7 +157,7 @@ const TopDriverCard = ({
                   opacity: 0.9,
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).style.display = "none"
+                  ; (e.target as HTMLImageElement).style.display = "none"
                 }}
               />
             ) : (
@@ -270,13 +270,13 @@ const TopConstructorCard = ({
           transition: "transform 0.2s, box-shadow 0.2s",
         }}
         onMouseEnter={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow =
-            `0 16px 40px ${teamColor}50`
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow =
+              `0 16px 40px ${teamColor}50`
         }}
         onMouseLeave={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(0)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow = "none"
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow = "none"
         }}
       >
         {/* Dark overlay */}
@@ -324,7 +324,7 @@ const TopConstructorCard = ({
             zIndex: 3,
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_CAR
+            ; (e.target as HTMLImageElement).src = FALLBACK_CAR
           }}
         />
 
@@ -360,7 +360,7 @@ const TopConstructorCard = ({
                   opacity: 0.9,
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).style.display = "none"
+                  ; (e.target as HTMLImageElement).style.display = "none"
                 }}
               />
             ) : (
@@ -507,7 +507,7 @@ const DriverStandingsSection = ({
               margin: 0,
             }}
           >
-            2025 {activeTab === "drivers" ? "DRIVER" : "CONSTRUCTOR"} STANDINGS
+            {activeTab === "drivers" ? "DRIVER" : "CONSTRUCTOR"} STANDINGS
           </h2>
         </div>
         <Link
@@ -632,12 +632,12 @@ const DriverStandingsSection = ({
                       cursor: "pointer",
                     }}
                     onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.backgroundColor =
-                        "rgba(255,255,255,0.03)")
+                    ((e.currentTarget as HTMLElement).style.backgroundColor =
+                      "rgba(255,255,255,0.03)")
                     }
                     onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.backgroundColor =
-                        "transparent")
+                    ((e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent")
                     }
                   >
                     <span
@@ -766,8 +766,8 @@ const DriverStandingsSection = ({
                 ((e.currentTarget as HTMLElement).style.color = "#ffffff")
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color =
-                  "rgba(255,255,255,0.3)")
+              ((e.currentTarget as HTMLElement).style.color =
+                "rgba(255,255,255,0.3)")
               }
             >
               {showAll
@@ -855,12 +855,12 @@ const DriverStandingsSection = ({
                       cursor: "pointer",
                     }}
                     onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.backgroundColor =
-                        "rgba(255,255,255,0.03)")
+                    ((e.currentTarget as HTMLElement).style.backgroundColor =
+                      "rgba(255,255,255,0.03)")
                     }
                     onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.backgroundColor =
-                        "transparent")
+                    ((e.currentTarget as HTMLElement).style.backgroundColor =
+                      "transparent")
                     }
                   >
                     <span
@@ -900,8 +900,8 @@ const DriverStandingsSection = ({
                           flexShrink: 0,
                         }}
                         onError={(e) =>
-                          ((e.target as HTMLImageElement).style.display =
-                            "none")
+                        ((e.target as HTMLImageElement).style.display =
+                          "none")
                         }
                       />
                       <div style={{ minWidth: 0 }}>
@@ -985,8 +985,8 @@ const DriverStandingsSection = ({
                 ((e.currentTarget as HTMLElement).style.color = "#ffffff")
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color =
-                  "rgba(255,255,255,0.3)")
+              ((e.currentTarget as HTMLElement).style.color =
+                "rgba(255,255,255,0.3)")
               }
             >
               {showAll
@@ -1017,16 +1017,16 @@ const DriverStandingsSection = ({
             display: "inline-block",
           }}
           onMouseEnter={(e) => {
-            ;(e.currentTarget as HTMLElement).style.backgroundColor =
+            ; (e.currentTarget as HTMLElement).style.backgroundColor =
               "rgba(255,255,255,0.05)"
-            ;(e.currentTarget as HTMLElement).style.borderColor =
-              "rgba(255,255,255,0.4)"
+              ; (e.currentTarget as HTMLElement).style.borderColor =
+                "rgba(255,255,255,0.4)"
           }}
           onMouseLeave={(e) => {
-            ;(e.currentTarget as HTMLElement).style.backgroundColor =
+            ; (e.currentTarget as HTMLElement).style.backgroundColor =
               "transparent"
-            ;(e.currentTarget as HTMLElement).style.borderColor =
-              "rgba(255,255,255,0.2)"
+              ; (e.currentTarget as HTMLElement).style.borderColor =
+                "rgba(255,255,255,0.2)"
           }}
         >
           View Full Standings

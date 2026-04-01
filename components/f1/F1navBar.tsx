@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -33,7 +32,7 @@ const F1navBar = () => {
           style={{ scrollbarWidth: "none" }}
         >
           {/* F1 badge */}
-          <div
+          <Link href="/sports/f1"
             className="flex items-center gap-2 pr-5 mr-2 shrink-0"
             style={{ borderRight: "1px solid rgba(255,255,255,0.08)" }}
           >
@@ -47,7 +46,7 @@ const F1navBar = () => {
             >
               F1
             </div>
-          </div>
+          </Link>
 
           {/* Nav items */}
           {navItems.map((item) => {
