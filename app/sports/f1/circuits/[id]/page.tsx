@@ -73,7 +73,7 @@ const CircuitMap = ({
 
         map = L.map(mapRef.current!, {
           center: [parseFloat(lat), parseFloat(lng)],
-          zoom: 13,
+          zoom: 15,
           zoomControl: true,
           attributionControl: false,
         })
@@ -104,7 +104,7 @@ const CircuitMap = ({
                 },
               }).addTo(map)
             }
-          } catch {}
+          } catch { }
         }
 
         // Circuit marker
@@ -455,10 +455,9 @@ export default function CircuitDetailPage() {
             {staticData && (
               <div
                 style={{
-                  backgroundColor: "rgba(225,6,0,0.06)",
-                  border: "1px solid rgba(225,6,0,0.2)",
-                  borderLeft: "3px solid var(--color-f1-red)",
-                  padding: "14px 16px",
+                  backgroundColor: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  padding: "32px 16px",
                 }}
               >
                 <p
@@ -478,7 +477,7 @@ export default function CircuitDetailPage() {
                     fontFamily: "var(--font-display)",
                     fontSize: "1.8rem",
                     fontWeight: 700,
-                    color: "#086b38",
+                    color: "#03954a",
                     margin: 0,
                     lineHeight: 1,
                   }}
@@ -521,7 +520,7 @@ export default function CircuitDetailPage() {
                   fontWeight: 600,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.25)",
+                  color: "rgba(255,255,255,0.50)",
                 }}
               >
                 {h}
@@ -552,18 +551,18 @@ export default function CircuitDetailPage() {
                     cursor: "pointer",
                   }}
                   onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "rgba(255,255,255,0.03)")
+                  ((e.currentTarget as HTMLElement).style.backgroundColor =
+                    "rgba(255,255,255,0.03)")
                   }
                   onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.backgroundColor =
-                      "transparent")
+                  ((e.currentTarget as HTMLElement).style.backgroundColor =
+                    "transparent")
                   }
                 >
                   {/* Year */}
                   <span
                     style={{
-                      fontFamily: "var(--font-display)",
+                      fontFamily: "var(--font-roboro-mono)",
                       fontSize: "0.9rem",
                       fontWeight: 700,
                       color: "#ffffff",
@@ -622,7 +621,7 @@ export default function CircuitDetailPage() {
                       />
                       <span
                         style={{
-                          fontFamily: "var(--font-display)",
+                          fontFamily: "var(--font-roboto-mono)",
                           fontSize: "0.85rem",
                           fontWeight: 700,
                           color: "#ffffff",

@@ -97,8 +97,7 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background:
-              "linear-gradient(270deg, #111111 60%, transparent 100%)",
+            background: "linear-gradient(90deg, #000 60%, transparent 100%)",
             border: "none",
             cursor: "pointer",
             color: "rgba(255,255,255,0.6)",

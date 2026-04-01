@@ -40,13 +40,13 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
           cursor: "pointer",
         }}
         onMouseEnter={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow =
-            `0 20px 40px ${teamColor}50`
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow =
+              `0 20px 40px ${teamColor}50`
         }}
         onMouseLeave={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(0)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow = "none"
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow = "none"
         }}
       >
         <div
@@ -89,7 +89,7 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
             zIndex: 3,
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+            ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
           }}
         />
         <div
@@ -174,7 +174,7 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
                   opacity: 0.9,
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).style.display = "none"
+                  ; (e.target as HTMLImageElement).style.display = "none"
                 }}
               />
             ) : (
@@ -374,7 +374,7 @@ const DriverCard = ({ standing }: { standing: DriverStanding }) => {
             zIndex: 3,
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+            ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
           }}
         />
 
@@ -411,7 +411,7 @@ const DriverCard = ({ standing }: { standing: DriverStanding }) => {
                   opacity: 0.9,
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).style.display = "none"
+                  ; (e.target as HTMLImageElement).style.display = "none"
                 }}
               />
             ) : (

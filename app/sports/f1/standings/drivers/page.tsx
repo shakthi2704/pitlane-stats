@@ -1,25 +1,28 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { getTeamColor, getFlagEmoji } from "@/types/f1/f1-api"
 import type { DriverStanding } from "@/types/f1"
 import {
   DRIVER_IMAGES,
   TEAM_LOGOS,
   FALLBACK_DRIVER,
+  CURRENT_SEASON,
+  AVAILABLE_SEASONS
 } from "@/lib/fi/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
-const SEASONS = Array.from({ length: 8 }, (_, i) => String(2025 - i))
+
+
+const SEASONS = AVAILABLE_SEASONS
 
 export default function DriverStandingsPage() {
-  const [season, setSeason] = useState("2025")
+  const [season, setSeason] = useState(CURRENT_SEASON)
   const [standings, setStandings] = useState<DriverStanding[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<"drivers" | "teams">("drivers")
-  const [showAll, setShowAll] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
 
   useEffect(() => {
     setLoading(true)
@@ -29,6 +32,13 @@ export default function DriverStandingsPage() {
       .finally(() => setLoading(false))
   }, [season])
 
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+  }
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+  }
   const leader = standings[0]
 
   return (
@@ -80,7 +90,7 @@ export default function DriverStandingsPage() {
             {season} FIA Formula One World Championship
           </p>
         </div>
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -112,6 +122,80 @@ export default function DriverStandingsPage() {
               {s}
             </button>
           ))}
+        </div> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          {/* LEFT ARROW */}
+          <button
+            onClick={scrollLeft}
+            style={{
+              cursor: "pointer",
+              padding: "6px 10px",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "transparent",
+              color: "white",
+            }}
+          >
+            ◀
+          </button>
+
+          {/* SCROLLABLE SEASONS */}
+          <div
+            ref={scrollRef}
+            style={{
+              display: "flex",
+              gap: "8px",
+              overflowX: "auto",
+              scrollBehavior: "smooth",
+              whiteSpace: "nowrap",
+              maxWidth: "200px",
+              scrollbarWidth: "none",
+            }}
+          >
+            {SEASONS.map((s) => (
+              <button
+                key={s}
+                onClick={() => setSeason(s)}
+                style={{
+                  flex: "0 0 auto", // important for horizontal scroll
+                  fontFamily: "var(--font-display)",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  padding: "6px 14px",
+                  cursor: "pointer",
+                  border: "1px solid",
+                  transition: "all 0.2s",
+                  borderColor:
+                    season === s
+                      ? "var(--color-f1-red)"
+                      : "rgba(255,255,255,0.1)",
+                  backgroundColor:
+                    season === s ? "var(--color-f1-red)" : "transparent",
+                  color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={scrollRight}
+            style={{
+              cursor: "pointer",
+              padding: "6px 10px",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "transparent",
+              color: "white",
+            }}
+          >
+            ▶
+          </button>
         </div>
       </div>
       {loading ? (
@@ -132,45 +216,7 @@ export default function DriverStandingsPage() {
                 borderLeft: "3px solid #F5C842",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  borderBottom: "1px solid rgba(255,255,255,0.08)",
-                  marginBottom: "20px",
-                }}
-              >
-                {(["drivers", "teams"] as const).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => {
-                      setActiveTab(tab)
-                      setShowAll(false)
-                    }}
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color:
-                        activeTab === tab ? "#ffffff" : "rgba(255,255,255,0.3)",
-                      background: "none",
-                      border: "none",
-                      borderBottom:
-                        activeTab === tab
-                          ? "2px solid var(--color-f1-red)"
-                          : "2px solid transparent",
-                      padding: "10px 16px",
-                      cursor: "pointer",
-                      marginBottom: "-1px",
-                      transition: "color 0.2s",
-                    }}
-                  >
-                    {tab === "drivers" ? "Drivers" : "Teams"}
-                  </button>
-                ))}
-              </div>
+
               <div
                 style={{
                   width: "48px",
@@ -352,14 +398,14 @@ export default function DriverStandingsPage() {
                         cursor: "pointer",
                       }}
                       onMouseEnter={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = "rgba(255,255,255,0.04)")
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = "rgba(255,255,255,0.04)")
                       }
                       onMouseLeave={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = isTop3
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = isTop3
                           ? `${teamColor}08`
                           : "transparent")
                       }
@@ -418,8 +464,8 @@ export default function DriverStandingsPage() {
                               objectPosition: "top",
                             }}
                             onError={(e) =>
-                              ((e.target as HTMLImageElement).src =
-                                FALLBACK_DRIVER)
+                            ((e.target as HTMLImageElement).src =
+                              FALLBACK_DRIVER)
                             }
                           />
                         </div>
@@ -479,8 +525,8 @@ export default function DriverStandingsPage() {
                               opacity: 0.6,
                             }}
                             onError={(e) =>
-                              ((e.target as HTMLImageElement).style.display =
-                                "none")
+                            ((e.target as HTMLImageElement).style.display =
+                              "none")
                             }
                           />
                         )}
