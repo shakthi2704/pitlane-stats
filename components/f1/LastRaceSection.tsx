@@ -11,6 +11,7 @@ import {
   FALLBACK_CAR,
   FALLBACK_DRIVER,
   FALLBACK_LOGO,
+  CURRENT_SEASON,
 } from "@/lib/fi/f1-constants"
 
 const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
@@ -40,13 +41,13 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
           transition: "transform 0.2s, box-shadow 0.2s",
         }}
         onMouseEnter={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow =
-            `0 16px 40px ${teamColor}50`
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow =
+              `0 16px 40px ${teamColor}50`
         }}
         onMouseLeave={(e) => {
-          ;(e.currentTarget as HTMLElement).style.transform = "translateY(0)"
-          ;(e.currentTarget as HTMLElement).style.boxShadow = "none"
+          ; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"
+            ; (e.currentTarget as HTMLElement).style.boxShadow = "none"
         }}
       >
         {/* Dark overlay */}
@@ -94,7 +95,7 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
             zIndex: 3,
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+            ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
           }}
         />
 
@@ -130,7 +131,7 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
                   opacity: 0.9,
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).style.display = "none"
+                  ; (e.target as HTMLImageElement).style.display = "none"
                 }}
               />
             ) : (
@@ -397,16 +398,16 @@ const LastRaceSection = ({
             whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => {
-            ;(e.currentTarget as HTMLElement).style.backgroundColor =
+            ; (e.currentTarget as HTMLElement).style.backgroundColor =
               "rgba(255,255,255,0.05)"
-            ;(e.currentTarget as HTMLElement).style.borderColor =
-              "rgba(255,255,255,0.4)"
+              ; (e.currentTarget as HTMLElement).style.borderColor =
+                "rgba(255,255,255,0.4)"
           }}
           onMouseLeave={(e) => {
-            ;(e.currentTarget as HTMLElement).style.backgroundColor =
+            ; (e.currentTarget as HTMLElement).style.backgroundColor =
               "transparent"
-            ;(e.currentTarget as HTMLElement).style.borderColor =
-              "rgba(255,255,255,0.2)"
+              ; (e.currentTarget as HTMLElement).style.borderColor =
+                "rgba(255,255,255,0.2)"
           }}
         >
           Full Results
@@ -476,12 +477,12 @@ const LastRaceSection = ({
                   cursor: "pointer",
                 }}
                 onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.backgroundColor =
-                    "rgba(255,255,255,0.03)")
+                ((e.currentTarget as HTMLElement).style.backgroundColor =
+                  "rgba(255,255,255,0.03)")
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.backgroundColor =
-                    "transparent")
+                ((e.currentTarget as HTMLElement).style.backgroundColor =
+                  "transparent")
                 }
               >
                 {/* Position */}
@@ -617,8 +618,8 @@ const LastRaceSection = ({
             ((e.currentTarget as HTMLElement).style.color = "#ffffff")
           }
           onMouseLeave={(e) =>
-            ((e.currentTarget as HTMLElement).style.color =
-              "rgba(255,255,255,0.3)")
+          ((e.currentTarget as HTMLElement).style.color =
+            "rgba(255,255,255,0.3)")
           }
         >
           View Full Results →

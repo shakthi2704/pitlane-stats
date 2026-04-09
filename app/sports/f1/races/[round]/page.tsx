@@ -11,6 +11,7 @@ import {
 } from "@/lib/fi/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 import { CIRCUIT_STATIC } from "@/lib/fi/circuit-data"
+import { MapPinCheckInside } from "lucide-react"
 
 interface Circuit {
   circuitId: string
@@ -146,7 +147,7 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
           zIndex: 3,
         }}
         onError={(e) => {
-          ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+          ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
         }}
       />
 
@@ -182,7 +183,7 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
                 opacity: 0.9,
               }}
               onError={(e) => {
-                ;(e.target as HTMLImageElement).style.display = "none"
+                ; (e.target as HTMLImageElement).style.display = "none"
               }}
             />
           ) : (
@@ -345,7 +346,7 @@ const SectionHeader = ({ title }: { title: string }) => (
       style={{
         fontFamily: "var(--font-display)",
         fontSize: "1.2rem",
-        fontWeight: 700,
+        fontWeight: 400,
         color: "#ffffff",
         margin: 0,
       }}
@@ -564,9 +565,10 @@ export default function RaceDetailPage() {
                   color: "rgba(255,255,255,0.4)",
                   fontSize: "0.875rem",
                   margin: 0,
+                  display: "flex", alignItems: "center", gap: "4px"
                 }}
               >
-                📍 {race.circuit.circuitName} · {race.circuit.locality},{" "}
+                <MapPinCheckInside size={16} className="text-f1-red" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
                 {race.circuit.country}
               </p>
               <p
@@ -651,9 +653,9 @@ export default function RaceDetailPage() {
                 alignItems: "center",
                 gap: "20px",
                 padding: "16px 20px",
-                backgroundColor: "rgba(168,85,247,0.08)",
-                border: "1px solid rgba(168,85,247,0.2)",
-                borderLeft: "3px solid #a855f7",
+                backgroundColor: "rgba(13, 130, 36, 0.08)",
+                border: "1px solid rgba(7, 96, 24, 0.2)",
+                borderLeft: "3px solid #1ad009",
               }}
             >
               <div
@@ -689,7 +691,7 @@ export default function RaceDetailPage() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "11px",
-                    color: "#a855f7",
+                    color: "#1ad009",
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
                     margin: "0 0 2px 0",
@@ -725,7 +727,7 @@ export default function RaceDetailPage() {
                     fontFamily: "var(--font-display)",
                     fontSize: "1.8rem",
                     fontWeight: 700,
-                    color: "#a855f7",
+                    color: "#1ad009",
                     margin: 0,
                     lineHeight: 1,
                     fontVariantNumeric: "tabular-nums",
@@ -816,14 +818,14 @@ export default function RaceDetailPage() {
                         cursor: "pointer",
                       }}
                       onMouseEnter={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = "rgba(255,255,255,0.05)")
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = "rgba(255,255,255,0.05)")
                       }
                       onMouseLeave={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = `${teamColor}08`)
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = `${teamColor}08`)
                       }
                     >
                       <span
@@ -856,8 +858,8 @@ export default function RaceDetailPage() {
                             objectPosition: "top",
                           }}
                           onError={(e) =>
-                            ((e.target as HTMLImageElement).src =
-                              FALLBACK_DRIVER)
+                          ((e.target as HTMLImageElement).src =
+                            FALLBACK_DRIVER)
                           }
                         />
                       </div>
@@ -976,14 +978,14 @@ export default function RaceDetailPage() {
                         cursor: "pointer",
                       }}
                       onMouseEnter={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = "rgba(255,255,255,0.03)")
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = "rgba(255,255,255,0.03)")
                       }
                       onMouseLeave={(e) =>
-                        ((
-                          e.currentTarget as HTMLElement
-                        ).style.backgroundColor = "transparent")
+                      ((
+                        e.currentTarget as HTMLElement
+                      ).style.backgroundColor = "transparent")
                       }
                     >
                       <span
@@ -1016,8 +1018,8 @@ export default function RaceDetailPage() {
                             objectPosition: "top",
                           }}
                           onError={(e) =>
-                            ((e.target as HTMLImageElement).src =
-                              FALLBACK_DRIVER)
+                          ((e.target as HTMLImageElement).src =
+                            FALLBACK_DRIVER)
                           }
                         />
                       </div>
@@ -1130,8 +1132,8 @@ export default function RaceDetailPage() {
                   ((e.currentTarget as HTMLElement).style.color = "#ffffff")
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color =
-                    "rgba(255,255,255,0.3)")
+                ((e.currentTarget as HTMLElement).style.color =
+                  "rgba(255,255,255,0.3)")
                 }
               >
                 {showAllResults
@@ -1220,7 +1222,7 @@ export default function RaceDetailPage() {
                       />
                       <span
                         style={{
-                          fontFamily: "var(--font-display)",
+                          fontFamily: "var(--font-roboto-mono)",
                           fontSize: "0.82rem",
                           fontWeight: 700,
                           color: "#ffffff",
@@ -1289,7 +1291,7 @@ export default function RaceDetailPage() {
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "1.2rem",
-                  fontWeight: 700,
+                  fontWeight: 400,
                   color: "#ffffff",
                   margin: 0,
                 }}
@@ -1369,7 +1371,7 @@ export default function RaceDetailPage() {
                         style={{
                           fontFamily: "var(--font-display)",
                           fontSize: "10px",
-                          fontWeight: 600,
+                          fontWeight: 400,
                           letterSpacing: "0.1em",
                           textTransform: "uppercase",
                           padding: "4px 12px",
@@ -1483,7 +1485,7 @@ export default function RaceDetailPage() {
                           style={{
                             fontFamily: "var(--font-display)",
                             fontSize: "0.78rem",
-                            fontWeight: 600,
+                            fontWeight: 400,
                             color: "#ffffff",
                           }}
                         >
@@ -1496,7 +1498,7 @@ export default function RaceDetailPage() {
                           fontFamily: "var(--font-mono)",
                           fontSize: "0.82rem",
                           fontWeight: isFastest ? 700 : 400,
-                          color: isFastest ? "#a855f7" : "#ffffff",
+                          color: isFastest ? "#1ad009" : "#ffffff",
                         }}
                       >
                         {l.time} {isFastest && "⚡"}
@@ -1506,7 +1508,7 @@ export default function RaceDetailPage() {
                           fontFamily: "var(--font-mono)",
                           fontSize: "0.75rem",
                           color:
-                            delta === 0 ? "#a855f7" : "rgba(255,255,255,0.3)",
+                            delta === 0 ? "#1ad009" : "rgba(255,255,255,0.3)",
                         }}
                       >
                         {delta === null
@@ -1567,7 +1569,7 @@ export default function RaceDetailPage() {
               }}
             >
               <img
-                src={`/circuits/${race.circuit.circuitId}.svg`}
+                src={`/sports/f1/circuits/${race.circuit.circuitId}.svg`}
                 alt={race.circuit.circuitName}
                 style={{
                   maxHeight: "180px",

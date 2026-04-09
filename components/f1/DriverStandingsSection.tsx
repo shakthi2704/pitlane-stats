@@ -11,8 +11,10 @@ import {
   FALLBACK_CAR,
   FALLBACK_DRIVER,
   FALLBACK_LOGO,
+  CURRENT_SEASON,
 } from "@/lib/fi/f1-constants"
 import type { DriverStanding, ConstructorStanding } from "@/types/f1"
+
 
 const TopDriverCard = ({
   standing,
@@ -31,7 +33,7 @@ const TopDriverCard = ({
 
   const logoSrc = TEAM_LOGOS[standing.constructorId] ?? null
 
-  const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
+  // const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
   const medalLabels = ["1ST", "2ND", "3RD"]
   const heights = ["240px", "210px", "200px"]
 
@@ -67,7 +69,7 @@ const TopDriverCard = ({
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.0) 100%)",
+              "linear-gradient(120deg, rgba(0,0,0,0.65) 20%, rgba(0,0,0,0.2) 90%, rgba(0,0,0,0.0) 100%)",
             zIndex: 1,
           }}
         />
@@ -78,7 +80,7 @@ const TopDriverCard = ({
           alt={standing.constructorId}
           style={{
             position: "absolute",
-            right: "40px",
+            right: "140px",
             bottom: "-5px",
             height: "550%",
             width: "auto",
@@ -86,11 +88,11 @@ const TopDriverCard = ({
             objectPosition: "bottom right",
             zIndex: 2,
             transform: "scaleX(-1)",
-            opacity: 0.55,
+            opacity: 0.35,
             filter: "brightness(0.9) contrast(1.05)",
           }}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).src = FALLBACK_CAR
+            ; (e.target as HTMLImageElement).src = FALLBACK_CAR
           }}
         /> */}
 
@@ -125,7 +127,7 @@ const TopDriverCard = ({
             width: "auto",
             objectFit: "contain",
             objectPosition: "top right",
-            zIndex: 4,
+            zIndex: 1,
           }}
           onError={(e) => {
             ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
@@ -184,7 +186,7 @@ const TopDriverCard = ({
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                color: medalColors[rank - 1],
+                // color: medalColors[rank - 1],
                 letterSpacing: "0.1em",
               }}
             >
@@ -197,9 +199,10 @@ const TopDriverCard = ({
               </span>
               <p
                 style={{
-                  fontSize: "0.75rem",
+                  fontSize: "1rem",
                   color: "rgba(255,255,255,0.65)",
                   margin: 0,
+                  fontFamily: "var(--font-display)",
                 }}
               >
                 {standing.driver.givenName}
@@ -209,7 +212,7 @@ const TopDriverCard = ({
             <p
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: rank === 1 ? "1.4rem" : "1.2rem",
+                fontSize: rank === 1 ? "1.8rem" : "1.4rem",
                 fontWeight: 700,
                 color: "#fff",
                 margin: 0,
@@ -223,7 +226,7 @@ const TopDriverCard = ({
                 fontFamily: "var(--font-display)",
                 fontSize: "1rem",
                 fontWeight: 700,
-                color: medalColors[rank - 1],
+                // color: medalColors[rank - 1],
                 marginTop: "6px",
               }}
             >
@@ -382,7 +385,7 @@ const TopConstructorCard = ({
                 fontFamily: "var(--font-display)",
                 fontSize: "0.75rem",
                 fontWeight: 700,
-                color: medalColors[rank - 1],
+                // color: medalColors[rank - 1],
                 letterSpacing: "0.1em",
               }}
             >
@@ -681,14 +684,14 @@ const DriverStandingsSection = ({
                         gap: "8px",
                       }}
                     >
-                      <div
+                      {/* <div
                         style={{
                           width: "3px",
                           height: "20px",
                           backgroundColor: teamColor,
                           flexShrink: 0,
                         }}
-                      />
+                      /> */}
                       <span
                         style={{
                           fontFamily: "var(--font-roboto)",

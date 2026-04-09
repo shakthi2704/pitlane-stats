@@ -92,7 +92,7 @@ const CircuitMap = ({
         if (geojsonFile) {
           try {
             const res = await fetch(
-              `/circuits/geojson/${encodeURIComponent(geojsonFile)}`,
+              `/F1/circuits/geojson/${encodeURIComponent(geojsonFile)}`,
             )
             if (res.ok) {
               const data = await res.json()

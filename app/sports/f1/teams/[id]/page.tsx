@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,7 +15,7 @@ import {
   CURRENT_SEASON,
 } from "@/lib/fi/f1-constants"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+const SEASONS = AVAILABLE_SEASONS
 
 interface TeamProfile {
   constructor: {
@@ -79,8 +79,6 @@ interface TeamProfile {
   }
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function posOrdinal(n: number): string {
   const s = ["th", "st", "nd", "rd"]
   const v = n % 100
@@ -97,14 +95,13 @@ function posColor(pos: number | null): string {
 
 type Tab = "results" | "career"
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function TeamDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [season, setSeason] = useState(CURRENT_SEASON)
   const [profile, setProfile] = useState<TeamProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>("results")
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const load = useCallback(
     async (s: string) => {
@@ -124,7 +121,97 @@ export default function TeamDetailPage() {
     load(season)
   }, [load, season])
 
-  if (loading) return <F1Loader message="LOADING TEAM..." />
+  // Scroll active season button into view — runs after render so ref is always available
+  useEffect(() => {
+    if (!scrollRef.current) return
+    const activeBtn = scrollRef.current.querySelector<HTMLElement>('[data-active="true"]')
+    activeBtn?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+  }, [season])
+
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+  }
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+  }
+
+  // Season selector — reused in both loading and loaded states
+  const seasonSelector = (teamColor: string = "#E10600") => (
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <button
+        onClick={scrollLeft}
+        style={{
+          cursor: "pointer",
+          padding: "6px 10px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "transparent",
+          color: "white",
+        }}
+      >
+        ◀
+      </button>
+      <div
+        ref={scrollRef}
+        style={{
+          display: "flex",
+          gap: "8px",
+          overflowX: "auto",
+          scrollBehavior: "smooth",
+          whiteSpace: "nowrap",
+          maxWidth: "200px",
+          scrollbarWidth: "none",
+        }}
+      >
+        {SEASONS.map((s) => (
+          <button
+            key={s}
+            data-active={season === s}
+            onClick={() => setSeason(s)}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "12px",
+              fontWeight: 600,
+              padding: "6px 14px",
+              cursor: "pointer",
+              border: "2px solid",
+              transition: "all 0.2s",
+              borderColor: season === s ? teamColor : "rgba(255,255,255,0.1)",
+              // backgroundColor: season === s ? teamColor : "transparent",
+              color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
+            }}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={scrollRight}
+        style={{
+          cursor: "pointer",
+          padding: "6px 10px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "transparent",
+          color: "white",
+        }}
+      >
+        ▶
+      </button>
+    </div>
+  )
+
+  // ── LOADING STATE — keep scrollRef mounted ──
+  if (loading) {
+    return (
+      <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
+        {/* Season selector stays mounted so scrollRef is always in the DOM */}
+        <div style={{ display: "none" }}>
+          {seasonSelector()}
+        </div>
+        <F1Loader message="LOADING TEAM..." />
+      </div>
+    )
+  }
 
   if (!profile) {
     return (
@@ -182,12 +269,11 @@ export default function TeamDetailPage() {
       <div
         style={{
           position: "relative",
-          // background: `linear-gradient(110deg, ${teamColor}18 0%, ${teamColor}08 40%, #0a0a0a 65%)`,
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           overflow: "hidden",
         }}
       >
-        <div
+        {/* <div
           style={{
             position: "absolute",
             left: 0,
@@ -196,7 +282,7 @@ export default function TeamDetailPage() {
             width: "3px",
             background: teamColor,
           }}
-        />
+        /> */}
 
         <div
           className="max-w-7xl"
@@ -253,7 +339,7 @@ export default function TeamDetailPage() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "0.65rem",
-                        color: "#777",
+                        color: teamColor,
                         letterSpacing: "0.12em",
                       }}
                     >
@@ -330,7 +416,6 @@ export default function TeamDetailPage() {
                   <span style={{ color: "#1e1e1e" }}>·</span>
                 </>
               )}
-              {/* Drivers */}
               {drivers.map((d, i) => (
                 <span
                   key={d.driverId}
@@ -358,10 +443,7 @@ export default function TeamDetailPage() {
             {standing && (
               <div style={{ display: "flex", gap: "1px" }}>
                 {[
-                  {
-                    label: `${season} Position`,
-                    value: posOrdinal(standing.position),
-                  },
+                  { label: `${season} Position`, value: posOrdinal(standing.position) },
                   { label: "Points", value: standing.points },
                   { label: "Wins", value: standing.wins },
                 ].map((stat, i) => (
@@ -369,13 +451,9 @@ export default function TeamDetailPage() {
                     key={stat.label}
                     style={{
                       padding: "14px 20px",
-                      backgroundColor:
-                        i === 0 ? `${teamColor}15` : "rgba(255,255,255,0.03)",
+                      backgroundColor: i === 0 ? `${teamColor}15` : "rgba(255,255,255,0.03)",
                       border: "1px solid rgba(255,255,255,0.06)",
-                      borderTop:
-                        i === 0
-                          ? `2px solid ${teamColor}`
-                          : "2px solid rgba(255,255,255,0.08)",
+                      borderTop: i === 0 ? `2px solid ${teamColor}` : "2px solid rgba(255,255,255,0.08)",
                     }}
                   >
                     <div
@@ -413,49 +491,12 @@ export default function TeamDetailPage() {
               position: "relative",
               width: "380px",
               flexShrink: 0,
-              alignSelf: "flex-end",
+              alignSelf: "stretch",
             }}
           >
-            {/* Driver photos */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "0",
-                left: "0",
-                display: "flex",
-                gap: "0",
-                zIndex: 2,
-              }}
-            >
-              {drivers.map((d, i) => (
-                <div
-                  key={d.driverId}
-                  style={{
-                    position: "relative",
-                    width: "90px",
-                    height: "160px",
-                  }}
-                >
-                  <Image
-                    src={DRIVER_IMAGES[d.driverId] ?? FALLBACK_DRIVER}
-                    alt={d.driver.familyName}
-                    fill
-                    style={{
-                      objectFit: "contain",
-                      objectPosition: "bottom center",
-                      filter: `brightness(${i === 0 ? 1 : 0.7})`,
-                    }}
-                    onError={(e) => {
-                      ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Car image */}
+            {/* Car image — top 65% */}
             {carSrc && (
-              <div style={{ position: "relative", height: "360px" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "65%" }}>
                 <Image
                   src={carSrc}
                   alt={team.name}
@@ -468,6 +509,84 @@ export default function TeamDetailPage() {
                 />
               </div>
             )}
+
+            {/* Driver photos — bottom 45%, side by side */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: "45%",
+                display: "flex",
+                alignItems: "flex-end",
+                zIndex: 2,
+              }}
+            >
+              {drivers.map((d, i) => (
+                <div
+                  key={d.driverId}
+                  style={{
+                    position: "relative",
+                    flex: 1,
+                    height: "100%",
+                    borderLeft: i > 0 ? `1px solid ${teamColor}30` : "none",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div style={{
+                    position: "absolute",
+                    top: 0, left: 0, right: 0,
+                    height: "2px",
+                    background: teamColor,
+                    opacity: i === 0 ? 1 : 0.35,
+                    zIndex: 4,
+                  }} />
+                  <Image
+                    src={DRIVER_IMAGES[d.driverId] ?? FALLBACK_DRIVER}
+                    alt={d.driver.familyName}
+                    fill
+                    style={{
+                      objectFit: "contain",
+                      objectPosition: "bottom center",
+                      filter: `brightness(${i === 0 ? 1 : 0.75})`,
+                    }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = FALLBACK_DRIVER
+                    }}
+                  />
+                  <div style={{
+                    position: "absolute",
+                    bottom: 0, left: 0, right: 0,
+                    padding: "20px 10px 10px",
+                    background: "linear-gradient(to top, rgba(10,10,10,0.92) 65%, transparent)",
+                    zIndex: 3,
+                  }}>
+                    <div style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "0.55rem",
+                      color: teamColor,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                    }}>
+                      #{d.driver.permanentNumber}
+                    </div>
+                    <div style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "0.82rem",
+                      fontWeight: 700,
+                      color: "#fff",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      lineHeight: 1,
+                      paddingBottom: "2px",
+                    }}>
+                      {d.driver.familyName}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -501,120 +620,42 @@ export default function TeamDetailPage() {
                     borderTop: `2px solid ${teamColor}`,
                     transition: "background 0.15s",
                   }}
-                  onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    "rgba(255,255,255,0.06)")
-                  }
-                  onMouseLeave={(e) =>
-                  (e.currentTarget.style.background =
-                    "rgba(255,255,255,0.03)")
-                  }
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
                 >
-                  <div
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      position: "relative",
-                      flexShrink: 0,
-                    }}
-                  >
+                  <div style={{ width: "48px", height: "48px", position: "relative", flexShrink: 0 }}>
                     <Image
                       src={DRIVER_IMAGES[d.driverId] ?? FALLBACK_DRIVER}
                       alt={d.driver.familyName}
                       fill
                       style={{ objectFit: "contain" }}
-                      onError={(e) => {
-                        ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
-                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK_DRIVER }}
                     />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.65rem",
-                        color: teamColor,
-                        letterSpacing: "0.1em",
-                        marginBottom: "2px",
-                      }}
-                    >
-                      {d.driver.permanentNumber
-                        ? `#${d.driver.permanentNumber}`
-                        : d.driver.code}
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", color: teamColor, letterSpacing: "0.1em", marginBottom: "2px" }}>
+                      {d.driver.permanentNumber ? `#${d.driver.permanentNumber}` : d.driver.code}
                     </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "1rem",
-                        color: "#fff",
-                        fontWeight: 700,
-                      }}
-                    >
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "#fff", fontWeight: 400 }}>
                       {d.driver.givenName} {d.driver.familyName}
                     </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.72rem",
-                        color: "rgba(255,255,255,0.4)",
-                        marginTop: "2px",
-                      }}
-                    >
-                      {getFlagEmoji(d.driver.nationality ?? "")}{" "}
-                      {d.driver.nationality}
+                    <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(255,255,255,0.4)", marginTop: "2px" }}>
+                      {getFlagEmoji(d.driver.nationality ?? "")} {d.driver.nationality}
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "1.5rem",
-                        color: "#fff",
-                        fontWeight: 700,
-                        lineHeight: 1,
-                      }}
-                    >
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", color: "#fff", fontWeight: 700, lineHeight: 1 }}>
                       {d.points}
                     </div>
-                    <div
-                      style={{
-                        fontSize: "9px",
-                        color: "rgba(255,255,255,0.3)",
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        marginTop: "2px",
-                      }}
-                    >
+                    <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "2px" }}>
                       PTS
                     </div>
                   </div>
-                  <div
-                    style={{
-                      textAlign: "right",
-                      paddingLeft: "16px",
-                      borderLeft: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "1.2rem",
-                        color: "rgba(255,255,255,0.6)",
-                        fontWeight: 700,
-                        lineHeight: 1,
-                      }}
-                    >
+                  <div style={{ textAlign: "right", paddingLeft: "16px", borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
+                    <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", color: "rgba(255,255,255,0.6)", fontWeight: 400, lineHeight: 1 }}>
                       {posOrdinal(d.position)}
                     </div>
-                    <div
-                      style={{
-                        fontSize: "9px",
-                        color: "rgba(255,255,255,0.3)",
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        marginTop: "2px",
-                      }}
-                    >
+                    <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "2px" }}>
                       STANDING
                     </div>
                   </div>
@@ -627,10 +668,7 @@ export default function TeamDetailPage() {
 
       {/* ── NO DATA BANNER ── */}
       {!hasSeasonData && (
-        <div
-          className="max-w-7xl"
-          style={{ margin: "0 auto", padding: "16px 24px" }}
-        >
+        <div className="max-w-7xl" style={{ margin: "0 auto", padding: "16px 24px" }}>
           <div
             style={{
               display: "flex",
@@ -642,16 +680,7 @@ export default function TeamDetailPage() {
               borderLeft: "3px solid #555",
             }}
           >
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.75rem",
-                color: "rgba(255,255,255,0.4)",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
+            <p style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>
               ⚠️ No data synced for {season} — career history only
             </p>
           </div>
@@ -659,10 +688,7 @@ export default function TeamDetailPage() {
       )}
 
       {/* ── BODY ── */}
-      <div
-        className="max-w-7xl"
-        style={{ margin: "0 auto", padding: "32px 24px" }}
-      >
+      <div className="max-w-7xl" style={{ margin: "0 auto", padding: "32px 24px" }}>
         {/* Controls */}
         <div
           style={{
@@ -674,13 +700,7 @@ export default function TeamDetailPage() {
             gap: "12px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
             {(["results", "career"] as Tab[]).map((t) => (
               <button
                 key={t}
@@ -694,10 +714,7 @@ export default function TeamDetailPage() {
                   color: tab === t ? "#ffffff" : "rgba(255,255,255,0.3)",
                   background: "none",
                   border: "none",
-                  borderBottom:
-                    tab === t
-                      ? `2px solid ${teamColor}`
-                      : "2px solid transparent",
+                  borderBottom: tab === t ? `2px solid ${teamColor}` : "2px solid transparent",
                   padding: "10px 16px",
                   cursor: "pointer",
                   marginBottom: "-1px",
@@ -708,92 +725,32 @@ export default function TeamDetailPage() {
               </button>
             ))}
           </div>
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {AVAILABLE_SEASONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSeason(s)}
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  padding: "6px 14px",
-                  cursor: "pointer",
-                  border: "1px solid",
-                  transition: "all 0.2s",
-                  borderColor:
-                    season === s ? teamColor : "rgba(255,255,255,0.1)",
-                  backgroundColor: season === s ? teamColor : "transparent",
-                  color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+
+          {/* Season selector with scrollRef always mounted here */}
+          {seasonSelector(teamColor)}
         </div>
 
         {/* ── RACE RESULTS TAB ── */}
         {tab === "results" && (
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "var(--color-f1-red)",
-                marginBottom: "6px",
-              }}
-            >
+            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "6px" }}>
               Formula 1
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                fontWeight: 700,
-                color: "#ffffff",
-                margin: "0 0 4px 0",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-            >
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 4px 0", lineHeight: 1, letterSpacing: "-0.02em" }}>
               {season} RACE BY RACE
             </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.35)",
-                fontSize: "0.85rem",
-                marginBottom: "24px",
-              }}
-            >
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.85rem", marginBottom: "24px" }}>
               {season} FIA Formula One World Championship
             </p>
 
             {raceResults.length === 0 ? (
-              <div
-                style={{
-                  padding: "60px 16px",
-                  textAlign: "center",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "11px",
-                    color: "rgba(255,255,255,0.3)",
-                    letterSpacing: "0.15em",
-                  }}
-                >
+              <div style={{ padding: "60px 16px", textAlign: "center", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}>
                   NO DATA AVAILABLE FOR {season}
                 </p>
               </div>
             ) : (
               <div style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-                {/* Header */}
                 <div
                   style={{
                     display: "grid",
@@ -803,23 +760,11 @@ export default function TeamDetailPage() {
                     borderBottom: "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
-                  {["RD", "RACE", "DRIVER", "GRID", "POS", "PTS", "FL"].map(
-                    (h) => (
-                      <span
-                        key={h}
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "10px",
-                          fontWeight: 600,
-                          letterSpacing: "0.15em",
-                          textTransform: "uppercase",
-                          color: "rgba(255,255,255,0.25)",
-                        }}
-                      >
-                        {h}
-                      </span>
-                    ),
-                  )}
+                  {["RD", "RACE", "DRIVER", "GRID", "POS", "PTS", "FL"].map((h) => (
+                    <span key={h} style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
+                      {h}
+                    </span>
+                  ))}
                 </div>
 
                 {raceResults.map((race, ri) =>
@@ -828,131 +773,44 @@ export default function TeamDetailPage() {
                       key={`${race.round}-${d.driverId}`}
                       style={{
                         display: "grid",
-                        gridTemplateColumns:
-                          "3rem 1fr 5rem 5rem 5rem 5rem 5rem",
+                        gridTemplateColumns: "3rem 1fr 5rem 5rem 5rem 5rem 5rem",
                         alignItems: "center",
                         padding: "11px 16px",
                         borderBottom: "1px solid rgba(255,255,255,0.04)",
-                        backgroundColor:
-                          di === 0 && ri % 2 === 0
-                            ? "transparent"
-                            : di === 0
-                              ? "rgba(255,255,255,0.01)"
-                              : `${teamColor}06`,
+                        backgroundColor: di === 0 && ri % 2 === 0 ? "transparent" : di === 0 ? "rgba(255,255,255,0.01)" : `${teamColor}06`,
                         transition: "background-color 0.15s",
                       }}
-                      onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)")
-                      }
-                      onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        di === 0 && ri % 2 === 0
-                          ? "transparent"
-                          : di === 0
-                            ? "rgba(255,255,255,0.01)"
-                            : `${teamColor}06`)
-                      }
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = di === 0 && ri % 2 === 0 ? "transparent" : di === 0 ? "rgba(255,255,255,0.01)" : `${teamColor}06`)}
                     >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.8rem",
-                          color: "rgba(255,255,255,0.2)",
-                        }}
-                      >
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.8rem", color: "rgba(255,255,255,0.2)" }}>
                         {di === 0 ? race.round : ""}
                       </span>
-
                       <div>
                         {di === 0 && (
-                          <div
-                            style={{
-                              fontFamily: "var(--font-sans)",
-                              fontSize: "0.85rem",
-                              color: "#fff",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {race.raceName.replace("Grand Prix", "GP")}
+                          <div style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", color: "#fff", fontWeight: 400 }}>
+                            {race.raceName.replace("Grand Prix", "GP").toUpperCase()}
                           </div>
                         )}
                         {di === 0 && (
-                          <div
-                            style={{
-                              fontFamily: "var(--font-sans)",
-                              fontSize: "0.7rem",
-                              color: "rgba(255,255,255,0.3)",
-                              marginTop: "1px",
-                            }}
-                          >
+                          <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.7rem", color: "rgba(255,255,255,0.3)", marginTop: "1px" }}>
                             {race.country}
                           </div>
                         )}
                       </div>
-
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.8rem",
-                          color: teamColor,
-                          letterSpacing: "0.06em",
-                        }}
-                      >
-                        {d.driverCode ??
-                          d.driverName
-                            .split(" ")
-                            .slice(-1)[0]
-                            .slice(0, 3)
-                            .toUpperCase()}
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.8rem", color: teamColor, letterSpacing: "0.06em" }}>
+                        {d.driverCode ?? d.driverName.split(" ").slice(-1)[0].slice(0, 3).toUpperCase()}
                       </span>
-
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.85rem",
-                          color: "rgba(255,255,255,0.3)",
-                        }}
-                      >
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", color: "rgba(255,255,255,0.3)" }}>
                         {d.grid ?? "—"}
                       </span>
-
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.95rem",
-                          fontWeight: 700,
-                          color: posColor(d.position),
-                        }}
-                      >
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", fontWeight: 700, color: posColor(d.position) }}>
                         {d.positionText}
                       </span>
-
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.9rem",
-                          fontWeight: 700,
-                          color:
-                            (d.points ?? 0) > 0
-                              ? "#ffffff"
-                              : "rgba(255,255,255,0.2)",
-                        }}
-                      >
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 700, color: (d.points ?? 0) > 0 ? "#ffffff" : "rgba(255,255,255,0.2)" }}>
                         {d.points ?? 0}
                       </span>
-
-                      <span
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          fontSize: "0.72rem",
-                          color:
-                            d.fastestLapRank === 1
-                              ? "#a855f7"
-                              : "rgba(255,255,255,0.2)",
-                          fontWeight: d.fastestLapRank === 1 ? 700 : 400,
-                        }}
-                      >
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: d.fastestLapRank === 1 ? "#1ad009" : "rgba(255,255,255,0.2)", fontWeight: d.fastestLapRank === 1 ? 700 : 400 }}>
                         {d.fastestLapTime ?? "—"}
                       </span>
                     </div>
@@ -966,39 +824,13 @@ export default function TeamDetailPage() {
         {/* ── CAREER TAB ── */}
         {tab === "career" && (
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "11px",
-                fontWeight: 600,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "var(--color-f1-red)",
-                marginBottom: "6px",
-              }}
-            >
+            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "6px" }}>
               Formula 1
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                fontWeight: 700,
-                color: "#ffffff",
-                margin: "0 0 4px 0",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-            >
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 4px 0", lineHeight: 1, letterSpacing: "-0.02em" }}>
               CONSTRUCTOR HISTORY
             </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.35)",
-                fontSize: "0.85rem",
-                marginBottom: "24px",
-              }}
-            >
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.85rem", marginBottom: "24px" }}>
               All-time Formula One record
             </p>
 
@@ -1017,28 +849,12 @@ export default function TeamDetailPage() {
               }}
             >
               {[
-                {
-                  label: "Championships",
-                  value: careerTotals.championships,
-                  color: "#F5C842",
-                },
-                {
-                  label: "Seasons",
-                  value: careerTotals.seasons,
-                  color: "#fff",
-                },
+                { label: "Championships", value: careerTotals.championships, color: "#F5C842" },
+                { label: "Seasons", value: careerTotals.seasons, color: "#fff" },
                 { label: "Wins", value: careerTotals.wins, color: "#fff" },
-                {
-                  label: "Podiums",
-                  value: careerTotals.podiums,
-                  color: "#C0C0C0",
-                },
+                { label: "Podiums", value: careerTotals.podiums, color: "#C0C0C0" },
                 { label: "Points", value: careerTotals.points, color: "#fff" },
-                {
-                  label: "Fastest Laps",
-                  value: careerTotals.fastestLaps,
-                  color: "#a855f7",
-                },
+                { label: "Fastest Laps", value: careerTotals.fastestLaps, color: "#1ad009" },
               ].map((stat, i) => (
                 <div
                   key={stat.label}
@@ -1046,32 +862,14 @@ export default function TeamDetailPage() {
                     flex: 1,
                     minWidth: "80px",
                     textAlign: i === 0 ? "left" : "center",
-                    borderLeft:
-                      i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
                     padding: i > 0 ? "0 16px" : "0 16px 0 0",
                   }}
                 >
-                  <p
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: i === 0 ? "2.5rem" : "2rem",
-                      fontWeight: 700,
-                      color: stat.color,
-                      margin: 0,
-                      lineHeight: 1,
-                    }}
-                  >
+                  <p style={{ fontFamily: "var(--font-display)", fontSize: i === 0 ? "2.5rem" : "2rem", fontWeight: 700, color: stat.color, margin: 0, lineHeight: 1 }}>
                     {stat.value}
                   </p>
-                  <p
-                    style={{
-                      fontSize: "10px",
-                      color: "rgba(255,255,255,0.3)",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      margin: "2px 0 0 0",
-                    }}
-                  >
+                  <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em", textTransform: "uppercase", margin: "2px 0 0 0" }}>
                     {stat.label}
                   </p>
                 </div>
@@ -1090,22 +888,12 @@ export default function TeamDetailPage() {
                 }}
               >
                 {["Season", "Position", "Points", "Wins"].map((h) => (
-                  <span
-                    key={h}
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "10px",
-                      fontWeight: 600,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "rgba(255,255,255,0.25)",
-                    }}
-                  >
+                  <span key={h} style={{ fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
                     {h}
                   </span>
                 ))}
               </div>
-              {careerHistory.map((ch, i) => {
+              {careerHistory.map((ch) => {
                 const isChamp = ch.position === 1
                 return (
                   <div
@@ -1116,71 +904,25 @@ export default function TeamDetailPage() {
                       alignItems: "center",
                       padding: "13px 16px",
                       borderBottom: "1px solid rgba(255,255,255,0.04)",
-                      backgroundColor: isChamp
-                        ? "rgba(245,200,66,0.05)"
-                        : "transparent",
+                      backgroundColor: isChamp ? "rgba(245,200,66,0.05)" : "transparent",
                       transition: "background-color 0.15s",
                     }}
-                    onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "rgba(255,255,255,0.04)")
-                    }
-                    onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = isChamp
-                      ? "rgba(245,200,66,0.05)"
-                      : "transparent")
-                    }
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isChamp ? "rgba(245,200,66,0.05)" : "transparent")}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.95rem",
-                          fontWeight: 700,
-                          color: isChamp ? "#F5C842" : "#ffffff",
-                        }}
-                      >
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", fontWeight: 400, color: isChamp ? "#F5C842" : "#ffffff" }}>
                         {ch.season}
                       </span>
-                      {isChamp && (
-                        <span style={{ fontSize: "0.75rem" }}>🏆</span>
-                      )}
+                      {isChamp && <span style={{ fontSize: "0.75rem" }}>🏆</span>}
                     </div>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.9rem",
-                        fontWeight: 700,
-                        color: posColor(ch.position),
-                      }}
-                    >
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 400, color: posColor(ch.position) }}>
                       {posOrdinal(ch.position)}
                     </span>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.9rem",
-                        fontWeight: 700,
-                        color: "#ffffff",
-                      }}
-                    >
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 400, color: "#ffffff" }}>
                       {ch.points}
                     </span>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.9rem",
-                        fontWeight: 700,
-                        color:
-                          ch.wins > 0 ? "#F5C842" : "rgba(255,255,255,0.2)",
-                      }}
-                    >
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 400, color: ch.wins > 0 ? "#F5C842" : "rgba(255,255,255,0.2)" }}>
                       {ch.wins}
                     </span>
                   </div>

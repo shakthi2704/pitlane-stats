@@ -156,7 +156,7 @@ const Footer = () => {
             >
               Jolpica F1 API
             </a>{" "}
-            · Not affiliated with Formula 1 or FIA
+            · Not affiliated with any official ports organization.
           </p>
         </div>
       </div>

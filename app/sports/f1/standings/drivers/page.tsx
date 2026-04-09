@@ -267,8 +267,9 @@ export default function DriverStandingsPage() {
                 </p>
                 <p
                   style={{
-                    fontSize: "0.8rem",
-                    color: "rgba(255,255,255,0.4)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.1rem",
+                    color: "rgba(192, 192, 192, 0.9)",
                     margin: "2px 0 0 0",
                   }}
                 >
@@ -282,7 +283,7 @@ export default function DriverStandingsPage() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "2.5rem",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: "#F5C842",
                     margin: 0,
                     lineHeight: 1,

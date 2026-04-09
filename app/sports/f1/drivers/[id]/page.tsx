@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -12,6 +12,9 @@ import {
   FALLBACK_DRIVER,
   AVAILABLE_SEASONS,
 } from "@/lib/fi/f1-constants"
+
+
+const SEASONS = AVAILABLE_SEASONS
 
 interface DriverProfile {
   driver: {
@@ -121,6 +124,7 @@ export default function DriverDetailPage() {
   const [results, setResults] = useState<RaceResult[]>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>("results")
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const load = useCallback(
     async (s: string) => {
@@ -144,6 +148,21 @@ export default function DriverDetailPage() {
     load(season)
   }, [load, season])
 
+  useEffect(() => {
+    if (!scrollRef.current) return
+    const activeBtn = scrollRef.current.querySelector<HTMLElement>('[data-active="true"]')
+    activeBtn?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+  }, [season])
+
+
+
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+  }
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+  }
   if (loading) return <F1Loader message="LOADING DRIVER..." />
 
   if (!profile) {
@@ -223,12 +242,12 @@ export default function DriverDetailPage() {
       <div
         style={{
           position: "relative",
-          background: `linear-gradient(110deg, ${teamColor}18 0%, ${teamColor}08 40%, #0a0a0a 65%)`,
+          // background: `linear-gradient(110deg, ${teamColor}18 0%, ${teamColor}08 40%, #0a0a0a 65%)`,
           borderBottom: "1px solid rgba(255,255,255,0.06)",
           overflow: "hidden",
         }}
       >
-        {/* Left color bar */}
+
         {/* <div
           style={{
             position: "absolute",
@@ -296,7 +315,7 @@ export default function DriverDetailPage() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "0.65rem",
-                        color: "#777",
+                        color: teamColor,
                         letterSpacing: "0.12em",
                       }}
                     >
@@ -538,7 +557,7 @@ export default function DriverDetailPage() {
                   objectPosition: "bottom center",
                 }}
                 onError={(e) => {
-                  ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+                  ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
                 }}
               />
             </div>
@@ -603,28 +622,69 @@ export default function DriverDetailPage() {
           </div>
 
           {/* Season pills — same style as standings page */}
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            {AVAILABLE_SEASONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSeason(s)}
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  padding: "6px 14px",
-                  cursor: "pointer",
-                  border: "1px solid",
-                  transition: "all 0.2s",
-                  borderColor:
-                    season === s ? teamColor : "rgba(255,255,255,0.1)",
-                  backgroundColor: season === s ? teamColor : "transparent",
-                  color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
-                }}
-              >
-                {s}
-              </button>
-            ))}
+          {/* Season pills */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              onClick={scrollLeft}
+              style={{
+                cursor: "pointer",
+                padding: "6px 10px",
+                border: "1px solid rgba(255,255,255,0.1)",
+                background: "transparent",
+                color: "white",
+              }}
+            >
+              ◀
+            </button>
+
+            <div
+              ref={scrollRef}
+              style={{
+                display: "flex",
+                gap: "8px",
+                overflowX: "auto",
+                scrollBehavior: "smooth",
+                whiteSpace: "nowrap",
+                maxWidth: "200px",
+                scrollbarWidth: "none",
+              }}
+            >
+              {SEASONS.map((s) => (
+                <button
+                  key={s}
+                  data-active={season === s}
+                  onClick={() => setSeason(s)}
+                  style={{
+                    flex: "0 0 auto",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    padding: "6px 14px",
+                    cursor: "pointer",
+                    border: "1px solid",
+                    transition: "all 0.2s",
+                    borderColor: season === s ? teamColor : "rgba(255,255,255,0.1)",
+                    // backgroundColor: season === s ? teamColor : "transparent",
+                    color: season === s ? teamColor : "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={scrollRight}
+              style={{
+                cursor: "pointer",
+                padding: "6px 10px",
+                border: "1px solid rgba(255,255,255,0.1)",
+                background: "transparent",
+                color: "white",
+              }}
+            >
+              ▶
+            </button>
           </div>
         </div>
 
@@ -639,7 +699,7 @@ export default function DriverDetailPage() {
                 fontWeight: 600,
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "var(--color-f1-red)",
+                color: teamColor,
                 marginBottom: "6px",
               }}
             >
@@ -793,8 +853,8 @@ export default function DriverDetailPage() {
                       backgroundColor: "transparent",
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)")
+                    (e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.04)")
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.backgroundColor = "transparent")
@@ -814,13 +874,13 @@ export default function DriverDetailPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: "var(--font-sans)",
+                          fontFamily: "var(--font-display)",
                           fontSize: "0.88rem",
                           color: "#fff",
-                          fontWeight: 600,
+                          fontWeight: 400,
                         }}
                       >
-                        {r.raceName.replace("Grand Prix", "GP")}
+                        {r.raceName.replace("Grand Prix", "GP").toUpperCase()}
                       </div>
                       <div
                         style={{
@@ -901,7 +961,7 @@ export default function DriverDetailPage() {
                         fontSize: "0.75rem",
                         color:
                           r.fastestLapRank === 1
-                            ? "#a855f7"
+                            ? "#4ade80"
                             : "rgba(255,255,255,0.2)",
                         fontWeight: r.fastestLapRank === 1 ? 700 : 400,
                       }}
@@ -925,7 +985,7 @@ export default function DriverDetailPage() {
                 fontWeight: 600,
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "var(--color-f1-red)",
+                color: teamColor,
                 marginBottom: "6px",
               }}
             >
@@ -983,7 +1043,7 @@ export default function DriverDetailPage() {
                   fill
                   style={{ objectFit: "contain" }}
                   onError={(e) => {
-                    ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+                    ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
                   }}
                 />
               </div>
@@ -1004,7 +1064,7 @@ export default function DriverDetailPage() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "1.3rem",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: "#ffffff",
                     margin: 0,
                   }}
@@ -1098,12 +1158,12 @@ export default function DriverDetailPage() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "1.3rem",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     color: "rgba(255,255,255,0.6)",
                     margin: 0,
                   }}
                 >
-                  {teammateName}
+                  {teammateName.toUpperCase()}
                 </p>
               </div>
               <div
@@ -1120,7 +1180,7 @@ export default function DriverDetailPage() {
                   fill
                   style={{ objectFit: "contain" }}
                   onError={(e) => {
-                    ;(e.target as HTMLImageElement).src = FALLBACK_DRIVER
+                    ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
                   }}
                 />
               </div>
@@ -1194,8 +1254,8 @@ export default function DriverDetailPage() {
                         transition: "background-color 0.15s",
                       }}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor =
-                          "rgba(255,255,255,0.04)")
+                      (e.currentTarget.style.backgroundColor =
+                        "rgba(255,255,255,0.04)")
                       }
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.backgroundColor = "transparent")
@@ -1204,13 +1264,13 @@ export default function DriverDetailPage() {
                       <div>
                         <div
                           style={{
-                            fontFamily: "var(--font-roboto-mono)",
+                            fontFamily: "var(--font-display)",
                             fontSize: "0.88rem",
                             color: "#fff",
-                            fontWeight: 600,
+                            fontWeight: 400,
                           }}
                         >
-                          {r.raceName.replace("Grand Prix", "GP")}
+                          {r.raceName.replace("Grand Prix", "GP").toUpperCase()}
                         </div>
                         <div
                           style={{
@@ -1287,7 +1347,7 @@ export default function DriverDetailPage() {
                 fontWeight: 600,
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                color: "var(--color-f1-red)",
+                color: teamColor,
                 marginBottom: "6px",
               }}
             >
@@ -1441,13 +1501,13 @@ export default function DriverDetailPage() {
                       transition: "background-color 0.15s",
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        "rgba(255,255,255,0.04)")
+                    (e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.04)")
                     }
                     onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor = isChamp
-                        ? "rgba(245,200,66,0.05)"
-                        : "transparent")
+                    (e.currentTarget.style.backgroundColor = isChamp
+                      ? "rgba(245,200,66,0.05)"
+                      : "transparent")
                     }
                   >
                     <div
