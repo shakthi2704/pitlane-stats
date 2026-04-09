@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react"
 import type { Race } from "@/types/f1"
+import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
+
+
+
 const useCountdown = (targetDate: string | null) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -54,7 +58,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/F1/hero/hero-f1-2.jpg')`,
+          backgroundImage: `url('/F1/hero/hero-f1-3.jpg')`,
         }}
       />
       <div
@@ -89,7 +93,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
             className="text-white/90 text-xs tracking-widest uppercase"
             style={{ fontFamily: "var(--font-sans)" }}
           >
-            2025 Season
+            {CURRENT_SEASON} Season
           </span>
         </div>
         <div className="mt-8">
@@ -108,7 +112,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
             <br />
             <span style={{ color: "var(--color-f1-red)" }}>AWAY WE GO.</span>
           </h1>
-          <p className="text-white/50 text-sm max-w-sm leading-relaxed">
+          <p className="text-white/80 text-base max-w-sm leading-relaxed">
             Live standings, race results, lap times and circuit stats — all in
             one place.
           </p>
@@ -147,17 +151,17 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
                 <div key={unit.label} className="flex items-center">
                   <div className="text-center px-3 py-2 bg-black/60 border border-white/10 min-w-[56px]">
                     <div
-                      className="text-2xl font-bold text-white tabular-nums leading-none"
+                      className="text-3xl font-bold text-white/60 tabular-nums leading-none"
                       style={{ fontFamily: "var(--font-display)" }}
                     >
                       {String(unit.value).padStart(2, "0")}
                     </div>
-                    <div className="text-[9px] text-white/30 tracking-widest mt-0.5 uppercase">
+                    <div className="text-[12px] text-white/60 tracking-widest mt-0.5 uppercase">
                       {unit.label}
                     </div>
                   </div>
                   {i < 3 && (
-                    <span className="text-white/20 font-bold mx-0.5">:</span>
+                    <span className="text-white font-bold mx-0.5">:</span>
                   )}
                 </div>
               ))}

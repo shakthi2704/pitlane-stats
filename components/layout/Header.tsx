@@ -31,21 +31,12 @@ const Header = () => {
             href="/"
             className="px-3 py-1.5 text-sm text-muted-foreground hover:text-white transition-colors rounded-md hover:bg-white/5"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
+              fontFamily: "var(--font-display)",
               letterSpacing: "0.05em",
+              color: "var(--color-f1-red)",
             }}
           >
             ALL SPORTS
-          </Link>
-          <Link
-            href="/sports/f1"
-            className="px-3 py-1.5 text-sm text-white font-semibold transition-colors rounded-md bg-white/5"
-            style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              letterSpacing: "0.05em",
-            }}
-          >
-            F1
           </Link>
         </nav>
       </div>

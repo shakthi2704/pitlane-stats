@@ -1,10 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import { AVAILABLE_SEASONS, CIRCUIT_IMAGES, CURRENT_SEASON } from "@/lib/fi/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 import { getCountryFlag } from "@/types/f1/f1-api"
+
+const SEASONS = AVAILABLE_SEASONS
 
 interface Race {
   id: number
@@ -44,7 +46,9 @@ export default function RacesPage() {
   const [season, setSeason] = useState(CURRENT_SEASON)
   const [races, setRaces] = useState<Race[]>([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<"all" | "past" | "upcoming">("all")
+  const [filter, setFilter] = useState<"all" | "past" | "upcoming">("upcoming")
+  const scrollRef = useRef<HTMLDivElement>(null)
+
 
   useEffect(() => {
     setLoading(true)
@@ -64,6 +68,10 @@ export default function RacesPage() {
 
   const pastCount = races.filter((r) => r.date < today).length
   const upcomingCount = races.filter((r) => r.date >= today).length
+
+  const scrollLeft = () => scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+  const scrollRight = () => scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+
 
   return (
     <div>
@@ -123,31 +131,52 @@ export default function RacesPage() {
             </div>
 
             {/* Season selector */}
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              {AVAILABLE_SEASONS.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSeason(s)}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    padding: "6px 14px",
-                    cursor: "pointer",
-                    border: "1px solid",
-                    transition: "all 0.2s",
-                    borderColor:
-                      season === s
-                        ? "var(--color-f1-red)"
-                        : "rgba(255,255,255,0.1)",
-                    backgroundColor:
-                      season === s ? "var(--color-f1-red)" : "transparent",
-                    color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
-                  }}
-                >
-                  {s}
-                </button>
-              ))}
+            {/* Season pills */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <button
+                onClick={scrollLeft}
+                style={{ cursor: "pointer", padding: "6px 10px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "white" }}
+              >
+                ◀
+              </button>
+
+              <div
+                ref={scrollRef}
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  overflowX: "auto",
+                  scrollBehavior: "smooth",
+                  whiteSpace: "nowrap",
+                  maxWidth: "200px",
+                  scrollbarWidth: "none",
+                }}
+              >
+                {SEASONS.map(s => (
+                  <button
+                    key={s}
+                    data-active={season === s}
+                    onClick={() => setSeason(s)}
+                    style={{
+                      flex: "0 0 auto",
+                      fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
+                      padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
+                      borderColor: season === s ? "var(--color-f1-red)" : "rgba(255,255,255,0.1)",
+                      backgroundColor: season === s ? "var(--color-f1-red)" : "transparent",
+                      color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={scrollRight}
+                style={{ cursor: "pointer", padding: "6px 10px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "white" }}
+              >
+                ▶
+              </button>
             </div>
           </div>
 
@@ -162,9 +191,11 @@ export default function RacesPage() {
           >
             {(
               [
-                { key: "all", label: `All ${races.length}` },
-                { key: "past", label: `Completed ${pastCount}` },
                 { key: "upcoming", label: `Upcoming ${upcomingCount}` },
+                { key: "past", label: `Completed ${pastCount}` },
+                { key: "all", label: `All ${races.length}` },
+
+
               ] as const
             ).map((tab) => (
               <button
@@ -224,11 +255,11 @@ export default function RacesPage() {
                       position: "relative",
                       overflow: "hidden",
                       background: next
-                        ? "linear-gradient(180deg, rgba(225,6,0,0.08), rgba(0,0,0,0.9))"
-                        : "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.9))",
+                        ? "linear-gradient(180deg, rgba(27, 209, 7, 0.08), rgba(0,0,0,0.9))"
+                        : "linear-gradient(180deg, rgba(19, 168, 86, 0.02), rgba(0,0,0,0.9))",
                       border: "1px solid",
                       borderColor: next
-                        ? "rgba(225,6,0,0.4)"
+                        ? "rgba(36, 214, 9, 0.4)"
                         : "rgba(255,255,255,0.08)",
                       backdropFilter: "blur(6px)",
                       transition: "all 0.25s ease",
@@ -239,7 +270,7 @@ export default function RacesPage() {
                       const el = e.currentTarget as HTMLElement
                       el.style.transform = "translateY(-6px) scale(1.01)"
                       el.style.boxShadow = next
-                        ? "0 20px 50px rgba(225,6,0,0.25)"
+                        ? "0 20px 50px rgba(13, 210, 69, 0.25)"
                         : "0 16px 40px rgba(0,0,0,0.6)"
                     }}
                     onMouseLeave={(e) => {
@@ -270,7 +301,7 @@ export default function RacesPage() {
                       }}
                     >
                       <img
-                        src={`/F1/circuits/${race.circuit.circuitId}.jpg`}
+                        src={`/F1/circuits/images/${race.circuit.circuitId}.avif`}
                         alt={race.circuit.circuitName}
                         style={{
                           width: "100%",
@@ -281,10 +312,9 @@ export default function RacesPage() {
                           transition: "transform 0.4s ease",
                         }}
                         onError={(e) => {
-                          ;(e.target as HTMLImageElement).style.display = "none"
+                          (e.target as HTMLImageElement).style.display = "none"
                         }}
                       />
-
                       {/* Gradient overlay */}
                       <div
                         style={{
@@ -483,7 +513,7 @@ export default function RacesPage() {
                               fontSize: "0.72rem",
                               color: next
                                 ? "var(--color-f1-red)"
-                                : "rgba(255,255,255,0.25)",
+                                : "rgba(255, 255, 255, 0.25)",
                               margin: 0,
                               letterSpacing: "0.1em",
                               textTransform: "uppercase",

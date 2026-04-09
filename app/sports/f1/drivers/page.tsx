@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { getTeamColor, getFlagEmoji } from "@/types/f1/f1-api"
 import type { DriverStanding } from "@/types/f1"
@@ -13,6 +13,8 @@ import {
   TEAM_LOGOS,
 } from "@/lib/fi/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
+
+const SEASONS = AVAILABLE_SEASONS
 
 const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
   const teamColor = getTeamColor(standing.constructorId)
@@ -54,7 +56,7 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%)",
+              "linear-gradient(120deg, rgba(0,0,0,0.65) 20%, rgba(0,0,0,0.2) 90%, rgba(0,0,0,0.0) 100%)",
             zIndex: 1,
           }}
         />
@@ -198,7 +200,7 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
                 fontFamily: "var(--font-display)",
                 fontSize: "1.5rem",
                 fontWeight: 700,
-                color: medalColor,
+                // color: medalColor,
                 letterSpacing: "0.1em",
               }}
             >
@@ -223,10 +225,10 @@ const TopDriverCard = ({ standing }: { standing: DriverStanding }) => {
                   fontSize: "0.75rem",
                   color: "rgba(255,255,255,0.6)",
                   margin: 0,
-                  fontFamily: "var(--font-roboto-mono)",
+                  fontFamily: "var(--font-display)",
                 }}
               >
-                {standing.driver.givenName}
+                {standing.driver.givenName.toUpperCase()}
               </p>
             </div>
             <p
@@ -460,10 +462,10 @@ const DriverCard = ({ standing }: { standing: DriverStanding }) => {
                   fontSize: "0.5rem",
                   color: "rgba(255,255,255,0.6)",
                   margin: 0,
-                  fontFamily: "var(--font-roboto-mono)",
+                  fontFamily: "var(--font-display)",
                 }}
               >
-                {standing.driver.givenName}
+                {standing.driver.givenName.toUpperCase()}
               </p>
             </div>
 
@@ -537,6 +539,8 @@ export default function DriversPage() {
   const [standings, setStandings] = useState<DriverStanding[]>([])
   const [loading, setLoading] = useState(true)
 
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     setLoading(true)
     fetch(`/api/f1/driver-standings?season=${season}`)
@@ -547,6 +551,16 @@ export default function DriversPage() {
 
   const top3 = standings.slice(0, 3)
   const rest = standings.slice(3)
+
+
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+  }
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+  }
+
 
   return (
     <div>
@@ -605,31 +619,75 @@ export default function DriversPage() {
                 drivers
               </p>
             </div>
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              {AVAILABLE_SEASONS.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSeason(s)}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    padding: "6px 14px",
-                    cursor: "pointer",
-                    border: "1px solid",
-                    transition: "all 0.2s",
-                    borderColor:
-                      season === s
-                        ? "var(--color-f1-red)"
-                        : "rgba(255,255,255,0.1)",
-                    backgroundColor:
-                      season === s ? "var(--color-f1-red)" : "transparent",
-                    color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
-                  }}
-                >
-                  {s}
-                </button>
-              ))}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <button
+                onClick={scrollLeft}
+                style={{
+                  cursor: "pointer",
+                  padding: "6px 10px",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "transparent",
+                  color: "white",
+                }}
+              >
+                ◀
+              </button>
+              <div
+                ref={scrollRef}
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  overflowX: "auto",
+                  scrollBehavior: "smooth",
+                  whiteSpace: "nowrap",
+                  maxWidth: "200px",
+                  scrollbarWidth: "none",
+                }}
+              >
+                {SEASONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSeason(s)}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      padding: "6px 14px",
+                      cursor: "pointer",
+                      border: "1px solid",
+                      transition: "all 0.2s",
+                      borderColor:
+                        season === s
+                          ? "var(--color-f1-red)"
+                          : "rgba(255,255,255,0.1)",
+                      backgroundColor:
+                        season === s ? "var(--color-f1-red)" : "transparent",
+                      color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={scrollRight}
+                style={{
+                  cursor: "pointer",
+                  padding: "6px 10px",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "transparent",
+                  color: "white",
+                }}
+              >
+                ▶
+              </button>
             </div>
           </div>
         </div>

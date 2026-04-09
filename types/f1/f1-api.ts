@@ -135,16 +135,53 @@ export function getTeamColor(constructorId: string): string {
 
 export function getFlagEmoji(nationality: string): string {
     const flags: Record<string, string> = {
-        Dutch: "🇳🇱", British: "🇬🇧", Spanish: "🇪🇸", Monegasque: "🇲🇨",
-        Mexican: "🇲🇽", Australian: "🇦🇺", Canadian: "🇨🇦", Finnish: "🇫🇮",
-        French: "🇫🇷", German: "🇩🇪", Japanese: "🇯🇵", Thai: "🇹🇭",
-        Chinese: "🇨🇳", American: "🇺🇸", Danish: "🇩🇰", Italian: "🇮🇹",
-        Brazilian: "🇧🇷", Argentine: "🇦🇷", Swiss: "🇨🇭", NewZealander: "🇳🇿",
-        Austrian: "🇦🇹", Belgian: "🇧🇪", Polish: "🇵🇱"
+        // Core F1 nationalities
+        dutch: "🇳🇱",
+        british: "🇬🇧",
+        spanish: "🇪🇸",
+        monegasque: "🇲🇨",
+        mexican: "🇲🇽",
+        australian: "🇦🇺",
+        canadian: "🇨🇦",
+        finnish: "🇫🇮",
+        french: "🇫🇷",
+        german: "🇩🇪",
+        japanese: "🇯🇵",
+        thai: "🇹🇭",
+        chinese: "🇨🇳",
+        american: "🇺🇸",
+        danish: "🇩🇰",
+        italian: "🇮🇹",
+        brazilian: "🇧🇷",
+        argentine: "🇦🇷",
+        swiss: "🇨🇭",
+        austrian: "🇦🇹",
+        belgian: "🇧🇪",
+        polish: "🇵🇱",
+        swedish: "🇸🇪",
+        sweden: "🇸🇪",
+        // Fixed + variants
+        "new zealander": "🇳🇿",
+        newzealander: "🇳🇿",
+        "south african": "🇿🇦",
+        southafrican: "🇿🇦",
+        irish: "🇮🇪",
+        indian: "🇮🇳",
+        malaysian: "🇲🇾",
+        indonesian: "🇮🇩",
+        venezuelan: "🇻🇪",
+        colombian: "🇨🇴",
+        czech: "🇨🇿",
+        portuguese: "🇵🇹",
+        uk: "🇬🇧",
+        usa: "🇺🇸",
+        russian: "🇷🇺",
     }
-    return flags[nationality] ?? "🏁"
-}
 
+    const key = nationality?.trim().toLowerCase()
+
+    return flags[key] ?? "🏁"
+}
 
 
 
@@ -180,8 +217,8 @@ export function getCountryFlag(value: string | null): string {
         Australian: "🇦🇺",
         Canadian: "🇨🇦",
         Finnish: "🇫🇮",
-        French: "🇫🇷",
-        German: "🇩🇪",
+        France: "🇫🇷",
+        Germany: "🇩🇪",
         Japanese: "🇯🇵",
         Thai: "🇹🇭",
         Chinese: "🇨🇳",
@@ -195,6 +232,11 @@ export function getCountryFlag(value: string | null): string {
         Austrian: "🇦🇹",
         Belgian: "🇧🇪",
         Polish: "🇵🇱",
+        Russia: "🇷🇺",
+        Portugal: "🇵🇹",
+        Turkey: "🇹🇷",
+        Sweden: "🇸🇪",
+        Swedish: "🇸🇪",
     }
 
     return flags[value ?? ""] ?? "🏁"

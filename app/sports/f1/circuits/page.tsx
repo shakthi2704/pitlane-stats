@@ -22,7 +22,7 @@ interface Circuit {
 
 const getColor = (id: string) => CIRCUIT_COLORS[id] ?? "#E10600"
 
-// ✅ Image Resolver Component (INSIDE SAME FILE)
+
 function CircuitImage({
   circuitId,
   alt,

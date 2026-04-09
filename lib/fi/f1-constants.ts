@@ -71,6 +71,24 @@ export const DRIVER_IMAGES: Record<string, string> = {
     doohan: "/F1/drivers/jack-doohan.avif",
     tsunoda: "/F1/drivers/yuki-tsunoda.avif",
     mick_schumacher: "/F1/drivers/MickSchumacher.avif",
+    arvid_lindblad: "/F1/drivers/arvid-lindblad.avif",
+    kevin_magnussen: "/F1/drivers/kevin-magnussen.png",
+    ricciardo: "/F1/drivers/daniel-ricciardo.png",
+    zhou: "/F1/drivers/guanyu-zhou.png",
+    sargeant: "/F1/drivers/logan-sargeant.png",
+    de_vries: "/F1/drivers/nyck-de-vries.png",
+    vettel: "/F1/drivers/sebastian-vettel.png",
+    sirotkin: "/F1/drivers/sergey-sirotkin.png",
+    latifi: "/F1/drivers/nicholas-latifi.png",
+    giovinazzi: "/F1/drivers/antonio-giovinazzi.png",
+    kubica: "/F1/drivers/robert-kubica.png",
+    mazepin: "/F1/drivers/nikita-mazepin.png",
+    raikkonen: "/F1/drivers/kimi-räikkönen.png",
+    grosjean: "/F1/drivers/romain-grosjean.png",
+    ericsson: "/F1/drivers/marcus-ericsson.png",
+    brendon_hartley: "/F1/drivers/brendon-hartley.png",
+    vandoorne: "/F1/drivers/stoffel-vandoorne.png",
+    kvyat: "/F1/drivers/daniil-kvyat.png",
 
 };
 
@@ -87,6 +105,13 @@ export const TEAM_CARS: Record<string, string> = {
     alpine: "/F1/team/2026alpinecarright.avif",
     audi: "/F1/team/2026audicarright.avif",
     cadillac: "/F1/team/2026cadillaccarright.avif",
+    alphatauri: "/F1/team/alphaTauri.png",
+    renault: "/F1/team/renault.png",
+    force_india: "/F1/team/force-india.png",
+    sauber: "/F1/team/2025kicksaubercarright.avif",
+    toro_rosso: "/F1/team/toro-rosso.png",
+    racing_point: "/F1/team/racing-point.png",
+    alfa: "/F1/team/alfa.png",
 }
 
 export const TEAM_LOGOS: Record<string, string> = {

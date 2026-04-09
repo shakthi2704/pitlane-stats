@@ -15,6 +15,7 @@ import type {
 import F1Loader from "@/components/f1/F1Loader"
 
 import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import NewsSection from "@/components/f1/NewsSection"
 
 const SEASON = CURRENT_SEASON
 
@@ -75,6 +76,7 @@ export default function F1Page() {
               constructorStandings={constructorStandings}
             />
             <LastRaceSection race={lastRace} results={lastRaceResults} />
+            <NewsSection />
             {/* <PartnersSection /> */}
           </div>
         </>
