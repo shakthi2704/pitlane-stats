@@ -187,3 +187,246 @@ model F1News {
   @@index([publishedAt])
   @@map("f1_news")
 }
+
+// ─── MotoGP Reference Data ──────────────────────────────────────────────────
+
+// Categories: MotoGP, Moto2, Moto3
+// UUIDs are stable across all seasons — we store them as constants too
+model MotoGPCategory {
+  id        String @id              // UUID from API e.g. "e8c110ad-..."
+  name      String                  // "MotoGP™" | "Moto2™" | "Moto3™"
+  legacyId  Int                     // 3 = MotoGP, 2 = Moto2, 1 = Moto3
+
+  riders       MotoGPRider[]
+  events       MotoGPEvent[]
+  riderStandings      MotoGPRiderStanding[]
+  constructorStandings MotoGPConstructorStanding[]
+  teamStandings        MotoGPTeamStanding[]
+
+  @@map("motogp_categories")
+}
+
+model MotoGPRider {
+  id          String  @id           // riders_api_uuid from API
+  fullName    String
+  firstName   String?
+  lastName    String?
+  nationality String?               // country.iso e.g. "ES"
+  birthDate   String?               // "1993-02-17"
+  birthCity   String?
+  number      Int?                  // current bike number
+  legacyId    Int?                  // for building photo URLs
+  categoryId  String                // which class they primarily ride in
+  photoUrl    String?                 // constructed from legacyId e.g. "https
+  category    MotoGPCategory @relation(fields: [categoryId], references: [id])
+
+  results     MotoGPResult[]
+  standings   MotoGPRiderStanding[]
+
+  @@map("motogp_riders")
+}
+
+model MotoGPTeam {
+  id       String @id               // UUID from API
+  name     String
+  legacyId Int?
+  color    String?                  // team color from career[].team.color
+  textColor String?
+
+  results   MotoGPResult[]
+  standings MotoGPTeamStanding[]
+
+  @@map("motogp_teams")
+}
+
+model MotoGPConstructor {
+  id       String @id               // UUID from API
+  name     String                   // "Ducati" | "KTM" | "Honda" | "Yamaha" | "Aprilia"
+  legacyId Int?
+
+  results   MotoGPResult[]
+  standings MotoGPConstructorStanding[]
+
+  @@map("motogp_constructors")
+}
+
+model MotoGPCircuit {
+  id       String @id               // UUID from API  e.g. "abc123..."
+  name     String                   // "Circuit Ricardo Tormo"
+  place    String?                  // city/place
+  nation   String?                  // country short code e.g. "SPA"
+  legacyId Int?
+
+  events MotoGPEvent[]
+
+  @@map("motogp_circuits")
+}
+
+// ─── Season Data ─────────────────────────────────────────────────────────────
+
+model MotoGPSeason {
+  id      String @id               // UUID from API
+  year    Int    @unique
+  current Boolean @default(false)
+
+  events               MotoGPEvent[]
+  riderStandings       MotoGPRiderStanding[]
+  constructorStandings MotoGPConstructorStanding[]
+  teamStandings        MotoGPTeamStanding[]
+
+  @@map("motogp_seasons")
+}
+
+model MotoGPEvent {
+  id            String  @id         // UUID from API
+  seasonId      String
+  season        MotoGPSeason   @relation(fields: [seasonId], references: [id])
+  categoryId    String
+  category      MotoGPCategory @relation(fields: [categoryId], references: [id])
+  circuitId     String?
+  circuit       MotoGPCircuit? @relation(fields: [circuitId], references: [id])
+
+  name          String              // "GRAND PRIX OF THAILAND"
+  shortName     String?             // "THA"
+  sponsoredName String?             // "PT Grand Prix of Thailand"
+  dateStart     String              // "2025-02-28"
+  dateEnd       String              // "2025-03-02"
+  status        String?             // "FINISHED"
+  isTest        Boolean @default(false)
+
+  sessions MotoGPSession[]
+
+  @@unique([seasonId, categoryId, shortName])
+  @@index([seasonId, categoryId])
+  @@map("motogp_events")
+}
+
+model MotoGPSession {
+  id        String  @id             // UUID from API
+  eventId   String
+  event     MotoGPEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // FP | PR | Q | SPR | WUP | RAC
+  // Q appears twice (Q1 + Q2) — differentiated by sessionNumber
+  type          String
+  sessionNumber Int     @default(1) // 1 or 2 for Q1/Q2, FP1/FP2 etc
+  date          String?             // "2025-11-16T14:00:00+00:00"
+  status        String?             // "FINISHED"
+
+  // Weather/conditions
+  trackCondition String?
+  airTemp        String?
+  humidity       String?
+  groundTemp     String?
+  weather        String?
+
+  results MotoGPResult[]
+
+  @@index([eventId, type])
+  @@map("motogp_sessions")
+}
+
+model MotoGPResult {
+  id            String @id          // UUID from API classification row
+  sessionId     String
+  session       MotoGPSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  riderId       String
+  rider         MotoGPRider    @relation(fields: [riderId], references: [id])
+  teamId        String?
+  team          MotoGPTeam?    @relation(fields: [teamId], references: [id])
+  constructorId String?
+  constructor   MotoGPConstructor? @relation(fields: [constructorId], references: [id])
+
+  position      Int?
+  status        String?             // "INSTND" | "DNF" | "DNS" etc
+  points        Float?
+  time          String?             // "40:52.458" for race, null for DNF
+  gapFirst      String?             // gap to leader
+  gapLap        Int?                // laps behind leader (if >1 lap down)
+  averageSpeed  Float?              // km/h — race/sprint only
+  totalLaps     Int?
+
+  // FP + Qualifying only
+  bestLapTime   String?             // "01:28.809"
+  bestLapNumber Int?
+  topSpeed      Float?              // km/h
+  gapPrev       String?             // gap to rider ahead — quali only
+
+  createdAt DateTime @default(now())
+
+  @@unique([sessionId, riderId])
+  @@index([sessionId])
+  @@index([riderId])
+  @@map("motogp_results")
+}
+
+// ─── Standings ───────────────────────────────────────────────────────────────
+
+model MotoGPRiderStanding {
+  id         Int    @id @default(autoincrement())
+  seasonId   String
+  season     MotoGPSeason   @relation(fields: [seasonId], references: [id])
+  categoryId String
+  category   MotoGPCategory @relation(fields: [categoryId], references: [id])
+  riderId    String
+  rider      MotoGPRider    @relation(fields: [riderId], references: [id])
+
+  position      Int
+  points        Float
+  raceWins      Int    @default(0)
+  podiums       Int    @default(0)
+  sprintWins    Int    @default(0)
+  sprintPodiums Int    @default(0)
+
+  // team + constructor stored as strings (denormalised for query speed)
+  teamName      String?
+  constructorName String?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, categoryId, riderId])
+  @@index([seasonId, categoryId, position])
+  @@map("motogp_rider_standings")
+}
+
+// Constructor standings: grouped by constructor name per season/category
+// (API returns per-rider rows — we aggregate in sync service)
+model MotoGPConstructorStanding {
+  id           Int    @id @default(autoincrement())
+  seasonId     String
+  season       MotoGPSeason   @relation(fields: [seasonId], references: [id])
+  categoryId   String
+  category     MotoGPCategory @relation(fields: [categoryId], references: [id])
+  constructorId String
+  constructor  MotoGPConstructor @relation(fields: [constructorId], references: [id])
+
+  position  Int
+  points    Float
+  wins      Int   @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, categoryId, constructorId])
+  @@index([seasonId, categoryId, position])
+  @@map("motogp_constructor_standings")
+}
+
+model MotoGPTeamStanding {
+  id         Int    @id @default(autoincrement())
+  seasonId   String
+  season     MotoGPSeason   @relation(fields: [seasonId], references: [id])
+  categoryId String
+  category   MotoGPCategory @relation(fields: [categoryId], references: [id])
+  teamId     String
+  team       MotoGPTeam @relation(fields: [teamId], references: [id])
+
+  position  Int
+  points    Float
+  wins      Int   @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, categoryId, teamId])
+  @@index([seasonId, categoryId, position])
+  @@map("motogp_team_standings")
+}

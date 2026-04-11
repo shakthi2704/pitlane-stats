@@ -1,0 +1,260 @@
+/* ─── Fonts (CLEANED) ───────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500&display=swap');
+
+@import "leaflet/dist/leaflet.css";
+@import "tailwindcss";
+
+/* ─── THEME ─────────────────────────────────────────────────── */
+@theme {
+
+  /* Base Colors */
+  --color-background: hsl(0 0% 5%);
+  --color-foreground: hsl(0 0% 95%);
+
+  --color-card: hsl(0 0% 10%);
+  --color-card-foreground: hsl(0 0% 95%);
+
+  --color-popover: hsl(0 0% 10%);
+  --color-popover-foreground: hsl(0 0% 95%);
+
+  --color-secondary: hsl(0 0% 14%);
+  --color-secondary-foreground: hsl(0 0% 90%);
+
+  --color-muted: hsl(0 0% 14%);
+  --color-muted-foreground: hsl(0 0% 55%);
+
+  --color-accent: hsl(0 0% 16%);
+  --color-accent-foreground: hsl(0 0% 95%);
+
+  --color-border: hsl(0 0% 18%);
+  --color-input: hsl(0 0% 18%);
+
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+
+  /* 🎯 Dynamic Accent (IMPORTANT) */
+  --accent: #E10600;
+  --accent-foreground: #ffffff;
+
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-foreground);
+  --color-ring: var(--accent);
+
+  /* Sport Colors */
+  --color-f1: #E10600;
+  --color-motogp: #FF6B00;
+  --color-football: #00A651;
+  --color-cricket: #0096C7;
+  --color-basketball: #F87831;
+  --color-tennis: #A3C72F;
+  --color-nfl: #013369;
+  --color-golf: #2ECC71;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Fonts */
+  --font-sans: "Inter", "DM Sans", sans-serif;
+  --font-display: "Russo One", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-spin: spin 1s linear infinite;
+  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* ─── SPORT THEMES (DYNAMIC SWITCHING) ─────────────────────── */
+:root {
+  --accent: var(--color-f1);
+}
+
+[data-sport="f1"] {
+  --accent: var(--color-f1);
+}
+
+[data-sport="motogp"] {
+  --accent: var(--color-motogp);
+}
+
+[data-sport="football"] {
+  --accent: var(--color-football);
+}
+
+[data-sport="cricket"] {
+  --accent: var(--color-cricket);
+}
+
+[data-sport="basketball"] {
+  --accent: var(--color-basketball);
+}
+
+[data-sport="tennis"] {
+  --accent: var(--color-tennis);
+}
+
+[data-sport="nfl"] {
+  --accent: var(--color-nfl);
+}
+
+[data-sport="golf"] {
+  --accent: var(--color-golf);
+}
+
+/* ─── BASE ─────────────────────────────────────────────────── */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+}
+
+/* ─── COMPONENTS ───────────────────────────────────────────── */
+@layer utilities {
+
+  .sport-grid-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--color-card);
+  }
+
+  .sport-grid-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .sport-grid-card.active:hover {
+    box-shadow: 0 20px 40px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  /* Accent bar (use in UI) */
+  .accent-bar {
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* Standings */
+  .standings-row-1 {
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.08), transparent);
+  }
+
+  .standings-row-2 {
+    background: linear-gradient(90deg, rgba(192, 192, 192, 0.06), transparent);
+  }
+
+  .standings-row-3 {
+    background: linear-gradient(90deg, rgba(205, 127, 50, 0.06), transparent);
+  }
+
+  /* Stagger animations */
+  .stagger-1 {
+    animation-delay: 0.05s;
+    opacity: 0;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.10s;
+    opacity: 0;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.15s;
+    opacity: 0;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.20s;
+    opacity: 0;
+  }
+
+  .stagger-5 {
+    animation-delay: 0.25s;
+    opacity: 0;
+  }
+
+  .stagger-6 {
+    animation-delay: 0.30s;
+    opacity: 0;
+  }
+
+  .stagger-7 {
+    animation-delay: 0.35s;
+    opacity: 0;
+  }
+
+  .stagger-8 {
+    animation-delay: 0.40s;
+    opacity: 0;
+  }
+}
+
+/* ─── SCROLLBAR ───────────────────────────────────────────── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
