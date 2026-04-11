@@ -237,7 +237,8 @@ export default function DriverDetailPage() {
     teammate?.driverId
 
   return (
-    <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
+    // <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
+    <div data-sport="f1" data-team={constructorId}>
       {/* ── HERO ── full bleed bg, constrained content ── */}
       <div
         style={{
@@ -315,7 +316,7 @@ export default function DriverDetailPage() {
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: "0.65rem",
-                        color: teamColor,
+                        color: "var(--accent)",
                         letterSpacing: "0.12em",
                       }}
                     >
@@ -1594,6 +1595,6 @@ export default function DriverDetailPage() {
           </div>
         )}
       </div>
-    </div>
+    </div >
   )
 }

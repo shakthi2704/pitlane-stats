@@ -39,7 +39,7 @@ const F1navBar = () => {
             <div
               className="px-2 py-0.5 text-white font-bold text-lg"
               style={{
-                backgroundColor: "var(--color-f1-red)",
+                backgroundColor: "var(--accent)",
                 fontFamily: "var(--font-display)",
                 letterSpacing: "0.1em",
               }}

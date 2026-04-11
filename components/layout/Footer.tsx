@@ -68,23 +68,15 @@ const Footer = () => {
           <div>
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="w-8 h-8 bg-[var(--color-f1-red)] flex items-center justify-center">
-                <span
-                  className="text-white text-xs font-bold"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  PS
-                </span>
-              </div>
+
               <span
-                className="text-white font-bold text-lg"
+                className="text-white font-bold text-lg italic border-b-4 border-white"
                 style={{
                   fontFamily: "var(--font-display)",
                   letterSpacing: "0.05em",
                 }}
               >
-                PITLANE
-                <span style={{ color: "var(--color-f1-red)" }}>STATS</span>
+                SPORTSPHERE
               </span>
             </Link>
 

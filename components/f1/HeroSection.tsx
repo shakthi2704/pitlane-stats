@@ -72,7 +72,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(0deg, rgba(239, 13, 13, 0.23) 1%, transparent 5%)",
+            "linear-gradient(0deg, rgba(252, 0, 0, 0.23) 1%, transparent 5%)",
         }}
       />
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--color-f1-red)]" />
@@ -110,7 +110,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
           >
             LIGHTS OUT.
             <br />
-            <span style={{ color: "var(--color-f1-red)" }}>AWAY WE GO.</span>
+            <span style={{ color: "var(--accent)" }}>AWAY WE GO.</span>
           </h1>
           <p className="text-white/80 text-base max-w-sm leading-relaxed">
             Live standings, race results, lap times and circuit stats — all in
@@ -120,8 +120,8 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
         {nextRace && (
           <div className="bg-black/70 mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
             {/* Race info */}
-            <div className="border-l-2 border-[var(--color-f1-red)] pl-4">
-              <p className="text-[var(--color-f1-red)] text-[10px] font-semibold tracking-[0.25em] uppercase mb-1">
+            <div className="border-l-2 border-[var(--accent)] pl-4">
+              <p className="text-[var(--accent))] text-[10px] font-semibold tracking-[0.25em] uppercase mb-1">
                 Next Race · Round {nextRace.round}
               </p>
               <p
