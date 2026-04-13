@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+import { FALLBACK_RIDER, MOTOGP_RED } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -13,7 +14,6 @@ function getFlagEmoji(iso: string): string {
     )
 }
 
-const FALLBACK_PHOTO = "/F1/drivers/placeholder.svg"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,7 +51,7 @@ interface Event {
 
 const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: number; eventId: string }) => {
     const color = getConstructorColor(result.constructor?.name ?? "")
-    const photoUrl = result.rider.photoUrl ?? FALLBACK_PHOTO
+    const photoUrl = result.rider.photoUrl ?? FALLBACK_RIDER
     const nameParts = result.rider.fullName.split(" ")
     const firstName = nameParts[0]
     const lastName = nameParts.slice(1).join(" ")
@@ -92,10 +92,10 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
 
                 {/* Rank watermark */}
                 <div style={{
-                    position: "absolute", right: "-10px", bottom: "-20px",
+                    position: "absolute", right: "5px", bottom: "-20px",
                     fontFamily: "var(--font-display)", fontSize: "9rem",
                     fontWeight: 900, lineHeight: 1,
-                    color: "rgba(0,0,0,0.2)", zIndex: 2,
+                    color: "rgba(0,0,0,0.3)", zIndex: 2,
                     userSelect: "none", pointerEvents: "none",
                 }}>
                     {rank}
@@ -111,7 +111,7 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
                         objectFit: "contain", objectPosition: "bottom right",
                         zIndex: 3,
                     }}
-                    onError={e => { (e.target as HTMLImageElement).src = FALLBACK_PHOTO }}
+                    onError={e => { (e.target as HTMLImageElement).src = FALLBACK_RIDER }}
                 />
 
                 {/* Content */}
@@ -135,7 +135,7 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
                         <span style={{
                             fontFamily: "var(--font-display)",
                             fontSize: "0.85rem", fontWeight: 700,
-                            color: medalColors[rank - 1],
+                            color: "rgba(255,255,255,0.9)",
                             letterSpacing: "0.1em",
                         }}>
                             P{rank}
@@ -149,7 +149,7 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
                                 {getFlagEmoji(result.rider.nationality ?? "")}
                             </span>
                             <p style={{
-                                fontFamily: "var(--font-sans)", fontSize: "0.75rem",
+                                fontFamily: "var(--font-display)", fontSize: "0.75rem",
                                 color: "rgba(255,255,255,0.65)", margin: 0,
                             }}>
                                 {firstName}
@@ -167,8 +167,8 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
 
                         <p style={{
                             fontFamily: "var(--font-display)",
-                            fontSize: "0.8rem", fontWeight: 600,
-                            color: medalColors[rank - 1],
+                            fontSize: "0.8rem", fontWeight: 400,
+                            color: "#fff",
                             margin: "6px 0 0 0",
                         }}>
                             {rank === 1 ? result.time : result.gapFirst ? `+${result.gapFirst}` : result.time ?? result.status}
@@ -176,9 +176,12 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
 
                         {/* Stats bar */}
                         <div style={{
-                            display: "flex", alignItems: "center", gap: "10px",
-                            paddingTop: "8px", marginTop: "6px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            paddingTop: "8px",
                             borderTop: "1px solid rgba(255,255,255,0.1)",
+                            marginTop: "auto",
                         }}>
                             {[
                                 { label: "Laps", value: result.totalLaps ?? "—" },
@@ -219,64 +222,153 @@ interface Props {
 const MotoGPLastRace = ({ event, results }: Props) => {
     if (!event || results.length === 0) return null
 
-    const top3 = results.slice(0, 3)
-    const podiumOrder = [top3[1], top3[0], top3[2]]
-    const tableResults = results.slice(0, 10)
 
+    // const top3 = results.slice(0, 3)
+    const podiumOrder = [results[1], results[0], results[2]]
+    const tableResults = results.slice(3)
+
+    type Value = string | number | null | undefined;
+
+    const formatPosition = (v: Value): string => {
+        if (v === null || v === undefined) return "";
+
+        const s = String(v).trim();
+
+        if (!s) return "";
+
+        if (["OUTSTND", "N/A", "NA", "-"].includes(s)) return "";
+
+        return s;
+    };
+    const isZeroGap = (v: any) =>
+        v == null ||
+        Number(v) === 0;
     return (
-        <div style={{ marginBottom: "48px" }}>
+        <div className="bg-black p-6 mb-10 ">
 
             {/* Section header */}
             <div style={{
-                display: "flex", alignItems: "center",
-                justifyContent: "space-between", marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "24px",
             }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "4px", height: "24px", backgroundColor: MOTOGP_RED }} />
-                    <div>
-                        <h2 style={{
+                    <div
+                        style={{
+                            width: "4px",
+                            height: "24px",
+                            backgroundColor: "var(--accent)",
+                        }}
+                    />
+                    <h2
+                        style={{
                             fontFamily: "var(--font-display)",
-                            fontSize: "1.1rem", fontWeight: 700,
-                            letterSpacing: "0.08em", textTransform: "uppercase",
-                            color: "#fff", margin: 0,
-                        }}>
-                            Last Race
-                        </h2>
-                        <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)", margin: "2px 0 0 0" }}>
-                            {event.sponsoredName ?? event.name} ·{" "}
-                            {new Date(event.dateEnd).toLocaleDateString("en-GB", {
-                                day: "numeric", month: "long", year: "numeric",
-                            })}
-                        </p>
-                    </div>
+                            fontSize: "1.5rem",
+                            fontWeight: 700,
+                            color: "#ffffff",
+                            margin: 0,
+                        }}
+                    >
+                        LAST RACE
+                    </h2>
                 </div>
 
                 <Link
                     href={`/sports/motogp/races/${event.id}`}
                     style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "11px", fontWeight: 600,
-                        letterSpacing: "0.15em", textTransform: "uppercase",
-                        color: "#fff", textDecoration: "none",
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        color: "rgba(255,255,255,0.3)",
+                        textDecoration: "none",
+                    }}
+                >
+                    Full Results →
+                </Link>
+            </div>
+            <div
+                style={{
+                    padding: "14px 16px",
+                    marginBottom: "20px",
+                    borderLeft: "3px solid var(--accent)",
+                    backgroundColor: `color-mix(in srgb, var(--accent) 10%, transparent)`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+
+                <div>
+                    <p
+                        style={{
+                            fontFamily: "var(--font-display)",
+                            fontSize: "1.1rem",
+                            fontWeight: 700,
+                            color: "#ffffff",
+                            margin: 0,
+                        }}
+                    >
+                        {event.sponsoredName}
+                    </p>
+
+                    <p
+                        style={{
+                            fontSize: "0.8rem",
+                            color: "rgba(255,255,255,0.7)",
+                            margin: "4px 0 0 0",
+                            fontFamily: "var(--font-roboto)",
+                        }}
+                    >
+                        {new Date(event.dateEnd).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        })}
+                    </p>
+                </div>
+
+                {/* RIGHT CTA (like F1) */}
+                <Link
+                    href={`/sports/motogp/races/${event.id}`} // adjust if needed
+                    style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        color: "#ffffff",
+                        textDecoration: "none",
                         padding: "8px 16px",
                         border: "1px solid rgba(255,255,255,0.2)",
-                        transition: "all 0.2s", whiteSpace: "nowrap",
+                        transition: "all 0.2s",
+                        whiteSpace: "nowrap",
                     }}
-                    onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)"
-                            ; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)"
+                    onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = "rgba(255,255,255,0.05)"
+                        el.style.borderColor = "rgba(255,255,255,0.4)"
                     }}
-                    onMouseLeave={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"
-                            ; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)"
+                    onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = "transparent"
+                        el.style.borderColor = "rgba(255,255,255,0.2)"
                     }}
                 >
                     Full Results
                 </Link>
             </div>
-
             {/* Podium cards — P2 / P1 / P3 */}
-            <div style={{ display: "flex", gap: "8px", marginBottom: "24px", alignItems: "flex-end" }}>
+            <div
+                style={{
+                    display: "flex",
+                    gap: "8px",
+                    marginBottom: "24px",
+                    alignItems: "flex-end",
+                }}
+            >
                 {podiumOrder.map((r, idx) => {
                     if (!r) return null
                     const rank = idx === 0 ? 2 : idx === 1 ? 1 : 3
@@ -295,7 +387,7 @@ const MotoGPLastRace = ({ event, results }: Props) => {
                     backgroundColor: "rgba(255,255,255,0.03)",
                     borderBottom: "1px solid rgba(255,255,255,0.06)",
                 }}>
-                    {["POS.", "", "RIDER", "NAT.", "CONSTRUCTOR", "TIME / GAP"].map(h => (
+                    {["POS.", "", "RIDER", "NATIONALITY", "CONSTRUCTOR", "TIME / GAP"].map(h => (
                         <span key={h} style={{
                             fontFamily: "var(--font-display)",
                             fontSize: "10px", fontWeight: 600,
@@ -310,7 +402,7 @@ const MotoGPLastRace = ({ event, results }: Props) => {
                 {/* Rows */}
                 {tableResults.map((r, i) => {
                     const color = getConstructorColor(r.constructor?.name ?? "")
-                    const photoUrl = r.rider.photoUrl ?? FALLBACK_PHOTO
+                    const photoUrl = r.rider.photoUrl ?? FALLBACK_RIDER
                     const nameParts = r.rider.fullName.split(" ")
                     const initial = nameParts[0]?.[0] ?? ""
                     const lastName = nameParts.slice(1).join(" ")
@@ -339,7 +431,9 @@ const MotoGPLastRace = ({ event, results }: Props) => {
                                     fontSize: "0.9rem", fontWeight: 700,
                                     color: i < 3 ? "#fff" : "rgba(255,255,255,0.4)",
                                 }}>
-                                    {r.position ?? r.status ?? "—"}
+                                    {formatPosition(r.position) ||
+                                        formatPosition(r.status) ||
+                                        "—"}
                                 </span>
 
                                 {/* Avatar */}
@@ -352,15 +446,20 @@ const MotoGPLastRace = ({ event, results }: Props) => {
                                     <img
                                         src={photoUrl}
                                         alt={r.rider.fullName}
-                                        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                                        onError={e => { (e.target as HTMLImageElement).src = FALLBACK_PHOTO }}
+                                        style={{
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            objectPosition: "top",
+                                        }}
+                                        onError={e => { (e.target as HTMLImageElement).src = FALLBACK_RIDER }}
                                     />
                                 </div>
 
                                 {/* Rider name */}
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                     <div style={{ width: "3px", height: "20px", backgroundColor: color, flexShrink: 0 }} />
-                                    <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#fff" }}>
+                                    <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#fff", fontFamily: "var(--font-inter)", }}>
                                         {initial}. {lastName}
                                     </span>
                                 </div>
@@ -387,8 +486,10 @@ const MotoGPLastRace = ({ event, results }: Props) => {
                                     textAlign: "right",
                                 }}>
                                     {i === 0
-                                        ? r.time ?? "—"
-                                        : r.gapFirst ? `+${r.gapFirst}` : r.status ?? "—"
+                                        ? (r.time ?? "—")
+                                        : (r.gapFirst && Number(r.gapFirst) !== 0
+                                            ? `+${r.gapFirst}`
+                                            : (r.status ?? "—"))
                                     }
                                 </span>
                             </div>

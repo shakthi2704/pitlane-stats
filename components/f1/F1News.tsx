@@ -12,7 +12,7 @@ interface Article {
     publishedAt: string | null
 }
 
-function timeAgo(iso: string | null): string {
+const timeAgo = (iso: string | null): string => {
     if (!iso) return ""
     const diff = Date.now() - new Date(iso).getTime()
     const mins = Math.floor(diff / 60000)
@@ -27,7 +27,7 @@ const SOURCE_COLORS: Record<string, string> = {
     "BBC Sport": "#BB1919",
 }
 
-export default function NewsSection() {
+const F1News = () => {
     const [articles, setArticles] = useState<Article[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -46,7 +46,7 @@ export default function NewsSection() {
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "4px", height: "24px", backgroundColor: "var(--color-f1-red)" }} />
+                    <div style={{ width: "4px", height: "24px", backgroundColor: "var(--accent)" }} />
                     <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
                         LATEST NEWS
                     </h2>
@@ -60,7 +60,7 @@ export default function NewsSection() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: "6px" }}>
                 {articles.map((article, i) => {
                     const slug = encodeURIComponent(btoa(article.url))
-                    const sourceColor = SOURCE_COLORS[article.source] ?? "#E10600"
+                    const sourceColor = "var(--accent)"
 
                     return (
                         <Link key={i} href={`/sports/f1/news/${slug}`} style={{ textDecoration: "none" }}>
@@ -99,7 +99,7 @@ export default function NewsSection() {
                                 {/* Content */}
                                 <div style={{ padding: "12px 14px" }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                                        <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: sourceColor, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>
+                                        <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: sourceColor, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 400 }}>
                                             {article.source}
                                         </span>
                                         <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.65rem", color: "rgba(255,255,255,0.25)" }}>
@@ -123,3 +123,5 @@ export default function NewsSection() {
         </div>
     )
 }
+
+export default F1News

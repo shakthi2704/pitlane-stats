@@ -1,10 +1,13 @@
 /* ─── Fonts ───────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 @import "leaflet/dist/leaflet.css";
+
 @import "tailwindcss";
 
-/* ─── THEME ───────────────────────────────────────── */
+/* ─── THEME (Tailwind build-time tokens) ─────────── */
 @theme {
 
     /* Base */
@@ -32,17 +35,12 @@
     --color-destructive: hsl(0 84% 60%);
     --color-destructive-foreground: hsl(0 0% 100%);
 
-    /* ─── GLOBAL ACCENT SYSTEM ───────────────────── */
-    --accent: #E10600;
-    --accent-foreground: #ffffff;
+    /* Accent system (for Tailwind utilities) */
+    --color-primary: #E10600;
+    --color-primary-foreground: #ffffff;
+    --color-ring: #E10600;
 
-    --team-accent: var(--accent);
-
-    --color-primary: var(--accent);
-    --color-primary-foreground: var(--accent-foreground);
-    --color-ring: var(--accent);
-
-    /* ─── SPORT COLORS ───────────────────────────── */
+    /* Sport colors */
     --color-f1: #E10600;
     --color-motogp: #FF6B00;
     --color-football: #00A651;
@@ -59,18 +57,34 @@
     --radius-xl: 0.75rem;
 
     /* Fonts */
-    --font-sans: "Inter", "DM Sans", sans-serif;
+    --font-inter: "Inter", "DM Sans", sans-serif;
     --font-display: "Russo One", sans-serif;
     --font-mono: "Roboto Mono", monospace;
 }
 
-/* ─── SPORT THEMING ───────────────────────────── */
+/* ─── REAL RUNTIME VARIABLES (THIS FIXES YOUR ISSUE) ─── */
 :root {
+    /* Sport colors MUST exist at runtime */
+    --color-f1: #E10600;
+    --color-motogp: #FF6B00;
+    --color-football: #00A651;
+    --color-cricket: #0096C7;
+    --color-basketball: #F87831;
+    --color-tennis: #A3C72F;
+    --color-nfl: #013369;
+    --color-golf: #2ECC71;
+
+    /* Global accent */
     --accent: var(--color-f1);
+    --accent-foreground: #ffffff;
+
     --team-accent: var(--accent);
+
+    --color-green: #4ade80;
+    /* nice modern green */
 }
 
-/* Sport level theme */
+/* ─── SPORT THEMING ───────────────────────────── */
 [data-sport="f1"] {
     --accent: var(--color-f1);
 }
@@ -130,7 +144,6 @@
 /* ─── COMPONENTS ───────────────────────────────── */
 @layer utilities {
 
-    /* CARD */
     .sport-grid-card {
         position: relative;
         overflow: hidden;
@@ -150,13 +163,11 @@
         box-shadow: 0 20px 40px color-mix(in srgb, var(--accent) 35%, transparent);
     }
 
-    /* ACCENT BAR */
     .accent-bar {
         height: 2px;
         background: var(--accent);
     }
 
-    /* DRIVER / TEAM USAGE */
     .team-accent {
         color: var(--team-accent);
     }
@@ -169,12 +180,10 @@
         box-shadow: 0 0 25px color-mix(in srgb, var(--team-accent) 30%, transparent);
     }
 
-    /* TABLE HOVER */
     tr:hover {
         background: color-mix(in srgb, var(--accent) 8%, transparent);
     }
 
-    /* PODIUM ROWS */
     .standings-row-1 {
         background: linear-gradient(90deg, rgba(255, 215, 0, 0.10), transparent);
     }
@@ -187,7 +196,7 @@
         background: linear-gradient(90deg, rgba(205, 127, 50, 0.08), transparent);
     }
 
-    /* STAGGER */
+    /* Stagger animations */
     .stagger-1 {
         animation-delay: 0.05s;
         opacity: 0;

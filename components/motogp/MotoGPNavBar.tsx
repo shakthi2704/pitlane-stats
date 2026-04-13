@@ -9,9 +9,11 @@ const navItems = [
     { label: "Schedule", href: "/sports/motogp/races" },
     { label: "Results", href: "/sports/motogp/results" },
     { label: "Standings", href: "/sports/motogp/standings/riders" },
+    { label: "Constructor Standings", href: "/sports/motogp/standings/riders" },
     { label: "Riders", href: "/sports/motogp/riders" },
     { label: "Teams", href: "/sports/motogp/teams" },
     { label: "Circuits", href: "/sports/motogp/circuits" },
+    { label: "News", href: "/sports/motogp/news" },
 ]
 
 const MotoGPNavBar = () => {

@@ -17,13 +17,13 @@ import {
 const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
 const heights = ["280px", "250px", "240px"]
 
+
 const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
   const teamColor = getTeamColor(result.constructor.constructorId)
   const imgSrc = DRIVER_IMAGES[result.driver.driverId] ?? FALLBACK_DRIVER
   const logoSrc = TEAM_LOGOS[result.constructor.constructorId] ?? null
-  const medalColor = medalColors[rank - 1]
   const posLabel = `P${rank}`
-  const timeDisplay = rank === 1 ? result.time : result.time
+  const timeDisplay = result.time
 
   return (
     <Link
@@ -50,30 +50,28 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
             ; (e.currentTarget as HTMLElement).style.boxShadow = "none"
         }}
       >
-        {/* Dark overlay */}
+        {/* Overlay */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.0) 100%)",
             zIndex: 1,
+            background:
+              "linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
           }}
         />
 
-        {/* Watermark position number */}
+        {/* Big rank watermark */}
         <div
           style={{
             position: "absolute",
-            right: "-10px",
+            right: "-5px",
             bottom: "-20px",
             fontFamily: "var(--font-display)",
             fontSize: "9rem",
             fontWeight: 900,
-            lineHeight: 1,
-            color: "rgba(0,0,0,0.2)",
+            color: "rgba(0,0,0,0.3)",
             zIndex: 2,
-            userSelect: "none",
             pointerEvents: "none",
           }}
         >
@@ -89,13 +87,8 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
             right: 0,
             bottom: 0,
             height: "100%",
-            width: "auto",
             objectFit: "contain",
-            objectPosition: "top right",
             zIndex: 3,
-          }}
-          onError={(e) => {
-            ; (e.target as HTMLImageElement).src = FALLBACK_DRIVER
           }}
         />
 
@@ -108,52 +101,35 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start", // ✅ FIXED
           }}
         >
-          {/* Top — logo left, position right */}
+          {/* TOP */}
           <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
               justifyContent: "space-between",
             }}
           >
-            {logoSrc ? (
-              <img
-                src={logoSrc}
-                alt={result.constructor.name}
-                style={{
-                  height: "28px",
-                  width: "auto",
-                  objectFit: "contain",
-                  filter: "brightness(0) invert(1)",
-                  opacity: 0.9,
-                }}
-                onError={(e) => {
-                  ; (e.target as HTMLImageElement).style.display = "none"
-                }}
-              />
-            ) : (
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  color: "rgba(255,255,255,0.9)",
-                  backgroundColor: "rgba(0,0,0,0.35)",
-                  padding: "2px 8px",
-                }}
-              >
-                {result.constructor.name.slice(0, 3).toUpperCase()}
-              </span>
-            )}
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "rgba(255,255,255,0.9)",
+                backgroundColor: "rgba(0,0,0,0.4)",
+                padding: "2px 8px",
+              }}
+            >
+              {result.constructor.name}
+            </span>
+
             <span
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "0.85rem",
                 fontWeight: 700,
-                color: medalColor,
+                color: "rgba(255,255,255,0.9)",
                 letterSpacing: "0.1em",
               }}
             >
@@ -161,8 +137,13 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
             </span>
           </div>
 
-          {/* Bottom — flag + name + time */}
-          <div>
+          {/* DRIVER INFO (pushed DOWN) */}
+          <div
+            style={{
+              marginTop: "68px", // or even 0
+              marginBottom: "6px",
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -171,12 +152,12 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
                 marginBottom: "2px",
               }}
             >
-              <span style={{ fontSize: "18px" }}>
+              <span style={{ fontSize: "16px" }}>
                 {getFlagEmoji(result.driver.nationality ?? "")}
               </span>
               <p
                 style={{
-                  fontFamily: "var(--font-sans)",
+                  fontFamily: "var(--font-display)",
                   fontSize: "0.75rem",
                   color: "rgba(255,255,255,0.65)",
                   margin: 0,
@@ -185,51 +166,39 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
                 {result.driver.givenName}
               </p>
             </div>
+
             <p
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: rank === 1 ? "1.4rem" : "1.2rem",
                 fontWeight: 700,
-                color: "#ffffff",
+                color: "#fff",
                 margin: 0,
-                lineHeight: 1.1,
               }}
             >
               {result.driver.familyName.toUpperCase()}
             </p>
+
             <p
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "0.8rem",
-                fontWeight: 600,
-                color: medalColor,
+                color: "#fff",
                 margin: "6px 0 0 0",
               }}
             >
               {timeDisplay ?? result.status}
-              {result.fastestLapRank === 1 && (
-                <span
-                  style={{
-                    marginLeft: "6px",
-                    color: "#a855f7",
-                    fontSize: "0.7rem",
-                  }}
-                >
-                  ⚡ FL
-                </span>
-              )}
             </p>
           </div>
 
-          {/* Info bar — grid, laps, points */}
+          {/* BOTTOM BAR */}
           <div
             style={{
+              marginTop: "auto",
               display: "flex",
-              alignItems: "center",
               gap: "10px",
               paddingTop: "8px",
               borderTop: "1px solid rgba(255,255,255,0.1)",
-              marginTop: "auto",
             }}
           >
             {[
@@ -237,21 +206,14 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
               { label: "Laps", value: result.laps ?? "—" },
               { label: "Pts", value: `+${result.points ?? 0}` },
             ].map((item, i) => (
-              <div
-                key={item.label}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: i < 2 ? "10px" : 0,
-                }}
-              >
+              <div key={item.label} style={{ display: "flex", gap: "10px" }}>
                 <div style={{ textAlign: "center" }}>
                   <p
                     style={{
                       fontFamily: "var(--font-display)",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      color: "rgba(255,255,255,0.9)",
+                      color: "#fff",
                       margin: 0,
                     }}
                   >
@@ -262,13 +224,12 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
                       fontSize: "0.6rem",
                       color: "rgba(255,255,255,0.35)",
                       margin: 0,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
                     }}
                   >
                     {item.label}
                   </p>
                 </div>
+
                 {i < 2 && (
                   <div
                     style={{
@@ -286,17 +247,34 @@ const PodiumCard = ({ result, rank }: { result: RaceResult; rank: number }) => {
     </Link>
   )
 }
-const LastRaceSection = ({
+
+const F1LastRace = ({
   race,
   results,
+  loading,
 }: {
   race: Race | null
   results: RaceResult[]
+  loading: boolean
+
 }) => {
   if (!race || results.length === 0) return null
+
+
+  // const top3 = results.slice(0, 3)
   const podiumOrder = [results[1], results[0], results[2]]
   const tableResults = results.slice(3)
 
+
+  const formatGap = (gap?: string | null) => {
+    if (!gap) return null
+
+    const num = Number(gap)
+    if (Number.isNaN(num)) return null
+    if (num === 0) return null
+
+    return `+${gap}`
+  }
   return (
     <div className="bg-black p-6 mb-10 ">
       <div
@@ -304,7 +282,7 @@ const LastRaceSection = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "20px",
+          marginBottom: "24px",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -312,7 +290,7 @@ const LastRaceSection = ({
             style={{
               width: "4px",
               height: "24px",
-              backgroundColor: "var(--color-f1-red)",
+              backgroundColor: "var(--accent)",
             }}
           />
           <h2
@@ -346,8 +324,8 @@ const LastRaceSection = ({
         style={{
           padding: "14px 16px",
           marginBottom: "20px",
-          borderLeft: "3px solid var(--color-f1-red)",
-          backgroundColor: "rgba(225,6,0,0.10)",
+          borderLeft: "3px solid var(--accent)",
+          backgroundColor: `color-mix(in srgb, var(--accent) 10%, transparent)`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -537,14 +515,14 @@ const LastRaceSection = ({
                   />
                   <span
                     style={{
-                      fontFamily: "var(--font-roboto)",
+                      fontFamily: "var(--font-inter)",
                       fontSize: "0.85rem",
                       fontWeight: 700,
                       color: "#ffffff",
                     }}
                   >
                     {r.driver.givenName[0]}. {r.driver.familyName}
-                    {isFastest && (
+                    {/* {isFastest && (
                       <span
                         style={{
                           marginLeft: "6px",
@@ -554,7 +532,7 @@ const LastRaceSection = ({
                       >
                         ⚡
                       </span>
-                    )}
+                    )} */}
                   </span>
                 </div>
 
@@ -629,4 +607,4 @@ const LastRaceSection = ({
   )
 }
 
-export default LastRaceSection
+export default F1LastRace

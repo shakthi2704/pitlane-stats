@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import F1Loader from "@/components/f1/F1Loader"
+import Loader from "@/components/layout/Loader"
 
 interface Article {
     title: string
@@ -23,14 +23,10 @@ function timeAgo(iso: string | null): string {
     return `${Math.floor(hrs / 24)}d ago`
 }
 
-const SOURCE_COLORS: Record<string, string> = {
-    "Autosport": "#E10600",
-    "BBC Sport": "#BB1919",
-}
 
 const ArticleCard = ({ article, featured }: { article: Article; featured?: boolean }) => {
     const [imgError, setImgError] = useState(false)
-    const sourceColor = SOURCE_COLORS[article.source] ?? "#E10600"
+    const sourceColor = "var(--accent)"
     const slug = encodeURIComponent(btoa(article.url))
 
     return (
@@ -40,8 +36,8 @@ const ArticleCard = ({ article, featured }: { article: Article; featured?: boole
                     position: "relative", overflow: "hidden",
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid rgba(255,255,255,0.06)",
-                    borderTop: `3px solid ${sourceColor}`,
-                    height: featured ? "420px" : "280px",
+                    borderTop: "3px solid var(--accent)",
+                    height: featured ? "420px" : "320px",
                     transition: "all 0.2s", cursor: "pointer",
                 }}
                 onMouseEnter={e => {
@@ -90,7 +86,18 @@ const ArticleCard = ({ article, featured }: { article: Article; featured?: boole
                         }}>{article.description}</p>
                     )}
                 </div>
-                <div style={{ position: "absolute", bottom: "14px", right: "16px", fontFamily: "var(--font-display)", fontSize: "0.65rem", color: "rgba(255,255,255,0.2)", letterSpacing: "0.1em" }}>
+
+                <div style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "0.65rem",
+                    color: "rgba(255,255,255,0.2)",
+                    letterSpacing: "0.1em",
+
+
+                }}>
                     READ →
                 </div>
             </div>
@@ -126,7 +133,7 @@ export default function NewsPage() {
                 <div className="max-w-7xl mx-auto px-6">
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "24px" }}>
                         <div>
-                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "8px" }}>Formula 1</p>
+                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>Formula 1</p>
                             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 0.9, letterSpacing: "-0.03em" }}>LATEST NEWS</h1>
                             <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.875rem", margin: 0 }}>
                                 {articles.length > 0 ? `${articles.length} articles from Autosport & BBC Sport` : "Live from Autosport & BBC Sport"}
@@ -137,15 +144,15 @@ export default function NewsPage() {
                                 <button key={s} onClick={() => setFilter(s)} style={{
                                     fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                     padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                    borderColor: filter === s ? "var(--color-f1-red)" : "rgba(255,255,255,0.1)",
-                                    backgroundColor: filter === s ? "var(--color-f1-red)" : "transparent",
+                                    borderColor: filter === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                    backgroundColor: filter === s ? "var(--accent)" : "transparent",
                                     color: filter === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                 }}>{s === "all" ? "All Sources" : s}</button>
                             ))}
                         </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", paddingBottom: "20px" }}>
-                        <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 6px #4ade80", animation: "pulse 2s infinite" }} />
+                        <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-green)", boxShadow: "0 0 6px #4ade80", animation: "pulse 2s infinite" }} />
                         <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "rgba(255, 255, 255, 0.74)", letterSpacing: "0.06em" }}>Live feed · updates every 10 minutes</span>
                         <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
                     </div>
@@ -153,7 +160,7 @@ export default function NewsPage() {
             </div>
 
             <div className="max-w-7xl mx-auto px-6 py-8">
-                {loading && <F1Loader message="LOADING NEWS..." />}
+                {loading && <Loader message="LOADING NEWS..." />}
                 {!loading && error && (
                     <div style={{ padding: "80px 0", textAlign: "center" }}>
                         <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em" }}>{error}</p>

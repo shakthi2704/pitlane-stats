@@ -25,7 +25,7 @@ export default function NotFound() {
         {/* Button */}
         <Link
           href="/sports/f1"
-          className="mt-6 inline-block px-6 py-3 rounded-xl bg-[var(--color-f1-red)] text-white font-medium hover:opacity-90 transition"
+          className="mt-6 inline-block px-6 py-3 rounded-xl bg-[var(--accent)] text-white font-medium hover:opacity-90 transition"
         >
           Go back home
         </Link>

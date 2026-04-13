@@ -7,8 +7,7 @@ import { getTeamColor, getFlagEmoji } from "@/types/f1/f1-api"
 import { DRIVER_IMAGES, FALLBACK_DRIVER } from "@/lib/fi/f1-constants"
 import { CIRCUIT_STATIC } from "@/lib/fi/circuit-data"
 import { MapPinCheckInside } from "lucide-react"
-import F1Loader from "@/components/f1/F1Loader"
-
+import Loader from "@/components/layout/Loader"
 interface Circuit {
   circuitId: string
   circuitName: string
@@ -273,7 +272,7 @@ export default function CircuitDetailPage() {
   if (loading) {
     return (
       <div style={{ padding: "80px" }}>
-        {loading && <F1Loader message="LOADING CIRCUIT DETAILS..." />}
+        {loading && <Loader message="LOADING CIRCUIT DETAILS..." />}
       </div>
     )
   }
@@ -381,7 +380,7 @@ export default function CircuitDetailPage() {
               fontWeight: 600,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "var(--color-f1-red)",
+              color: "var(--accent)",
               margin: "0 0 6px 0",
             }}
           >
@@ -410,8 +409,8 @@ export default function CircuitDetailPage() {
               gap: "4px",
             }}
           >
-            <MapPinCheckInside size={16} className="text-f1-red" />
-            {circuit.locality}, {circuit.country}
+            <MapPinCheckInside size={16} style={{ color: "var(--accent)" }} />
+            {`${circuit.locality ?? ""}, ${circuit.country ?? ""}`.toUpperCase()}
           </p>
         </div>
       </div>
@@ -562,7 +561,7 @@ export default function CircuitDetailPage() {
                   {/* Year */}
                   <span
                     style={{
-                      fontFamily: "var(--font-roboro-mono)",
+                      fontFamily: "var(--font-inter)",
                       fontSize: "0.9rem",
                       fontWeight: 700,
                       color: "#ffffff",

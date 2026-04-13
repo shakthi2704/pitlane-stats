@@ -1,3 +1,8 @@
+
+
+export const FALLBACK_RIDER = "/F1/drivers/driver-placeholder.png"
+
+
 export const CURRENT_SEASON = new Date().getFullYear().toString()
 
 export const MOTOGP_AVAILABLE_SEASONS = Array.from(

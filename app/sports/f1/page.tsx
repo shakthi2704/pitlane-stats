@@ -1,31 +1,34 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import HeroSection from "@/components/f1/HeroSection"
-import RaceStripSection from "@/components/f1/RaceStripSection"
-import DriverStandingsSection from "@/components/f1/DriverStandingsSection"
-import LastRaceSection from "@/components/f1/LastRaceSection"
-import PartnersSection from "@/components/f1/PartnersSection"
+import F1Hero from "@/components/f1/F1Hero"
+import F1RaceStrip from "@/components/f1/F1RaceStrip"
+import DriverStandings from "@/components/f1/DriverStandings"
+import LastRaceSection from "@/components/f1/F1LastRace"
 import type {
   Race,
   DriverStanding,
   ConstructorStanding,
   RaceResult,
 } from "@/types/f1"
-import F1Loader from "@/components/f1/F1Loader"
 
 import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
-import NewsSection from "@/components/f1/NewsSection"
+import Loader from "@/components/layout/Loader"
+import F1News from "@/components/f1/F1News"
+import F1LastRace from "@/components/f1/F1LastRace"
+import { ConstructorStandingsOnly } from "@/components/f1/ConstructorStandings"
+import DriverStandingsSection from "@/components/f1/DriverStandingsSection"
+import ConstructorStandingsSection from "@/components/f1/ConstructorStandingsSection"
 
 const SEASON = CURRENT_SEASON
 
 export default function F1Page() {
   const [loading, setLoading] = useState(true)
+  const [standingsLoading, setStandingsLoading] = useState(false)
+
   const [races, setRaces] = useState<Race[]>([])
   const [driverStandings, setDriverStandings] = useState<DriverStanding[]>([])
-  const [constructorStandings, setConstructorStandings] = useState<
-    ConstructorStanding[]
-  >([])
+  const [constructorStandings, setConstructorStandings] = useState<ConstructorStanding[]>([])
   const [lastRace, setLastRace] = useState<Race | null>(null)
   const [lastRaceResults, setLastRaceResults] = useState<RaceResult[]>([])
 
@@ -35,52 +38,66 @@ export default function F1Page() {
   useEffect(() => {
     setLoading(true)
 
-    Promise.all([
-      fetch(`/api/f1/races?season=${SEASON}`).then((r) => r.json()),
-      fetch(`/api/f1/driver-standings?season=${SEASON}`).then((r) => r.json()),
-      fetch(`/api/f1/constructor-standings?season=${SEASON}`).then((r) =>
-        r.json(),
-      ),
-    ])
-      .then(([racesData, driverData, constructorData]) => {
+    fetch(`/api/f1/races?season=${SEASON}`)
+      .then((r) => r.json())
+      .then((racesData) => {
         const allRaces: Race[] = racesData.races ?? []
         setRaces(allRaces)
 
         const pastRaces = allRaces.filter((r) => r.date < today)
         const last = pastRaces[pastRaces.length - 1]
+
         if (last) {
           setLastRace(last)
+
           fetch(`/api/f1/race-results?season=${SEASON}&round=${last.round}`)
             .then((r) => r.json())
-            .then((data) => setLastRaceResults(data.race?.results ?? []))
+            .then((data) =>
+              setLastRaceResults(data.race?.results ?? [])
+            )
         }
-
-        setDriverStandings(driverData.standings ?? [])
-        setConstructorStandings(constructorData.standings ?? [])
       })
       .finally(() => setLoading(false))
   }, [])
 
+
+  useEffect(() => {
+    setStandingsLoading(true)
+
+    Promise.all([
+      fetch(`/api/f1/driver-standings?season=${SEASON}`).then((r) => r.json()),
+      fetch(`/api/f1/constructor-standings?season=${SEASON}`).then((r) => r.json()),
+    ])
+      .then(([driverData, constructorData]) => {
+        setDriverStandings(driverData.standings ?? [])
+        setConstructorStandings(constructorData.standings ?? [])
+      })
+      .catch((err) => console.error("[F1] standings:", err))
+      .finally(() => setStandingsLoading(false))
+  }, [])
+
   const nextRace = races.find((r) => r.date >= today) ?? null
+
+  if (loading) return <Loader message="Data loading..." />
 
   return (
     <>
-      {loading && <F1Loader message="LOADING DATA..." />}
-      {!loading && (
-        <>
-          <HeroSection nextRace={nextRace} />
-          <RaceStripSection races={races} />
-          <div className="max-w-7xl mx-auto px-6 py-12 mt-10">
-            <DriverStandingsSection
-              standings={driverStandings}
-              constructorStandings={constructorStandings}
-            />
-            <LastRaceSection race={lastRace} results={lastRaceResults} />
-            <NewsSection />
-            {/* <PartnersSection /> */}
-          </div>
-        </>
-      )}
+      <F1Hero nextRace={nextRace} />
+      <F1RaceStrip races={races} />
+
+      <div className="max-w-7xl mx-auto px-6 py-12 mt-10">
+        <DriverStandings
+          standings={driverStandings}
+          constructorStandings={constructorStandings}
+          loading={standingsLoading}
+        />
+        <DriverStandingsSection standings={driverStandings} />
+        <ConstructorStandingsSection constructorStandings={constructorStandings} />
+
+        <F1LastRace race={lastRace} results={lastRaceResults}
+          loading={standingsLoading} />
+        <F1News />
+      </div>
     </>
   )
 }

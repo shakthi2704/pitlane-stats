@@ -142,7 +142,7 @@ const TopConstructorCard = ({
     )
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+
 
 interface Props {
     standings: ConstructorStanding[]
