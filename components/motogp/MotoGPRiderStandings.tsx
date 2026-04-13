@@ -231,7 +231,7 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
     const maxPts = standings[0]?.points ?? 1
 
     return (
-        <div style={{ marginBottom: "48px" }}>
+        <div className="bg-black p-6 mb-10 ">
 
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>

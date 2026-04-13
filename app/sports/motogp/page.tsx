@@ -6,8 +6,10 @@ import MotoGPRaceStrip from "@/components/motogp/MotoGPRaceStrip"
 import MotoGPRiderStandings from "@/components/motogp/MotoGPRiderStandings"
 import MotoGPConstructorStandings from "@/components/motogp/MotoGPConstructorStandings"
 import MotoGPLastRace from "@/components/motogp/MotoGPLastRace"
-import F1Loader from "@/components/f1/F1Loader"
 import { CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import Loader from "@/components/layout/Loader"
+import MotoGPNews from "@/components/motogp/MotoGPNews"
+
 
 type Category = "MotoGP" | "Moto2" | "Moto3"
 
@@ -110,14 +112,14 @@ export default function MotoGPPage() {
             .finally(() => setStandingsLoading(false))
     }, [category])
 
-    if (loading) return <F1Loader message="LOADING MOTOGP..." />
+    if (loading) return <Loader message="LOADING MOTOGP..." />
 
     return (
         <>
             <MotoGPHero nextEvent={nextEvent} />
             <MotoGPRaceStrip events={events} />
 
-            <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="max-w-7xl mx-auto px-6 py-12 mt-10">
                 <MotoGPRiderStandings
                     standings={riderStandings}
                     category={category}
@@ -134,6 +136,7 @@ export default function MotoGPPage() {
                     event={lastEvent}
                     results={lastRaceResults}
                 />
+                <MotoGPNews />
             </div>
         </>
     )

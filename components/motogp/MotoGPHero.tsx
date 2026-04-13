@@ -4,7 +4,7 @@ import { CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { useEffect, useState } from "react"
 
 
-const MOTOGP_RED = "#E3001B"
+
 interface MotoGPEvent {
     id: string
     name: string
@@ -57,7 +57,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
         <div className="relative w-full overflow-hidden" style={{ minHeight: "520px" }}>
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url('/motogp/hero/hero-motogp-2.jpg')`, backgroundColor: "#0a0a0a" }}
+                style={{ backgroundImage: `url('/MotoGP/hero/hero-motogp-2.jpg')`, backgroundColor: "#0a0a0a" }}
             />
             <div
                 className="absolute inset-0"
@@ -65,14 +65,16 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                     background: "linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.15) 100%)",
                 }}
             />
+
             <div
                 className="absolute inset-0"
                 style={{
                     background:
-                        "linear-gradient(0deg, rgba(239, 13, 13, 0.23) 1%, transparent 5%)",
+                        "linear-gradient(0deg, color-mix(in srgb, var(--accent) 23%, transparent) 1%, transparent 5%)",
                 }}
             />
-            <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--color-f1-red)]" />
+
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--accent)] opacity-30" />
             <div
                 className="relative z-10 max-w-7xl mx-auto px-6 py-14 flex flex-col justify-between"
                 style={{ minHeight: "520px" }}
@@ -114,7 +116,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                 {nextEvent && (
                     <div className="mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
                         {/* Race info */}
-                        <div className="pl-4" style={{ borderLeft: `2px solid ${MOTOGP_RED}` }}>
+                        <div className="pl-4" style={{ borderLeft: "2px solidvar(--accent)" }}>
                             <p
                                 className="text-[10px] font-semibold tracking-[0.25em] uppercase mb-1"
                                 style={{ color: 'var(--accent)' }}
@@ -176,7 +178,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                     </div>
                 )}
                 {!nextEvent && (
-                    <div className="mt-10 pl-4" style={{ borderLeft: `2px solid ${MOTOGP_RED}` }}>
+                    <div className="mt-10 pl-4" style={{ borderLeft: "2px solid var(--accent)}" }}>
                         <p className="text-white/50 text-sm">Season schedule loading...</p>
                     </div>
                 )}

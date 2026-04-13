@@ -74,7 +74,7 @@ const MotoGPRaceStrip = ({ events }: { events: MotoGPEvent[] }) => {
                     : "linear-gradient(270deg, #000 60%, transparent 100%)",
                 border: "none",
                 cursor: "pointer",
-                color: "rgba(255,255,255,0.6)",
+                color: "var(--accent)",
             }}
         >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -138,12 +138,12 @@ const MotoGPRaceStrip = ({ events }: { events: MotoGPEvent[] }) => {
                                     padding: "12px 20px",
                                     borderRight: "1px solid rgba(255,255,255,0.05)",
                                     borderBottom: isNext
-                                        ? `2px solid ${MOTOGP_RED}`
+                                        ? "2px solid var(--accent)"
                                         : "2px solid transparent",
                                     minWidth: "120px",
                                     cursor: "pointer",
                                     backgroundColor: isNext
-                                        ? `${MOTOGP_RED}0d`  // 5% opacity
+                                        ? "color-mix(in srgb, var(--accent) 10%, transparent)"
                                         : "transparent",
                                     transition: "background-color 0.2s",
                                 }}
@@ -162,7 +162,7 @@ const MotoGPRaceStrip = ({ events }: { events: MotoGPEvent[] }) => {
                                         letterSpacing: "0.2em",
                                         textTransform: "uppercase",
                                         marginBottom: "4px",
-                                        color: isNext ? MOTOGP_RED : "rgba(255,255,255,0.2)",
+                                        color: isNext ? 'var(--accent)' : "rgba(255,255,255,0.2)",
                                         fontFamily: "var(--font-display)",
                                     }}
                                 >
@@ -204,7 +204,7 @@ const MotoGPRaceStrip = ({ events }: { events: MotoGPEvent[] }) => {
                                             style={{
                                                 width: "6px", height: "6px",
                                                 borderRadius: "50%",
-                                                backgroundColor: MOTOGP_RED,
+                                                backgroundColor: ' var(--accent)',
                                             }}
                                         />
                                     )}

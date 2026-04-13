@@ -64,7 +64,7 @@ const F1navBar = () => {
                   fontFamily: "var(--font-display)",
                   color: isActive ? "#ffffff" : "rgba(255,255,255,0.35)",
                   borderBottom: isActive
-                    ? "2px solid var(--color-f1-red)"
+                    ? "2px solid var(--accent)"
                     : "2px solid transparent",
                 }}
               >

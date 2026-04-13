@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import type { Race } from "@/types/f1"
 
-const RaceStripSection = ({ races }: { races: Race[] }) => {
+const F1RaceStrip = ({ races }: { races: Race[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
+
   const today = new Date().toISOString().split("T")[0]
   const nextIdx = races.findIndex((r) => r.date >= today)
   const highlightIdx = nextIdx === -1 ? races.length - 1 : nextIdx
@@ -42,6 +43,40 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
     })
   }
 
+  const ArrowBtn = ({ dir }: { dir: "left" | "right" }) => (
+    <button
+      onClick={() => scroll(dir)}
+      style={{
+        position: "absolute",
+        [dir]: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 10,
+        width: "40px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background:
+          dir === "left"
+            ? "linear-gradient(90deg, #000 60%, transparent 100%)"
+            : "linear-gradient(270deg, #000 60%, transparent 100%)",
+        border: "none",
+        cursor: "pointer",
+        color: "var(--accent)",
+      }}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path
+          d={dir === "left" ? "M10 12L6 8L10 4" : "M6 12L10 8L6 4"}
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+  )
+
   return (
     <div
       style={{
@@ -51,71 +86,10 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
         position: "relative",
       }}
     >
-      {/* Left arrow */}
-      {canScrollLeft && (
-        <button
-          onClick={() => scroll("left")}
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            zIndex: 10,
-            width: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(90deg, #000 60%, transparent 100%)",
-            border: "none",
-            cursor: "pointer",
-            color: "rgba(255,255,255,0.6)",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M10 12L6 8L10 4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      )}
+      {canScrollLeft && <ArrowBtn dir="left" />}
+      {canScrollRight && <ArrowBtn dir="right" />}
 
-      {/* Right arrow */}
-      {canScrollRight && (
-        <button
-          onClick={() => scroll("right")}
-          style={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            bottom: 0,
-            zIndex: 10,
-            width: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(90deg, #000 60%, transparent 100%)",
-            border: "none",
-            cursor: "pointer",
-            color: "rgba(255,255,255,0.6)",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M6 12L10 8L6 4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      )}
-
-      {/* Scroll container */}
+      {/* Scrollable strip */}
       <div
         ref={scrollRef}
         style={{
@@ -134,6 +108,11 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
           const isPast = race.date < today
           const isNext = i === highlightIdx
 
+          const dateStr = new Date(race.date).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+          })
+
           return (
             <Link
               key={race.id}
@@ -148,12 +127,12 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
                   padding: "12px 20px",
                   borderRight: "1px solid rgba(255,255,255,0.05)",
                   borderBottom: isNext
-                    ? "2px solid var(--color-f1-red)"
+                    ? "2px solid var(--accent)"
                     : "2px solid transparent",
-                  minWidth: "130px",
+                  minWidth: "120px",
                   cursor: "pointer",
                   backgroundColor: isNext
-                    ? "rgba(225,6,0,0.05)"
+                    ? "color-mix(in srgb, var(--accent) 10%, transparent)"
                     : "transparent",
                   transition: "background-color 0.2s",
                 }}
@@ -168,6 +147,7 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
                       "transparent"
                 }}
               >
+                {/* Round label */}
                 <span
                   style={{
                     fontSize: "9px",
@@ -176,18 +156,20 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
                     textTransform: "uppercase",
                     marginBottom: "4px",
                     color: isNext
-                      ? "var(--color-f1-red)"
+                      ? "var(--accent)"
                       : "rgba(255,255,255,0.2)",
                     fontFamily: "var(--font-display)",
                   }}
                 >
                   R{race.round}
                 </span>
+
+                {/* Country */}
                 <span
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "0.8rem",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     lineHeight: 1.2,
                     color: isPast
                       ? "rgba(255,255,255,0.3)"
@@ -198,6 +180,8 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
                 >
                   {race.circuit.country}
                 </span>
+
+                {/* Date */}
                 <span
                   style={{
                     fontSize: "10px",
@@ -205,21 +189,18 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
                     marginTop: "2px",
                   }}
                 >
-                  {new Date(race.date).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "short",
-                  })}
+                  {dateStr}
                 </span>
-                <div
-                  style={{ position: "absolute", top: "10px", right: "10px" }}
-                >
+
+                {/* Status dot */}
+                <div style={{ position: "absolute", top: "10px", right: "10px" }}>
                   {isNext && (
                     <div
                       style={{
                         width: "6px",
                         height: "6px",
                         borderRadius: "50%",
-                        backgroundColor: "var(--color-f1-red)",
+                        backgroundColor: "var(--accent)",
                       }}
                     />
                   )}
@@ -243,4 +224,4 @@ const RaceStripSection = ({ races }: { races: Race[] }) => {
   )
 }
 
-export default RaceStripSection
+export default F1RaceStrip

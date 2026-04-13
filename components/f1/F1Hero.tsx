@@ -43,7 +43,7 @@ const useCountdown = (targetDate: string | null) => {
   return timeLeft
 }
 
-const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
+const F1Hero = ({ nextRace }: { nextRace: Race | null }) => {
   const targetDate = nextRace
     ? `${nextRace.date}T${nextRace.time ?? "12:00:00"}`
     : null
@@ -58,7 +58,7 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/F1/hero/hero-f1-3.jpg')`,
+          backgroundImage: `url('/F1/hero/hero-f1-4.png')`,
         }}
       />
       <div
@@ -72,16 +72,17 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(0deg, rgba(252, 0, 0, 0.23) 1%, transparent 5%)",
+            "linear-gradient(0deg, color-mix(in srgb, var(--accent) 23%, transparent) 1%, transparent 5%)",
         }}
       />
-      <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--color-f1-red)]" />
+
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--accent)] opacity-30" />
       <div
         className="relative z-10 max-w-7xl mx-auto px-6 py-14 flex flex-col justify-between"
         style={{ minHeight: "520px" }}
       >
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-f1-red)]">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent)]">
             <span
               className="text-white text-xs font-bold tracking-widest"
               style={{ fontFamily: "var(--font-display)" }}
@@ -93,11 +94,11 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
             className="text-white/90 text-xs tracking-widest uppercase"
             style={{ fontFamily: "var(--font-sans)" }}
           >
-            {CURRENT_SEASON} Season
+            {CURRENT_SEASON} Season World Championship
           </span>
         </div>
         <div className="mt-8">
-          <p className="text-[var(--color-f1-red)] text-xs tracking-[0.3em] uppercase mb-3 font-semibold">
+          <p className="text-[var(--accent)] text-xs tracking-[0.3em] uppercase mb-3 font-semibold">
             Formula 1 World Championship
           </p>
           <h1
@@ -173,4 +174,4 @@ const HeroSection = ({ nextRace }: { nextRace: Race | null }) => {
   )
 }
 
-export default HeroSection
+export default F1Hero
