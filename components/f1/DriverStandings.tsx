@@ -12,7 +12,7 @@ import {
   FALLBACK_DRIVER,
   FALLBACK_LOGO,
   CURRENT_SEASON,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import type { DriverStanding, ConstructorStanding } from "@/types/f1"
 
 
@@ -499,7 +499,7 @@ const DriverStandings = ({
             style={{
               width: "4px",
               height: "24px",
-              backgroundColor: "var(--color-f1-red)",
+              backgroundColor: "var(--accent)",
             }}
           />
           <h2
@@ -557,7 +557,7 @@ const DriverStandings = ({
               border: "none",
               borderBottom:
                 activeTab === tab
-                  ? "2px solid var(--color-f1-red)"
+                  ? "2px solid var(--accent)"
                   : "2px solid transparent",
               padding: "10px 16px",
               cursor: "pointer",

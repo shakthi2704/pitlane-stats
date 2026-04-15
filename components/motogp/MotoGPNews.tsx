@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+
 
 interface Article {
     title: string
@@ -24,7 +24,7 @@ const timeAgo = (iso: string | null): string => {
 }
 
 const SOURCE_COLORS: Record<string, string> = {
-    "Autosport": MOTOGP_RED,
+    "Autosport": "var(--accent)",
     "BBC Sport": "#BB1919",
     "Crash.net": "#FF6B00",
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -58,10 +58,13 @@ const ChampionBanner = ({ standing, season }: { standing: RiderStanding; season:
         <div style={{
             position: "relative",
             overflow: "hidden",
-            marginBottom: "32px",
-            backgroundColor: `${color}14`,
-            border: `1px solid ${color}44`,
-            borderLeft: `4px solid ${color}`,
+            marginBottom: "24px",
+
+            borderLeft: "3px solid var(--color-yellow)",
+
+            backgroundColor: "color-mix(in srgb, var(--color-yellow) 6%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--color-yellow) 20%, transparent)",
+
         }}>
             {/* Subtle bg photo */}
             <div style={{
@@ -85,10 +88,10 @@ const ChampionBanner = ({ standing, season }: { standing: RiderStanding; season:
                 }} />
             </div>
 
-            <div style={{ position: "relative", zIndex: 1, padding: "20px 24px", display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+            <div style={{ position: "relative", zIndex: 1, padding: "20px 24px", display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap", }}>
                 {/* Photo */}
                 <div style={{
-                    width: "64px", height: "64px", overflow: "hidden", flexShrink: 0,
+                    width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", flexShrink: 0,
                     backgroundColor: `${color}30`, border: `2px solid ${color}66`,
                 }}>
                     <img
@@ -102,19 +105,19 @@ const ChampionBanner = ({ standing, season }: { standing: RiderStanding; season:
                 {/* Info */}
                 <div style={{ flex: 1 }}>
                     <p style={{
-                        fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: 600,
-                        letterSpacing: "0.2em", textTransform: "uppercase",
-                        color: color, margin: "0 0 4px",
+                        fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
+                        letterSpacing: "0.15em", textTransform: "uppercase",
+                        color: "var(--color-yellow)", margin: "0 0 4px",
                     }}>
-                        🏆 {season} Championship Leader
+                        {season} Championship Leader
                     </p>
                     <p style={{
-                        fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 800,
-                        color: "#fff", margin: "0 0 2px", letterSpacing: "-0.01em",
+                        fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 400,
+                        color: "#fff", margin: "0 0 2px", letterSpacing: "0.05em",
                     }}>
-                        {firstName} <span style={{ color }}>{lastName.toUpperCase()}</span>
+                        {firstName} {lastName}
                     </p>
-                    <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.45)", margin: 0 }}>
+                    <p style={{ fontSize: "0.8rem", fontFamily: "var(--font-inter)", color: "rgba(255,255,255,0.90)", margin: 0 }}>
                         {getFlagEmoji(standing.rider.nationality ?? "")} {standing.rider.nationality}
                         {standing.constructorName ? ` · ${standing.constructorName}` : ""}
                         {standing.teamName ? ` · ${standing.teamName}` : ""}
@@ -124,7 +127,7 @@ const ChampionBanner = ({ standing, season }: { standing: RiderStanding; season:
                 {/* Stats */}
                 <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
                     {[
-                        { label: "Points", value: standing.points, color: color },
+                        { label: "Points", value: standing.points, color: "var(--color-yellow)" },
                         { label: "Wins", value: standing.raceWins, color: "rgba(255,255,255,0.8)" },
                         { label: "Podiums", value: standing.podiums, color: "rgba(255,255,255,0.6)" },
                     ].map(stat => (
@@ -182,7 +185,6 @@ const StandingRow = ({ s, i, maxPts, leaderPts, showSprint }: {
                     alignItems: "center",
                     padding: "10px 16px",
                     borderBottom: "1px solid rgba(255,255,255,0.04)",
-                    borderLeft: `3px solid ${isTop3 ? color : "transparent"}`,
                     backgroundColor: isTop3 ? `${color}08` : "transparent",
                     cursor: "pointer",
                     transition: "background-color 0.15s",
@@ -196,22 +198,22 @@ const StandingRow = ({ s, i, maxPts, leaderPts, showSprint }: {
                     fontFamily: "var(--font-display)",
                     fontSize: isTop3 ? "1.1rem" : "0.95rem",
                     fontWeight: 800,
-                    color: isTop3 ? MEDAL_COLORS[i] : "rgba(255,255,255,0.35)",
+                    color: "#fff",
                 }}>
                     {s.position}
                 </span>
 
                 {/* Number */}
                 <span style={{
-                    fontFamily: "var(--font-display)", fontSize: "0.8rem", fontWeight: 700, color: color,
+                    fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700, color: color, opacity: 0.8
                 }}>
-                    {s.rider.number != null ? `#${s.rider.number}` : "—"}
+                    {s.rider.number != null ? `${s.rider.number}` : "—"}
                 </span>
 
                 {/* Photo */}
                 <div style={{
-                    width: "32px", height: "32px", overflow: "hidden",
-                    backgroundColor: `${color}20`, border: `1px solid ${color}40`, flexShrink: 0,
+                    width: "32px", height: "32px", overflow: "hidden", borderRadius: "50%",
+                    backgroundColor: `${color}20`, border: `1px solid ${color}50`, flexShrink: 0,
                 }}>
                     <img
                         src={photoUrl}
@@ -226,11 +228,11 @@ const StandingRow = ({ s, i, maxPts, leaderPts, showSprint }: {
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                         <span style={{ fontSize: "13px" }}>{flag}</span>
                         <span style={{
-                            fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700,
+                            fontFamily: "var(--font-inter)", fontSize: "0.9rem", fontWeight: 700,
                             color: isTop3 ? "#ffffff" : "rgba(255,255,255,0.8)",
                             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                         }}>
-                            {firstName[0]}. {lastName.toUpperCase()}
+                            {firstName} {lastName}
                         </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -283,7 +285,7 @@ const StandingRow = ({ s, i, maxPts, leaderPts, showSprint }: {
                 {showSprint && (
                     <span style={{
                         fontFamily: "var(--font-display)", fontSize: "0.8rem",
-                        color: s.sprintWins > 0 ? MOTOGP_RED : "rgba(255,255,255,0.15)",
+                        color: s.sprintWins > 0 ? "var(--accent)" : "rgba(255,255,255,0.15)",
                         textAlign: "center",
                     }}>
                         {s.sprintWins || "—"}
@@ -354,27 +356,30 @@ export default function MotoGPRiderStandingsPage() {
     return (
         <div>
             {/* Page header */}
-            <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "48px 0 36px" }}>
+            <div className="max-w-7xl mx-auto px-6 py-10">
                 <div className="max-w-7xl mx-auto px-6">
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px" }}>
                         <div>
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™ World Championship
                             </p>
                             <h1 style={{
                                 fontFamily: "var(--font-display)",
-                                fontSize: "clamp(2rem, 5vw, 4rem)",
-                                fontWeight: 800, color: "#ffffff",
-                                margin: "0 0 8px", lineHeight: 0.95, letterSpacing: "-0.03em",
+                                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                                fontWeight: 700,
+                                color: "#ffffff",
+                                margin: 0,
+                                lineHeight: 1,
+                                letterSpacing: "-0.02em",
                             }}>
                                 RIDER STANDINGS
                             </h1>
                             <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.85rem", margin: 0 }}>
-                                {season} Season · {standings.length} riders
+                                {season} MotoGP World Championship - {standings.length} riders
                             </p>
                         </div>
 
@@ -393,8 +398,8 @@ export default function MotoGPRiderStandingsPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -407,7 +412,7 @@ export default function MotoGPRiderStandingsPage() {
                     </div>
 
                     {/* Class tabs */}
-                    <div style={{ display: "flex", gap: "0", marginTop: "28px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                    <div style={{ display: "flex", gap: "0", marginTop: "28px" }}>
                         {CATEGORIES.map(cat => (
                             <button
                                 key={cat}
@@ -418,14 +423,14 @@ export default function MotoGPRiderStandingsPage() {
                                     padding: "10px 20px", background: "none", border: "none", cursor: "pointer",
                                     transition: "color 0.2s", marginBottom: "-1px",
                                     color: category === cat ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: category === cat ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: category === cat ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {cat}™
                             </button>
                         ))}
                         {/* Link to constructor standings */}
-                        <Link
+                        {/* <Link
                             href="/sports/motogp/standings/constructors"
                             style={{
                                 marginLeft: "auto",
@@ -441,7 +446,7 @@ export default function MotoGPRiderStandingsPage() {
                             onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)"}
                         >
                             Constructor →
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             </div>
@@ -480,7 +485,7 @@ export default function MotoGPRiderStandingsPage() {
                                         <Link key={label} href={`/sports/motogp/riders/${value.rider.id}`} style={{ textDecoration: "none", flex: 1 }}>
                                             <div style={{
                                                 padding: "14px 20px", backgroundColor: "rgba(255,255,255,0.02)",
-                                                borderLeft: `3px solid ${c}`, cursor: "pointer",
+                                                borderLeft: `3px solid var(--accent)`, cursor: "pointer",
                                                 transition: "background-color 0.15s",
                                             }}
                                                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.04)"}
@@ -489,7 +494,7 @@ export default function MotoGPRiderStandingsPage() {
                                                 <p style={{
                                                     fontFamily: "var(--font-display)", fontSize: "9px", fontWeight: 600,
                                                     letterSpacing: "0.15em", textTransform: "uppercase",
-                                                    color: MOTOGP_RED, margin: "0 0 4px",
+                                                    color: "var(--accent)", margin: "0 0 4px",
                                                 }}>
                                                     {label}
                                                 </p>

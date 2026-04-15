@@ -12,7 +12,7 @@ import {
   FALLBACK_DRIVER,
   FALLBACK_LOGO,
   CURRENT_SEASON,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 
 const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
 const heights = ["280px", "250px", "240px"]
@@ -505,14 +505,7 @@ const F1LastRace = ({
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "8px" }}
                 >
-                  <div
-                    style={{
-                      width: "3px",
-                      height: "20px",
-                      backgroundColor: teamColor,
-                      flexShrink: 0,
-                    }}
-                  />
+
                   <span
                     style={{
                       fontFamily: "var(--font-inter)",

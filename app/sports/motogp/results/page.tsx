@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
+import { CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -147,7 +147,7 @@ export default function MotoGPResultsPage() {
                 <div className="max-w-7xl mx-auto px-6">
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "24px" }}>
                         <div>
-                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: MOTOGP_RED, marginBottom: "8px" }}>
+                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>
                                 MotoGP™
                             </p>
                             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 8px", lineHeight: 0.9, letterSpacing: "-0.03em" }}>
@@ -169,8 +169,8 @@ export default function MotoGPResultsPage() {
                                         style={{
                                             flex: "0 0 auto", fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#fff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -196,7 +196,7 @@ export default function MotoGPResultsPage() {
                                         padding: "10px 18px", background: "none", border: "none",
                                         cursor: "pointer", transition: "color 0.2s", marginBottom: "-1px",
                                         color: category === cls ? "#fff" : "rgba(255,255,255,0.3)",
-                                        borderBottom: category === cls ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                        borderBottom: category === cls ? "2px solid var(--accent)" : "2px solid transparent",
                                     }}
                                 >
                                     {cls}™
@@ -220,7 +220,7 @@ export default function MotoGPResultsPage() {
                                         padding: "10px 14px", background: "none", border: "none",
                                         cursor: "pointer", transition: "color 0.2s", marginBottom: "-1px",
                                         color: filter === tab.key ? "#fff" : "rgba(255,255,255,0.3)",
-                                        borderBottom: filter === tab.key ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                        borderBottom: filter === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
                                     }}
                                 >
                                     {tab.label}
@@ -267,12 +267,12 @@ export default function MotoGPResultsPage() {
                             const p2 = race.podium[1]
                             const p3 = race.podium[2]
                             const sprintLastName = race.sprintWinner?.riderName.split(" ").slice(1).join(" ") || race.sprintWinner?.riderName
-                            const sprintColor = race.sprintWinner?.constructorName ? getConstructorColor(race.sprintWinner.constructorName) : MOTOGP_RED
+                            const sprintColor = race.sprintWinner?.constructorName ? getConstructorColor(race.sprintWinner.constructorName) : "var(--accent)"
 
                             return (
                                 <Link
                                     key={race.eventId}
-                                    href={`/sports/motogp/races/${race.eventId}`}
+                                    href={`/ sports / motogp / races / ${race.eventId}`}
                                     style={{ textDecoration: "none", display: "block" }}
                                 >
                                     <div
@@ -282,9 +282,9 @@ export default function MotoGPResultsPage() {
                                             alignItems: "center",
                                             padding: "14px 16px",
                                             borderBottom: "1px solid rgba(255,255,255,0.04)",
-                                            borderLeft: isNext ? `3px solid ${MOTOGP_RED}` : "3px solid transparent",
+                                            borderLeft: isNext ? "3px solid var(--accent)" : "3px solid transparent",
                                             backgroundColor: isNext
-                                                ? `${MOTOGP_RED}08`
+                                                ? "color-mix(in srgb, var(--accent) 3%, transparent)"
                                                 : !race.isPast
                                                     ? "rgba(255,255,255,0.01)"
                                                     : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)",
@@ -293,14 +293,14 @@ export default function MotoGPResultsPage() {
                                         }}
                                         onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.04)"}
                                         onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = isNext
-                                            ? `${MOTOGP_RED}08`
+                                            ? "color-mix(in srgb, var(--accent) 3%, transparent)"
                                             : !race.isPast ? "rgba(255,255,255,0.01)"
                                                 : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
                                     >
                                         {/* Round */}
                                         <span style={{
                                             fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 700,
-                                            color: race.isPast ? "rgba(255,255,255,0.5)" : isNext ? MOTOGP_RED : "rgba(255,255,255,0.25)",
+                                            color: race.isPast ? "rgba(255,255,255,0.5)" : isNext ? "var(--accent)" : "rgba(255,255,255,0.25)",
                                         }}>
                                             {i + 1}
                                         </span>
@@ -324,7 +324,7 @@ export default function MotoGPResultsPage() {
                                                 {formatDate(race.dateEnd)}
                                             </div>
                                             {isNext && (
-                                                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: MOTOGP_RED, letterSpacing: "0.1em", marginTop: "2px" }}>
+                                                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: "var(--accent)", letterSpacing: "0.1em", marginTop: "2px" }}>
                                                     ● NEXT RACE
                                                 </div>
                                             )}

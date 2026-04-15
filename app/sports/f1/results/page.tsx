@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { getTeamColor, getCountryFlag, getFlagEmoji } from "@/types/f1/f1-api"
-import { DRIVER_IMAGES, FALLBACK_DRIVER, AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import { DRIVER_IMAGES, FALLBACK_DRIVER, AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
 
@@ -135,7 +135,7 @@ export default function ResultsPage() {
                 <div className="max-w-7xl mx-auto px-6">
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "24px" }}>
                         <div>
-                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "8px" }}>
+                            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>
                                 Formula 1
                             </p>
                             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 8px 0", lineHeight: 0.9, letterSpacing: "-0.03em" }}>
@@ -177,8 +177,8 @@ export default function ResultsPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? "var(--color-f1-red)" : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? "var(--color-f1-red)" : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -209,7 +209,7 @@ export default function ResultsPage() {
                                 padding: "10px 16px", background: "none", border: "none",
                                 cursor: "pointer", transition: "color 0.2s", marginBottom: "-1px",
                                 color: filter === tab.key ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                borderBottom: filter === tab.key ? "2px solid var(--color-f1-red)" : "2px solid transparent",
+                                borderBottom: filter === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
                             }}>{tab.label}</button>
                         ))}
                     </div>
@@ -268,7 +268,7 @@ export default function ResultsPage() {
                                             alignItems: "center",
                                             padding: "14px 16px",
                                             borderBottom: "1px solid rgba(255,255,255,0.04)",
-                                            borderLeft: isNext ? "3px solid var(--color-f1-red)" : "3px solid transparent",
+                                            borderLeft: isNext ? "3px solid var(--accent)" : "3px solid transparent",
                                             backgroundColor: isNext
                                                 ? "rgba(225,6,0,0.04)"
                                                 : !race.isPast
@@ -286,7 +286,7 @@ export default function ResultsPage() {
                                         {/* Round */}
                                         <span style={{
                                             fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 700,
-                                            color: race.isPast ? "rgba(255,255,255,0.5)" : isNext ? "var(--color-f1-red)" : "rgba(255,255,255,0.25)",
+                                            color: race.isPast ? "rgba(255,255,255,0.5)" : isNext ? "var(--accent)" : "rgba(255,255,255,0.25)",
                                         }}>{race.round}</span>
 
                                         {/* Flag */}
@@ -311,7 +311,7 @@ export default function ResultsPage() {
                                                 {formatDate(race.date)}
                                             </div>
                                             {isNext && (
-                                                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: "var(--color-f1-red)", letterSpacing: "0.1em", marginTop: "2px" }}>
+                                                <div style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: "var(--accent)", letterSpacing: "0.1em", marginTop: "2px" }}>
                                                     ● NEXT RACE
                                                 </div>
                                             )}

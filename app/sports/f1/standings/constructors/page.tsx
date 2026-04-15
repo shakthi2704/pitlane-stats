@@ -11,7 +11,7 @@ import {
   CURRENT_SEASON,
   AVAILABLE_SEASONS,
   FALLBACK_LOGO
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
 const SEASONS = AVAILABLE_SEASONS
@@ -62,7 +62,7 @@ export default function ConstructorStandingsPage() {
               fontWeight: 600,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "var(--color-f1-red)",
+              color: "var(--accent)",
               marginBottom: "6px",
             }}
           >
@@ -120,8 +120,8 @@ export default function ConstructorStandingsPage() {
                   cursor: "pointer",
                   border: "1px solid",
                   transition: "all 0.2s",
-                  borderColor: season === s ? "var(--color-f1-red)" : "rgba(255,255,255,0.1)",
-                  backgroundColor: season === s ? "var(--color-f1-red)" : "transparent",
+                  borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                  backgroundColor: season === s ? "var(--accent)" : "transparent",
                   color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                 }}
               >

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -145,7 +145,7 @@ export default function MotoGPRiderDetailPage() {
 
     if (!profile) return (
         <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-            <p style={{ fontFamily: "var(--font-display)", color: MOTOGP_RED, fontSize: "1.5rem", letterSpacing: "0.1em" }}>
+            <p style={{ fontFamily: "var(--font-display)", color: "var(--accent)", fontSize: "1.5rem", letterSpacing: "0.1em" }}>
                 RIDER NOT FOUND
             </p>
             <Link href="/sports/motogp/riders" style={{ fontFamily: "var(--font-sans)", color: "#555", fontSize: "0.85rem", textDecoration: "none" }}>
@@ -191,7 +191,7 @@ export default function MotoGPRiderDetailPage() {
                                             {crumb.label}
                                         </Link>
                                     ) : (
-                                        <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", color: MOTOGP_RED, letterSpacing: "0.12em" }}>
+                                        <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", color: "var(--accent)", letterSpacing: "0.12em" }}>
                                             {crumb.label}
                                         </span>
                                     )}
@@ -540,7 +540,7 @@ export default function MotoGPRiderDetailPage() {
                                 { label: "Seasons", value: careerTotals.seasons, color: "#ffffff" },
                                 { label: "Wins", value: careerTotals.wins, color: "#ffffff" },
                                 { label: "Podiums", value: careerTotals.podiums, color: "#C0C0C0" },
-                                { label: "Sprint Wins", value: careerTotals.sprintWins, color: MOTOGP_RED },
+                                { label: "Sprint Wins", value: careerTotals.sprintWins, color: "var(--accent)" },
                                 { label: "Points", value: Math.round(careerTotals.points), color: "#ffffff" },
                             ].map((stat, i) => (
                                 <div key={stat.label} style={{

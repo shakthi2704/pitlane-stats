@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
 
-const MOTOGP_RED = "#E3001B"
+
 interface MotoGPEvent {
     id: string
     name: string

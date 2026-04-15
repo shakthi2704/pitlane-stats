@@ -378,7 +378,7 @@ export default function HomePage() {
           className="text-xs tracking-[0.3em] mb-3 font-semibold uppercase"
           style={{
             fontFamily: "var(--font-display)",
-            color: "var(--color-f1-red)",
+            color: "var(--accent)",
           }}
         >
           Your Global Sports Hub

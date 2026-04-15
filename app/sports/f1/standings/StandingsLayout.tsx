@@ -42,7 +42,7 @@ export default function StandingsLayout({
                     pathname === tab.href ? "#ffffff" : "rgba(255,255,255,0.4)",
                   borderBottom:
                     pathname === tab.href
-                      ? "2px solid var(--color-f1-red)"
+                      ? "2px solid var(--accent)"
                       : "2px solid transparent",
                   transition: "color 0.2s",
                   display: "block",

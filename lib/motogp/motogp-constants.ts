@@ -1,6 +1,6 @@
 
 
-export const FALLBACK_RIDER = "/F1/drivers/driver-placeholder.png"
+export const FALLBACK_RIDER = "/motogp/riders/rider-placeholder.png"
 
 
 export const CURRENT_SEASON = new Date().getFullYear().toString()

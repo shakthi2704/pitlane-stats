@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { CIRCUIT_STATIC } from "@/lib/fi/circuit-data"
-import { CIRCUIT_COLORS, CIRCUIT_IMAGES } from "@/lib/fi/f1-constants"
+import { CIRCUIT_STATIC } from "@/lib/f1/circuit-data"
+import { CIRCUIT_COLORS, CIRCUIT_IMAGES } from "@/lib/f1/f1-constants"
 
 interface Circuit {
   circuitId: string
@@ -43,7 +43,7 @@ export default function CircuitsPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "28px" }}>
             <div>
-              <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "8px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>
                 Formula 1
               </p>
               <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 6vw, 5rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 8px", lineHeight: 0.9, letterSpacing: "-0.03em" }}>
@@ -69,7 +69,7 @@ export default function CircuitsPage() {
                   fontSize: "0.85rem", outline: "none", width: "260px",
                   fontFamily: "var(--font-sans)", transition: "border-color 0.2s",
                 }}
-                onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--color-f1-red)"}
+                onFocus={e => (e.target as HTMLInputElement).style.borderColor = "var(--accent)"}
                 onBlur={e => (e.target as HTMLInputElement).style.borderColor = "rgba(255,255,255,0.1)"}
               />
               {search && (

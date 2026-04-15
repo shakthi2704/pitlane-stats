@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import F1Hero from "@/components/f1/F1Hero"
 import F1RaceStrip from "@/components/f1/F1RaceStrip"
-import DriverStandings from "@/components/f1/DriverStandings"
-import LastRaceSection from "@/components/f1/F1LastRace"
+
+
 import type {
   Race,
   DriverStanding,
@@ -12,13 +12,14 @@ import type {
   RaceResult,
 } from "@/types/f1"
 
-import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import { CURRENT_SEASON } from "@/lib/f1/f1-constants"
 import Loader from "@/components/layout/Loader"
 import F1News from "@/components/f1/F1News"
 import F1LastRace from "@/components/f1/F1LastRace"
-import { ConstructorStandingsOnly } from "@/components/f1/ConstructorStandings"
-import DriverStandingsSection from "@/components/f1/DriverStandingsSection"
-import ConstructorStandingsSection from "@/components/f1/ConstructorStandingsSection"
+
+import F1DriverStandings from "@/components/f1/F1DriverStandings"
+import ConstructorStandingsSection from "@/components/f1/F1ConstructorStandings"
+import F1ConstructorStandings from "@/components/f1/F1ConstructorStandings"
 
 const SEASON = CURRENT_SEASON
 
@@ -86,13 +87,9 @@ export default function F1Page() {
       <F1RaceStrip races={races} />
 
       <div className="max-w-7xl mx-auto px-6 py-12 mt-10">
-        <DriverStandings
-          standings={driverStandings}
-          constructorStandings={constructorStandings}
-          loading={standingsLoading}
-        />
-        <DriverStandingsSection standings={driverStandings} />
-        <ConstructorStandingsSection constructorStandings={constructorStandings} />
+
+        <F1DriverStandings standings={driverStandings} />
+        <F1ConstructorStandings constructorStandings={constructorStandings} />
 
         <F1LastRace race={lastRace} results={lastRaceResults}
           loading={standingsLoading} />

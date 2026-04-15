@@ -1,0 +1,59 @@
+# Query: f1-red
+# Flags: RegExp
+
+37 results - 9 files
+
+app/sports/f1/circuits/[id]/page.tsx:
+  303:               color: "var(--accent)",
+
+app/sports/f1/drivers/page.tsx:
+  712:                     backgroundColor: "var(--accent)",
+
+app/sports/f1/races/page.tsx:
+  102:                   color: "var(--accent)",
+  165:                       backgroundColor: season === s ? "var(--color-accent)" : "transparent",
+  287:                           ? "var(--accent)"
+  515:                                 ? "var(--accent)"
+
+app/sports/f1/races/[round]/page.tsx:
+   544: //                   color: "var(--accent)",
+  1287: //                   backgroundColor: "var(--accent)",
+  1313: //                   backgroundColor: "var(--accent)",
+  1351: //                         ? "var(--accent)"
+  1355: //                         ? "var(--color-accent)"
+  1383: //                               ? "var(--accent)"
+  1387: //                               ? "var(--accent)"
+  2032:         backgroundColor: "var(--accent)",
+  2122:               color: "var(--accent)",
+  2234:                   color: "var(--accent)",
+  2261:                 <MapPinCheckInside size={16} className="text-f1-red" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
+  2977:                   backgroundColor: "var(--accent)",
+  3003:                   backgroundColor: "var(--accent)",
+  3041:                         ? "var(--accent)"
+  3045:                         ? "var(--accent)"
+  3073:                               ? "var(--accent)"
+  3077:                               ? "var(--accent)"
+
+app/sports/f1/results/page.tsx:
+  138:                             <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>
+  180:                                             borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+  181:                                             backgroundColor: season === s ? "var(--accent)" : "transparent",
+  212:                                 borderBottom: filter === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
+  271:                                             borderLeft: isNext ? "3px solid var(--accent)" : "3px solid transparent",
+  289:                                             color: race.isPast ? "rgba(255,255,255,0.5)" : isNext ? "var(--accent)" : "rgba(255,255,255,0.25)",
+  314:                                                 <div style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", color: "var(--accent)", letterSpacing: "0.1em", marginTop: "2px" }}>
+
+app/sports/f1/standings/StandingsLayout.tsx:
+  45:                       ? "2px solid var(--accent)"
+
+app/sports/f1/standings/constructors/page.tsx:
+   65:               color: "var(--accent)",
+  123:                   borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+  124:                   backgroundColor: season === s ? "var(--accent)" : "transparent",
+
+app/sports/f1/standings/drivers/page.tsx:
+  115:                     ? "var(--accent)"
+  118:                   season === s ? "var(--accent)" : "transparent",
+
+app/sports/f1/teams/page.tsx:
+  633:                   color: "var(--accent)",

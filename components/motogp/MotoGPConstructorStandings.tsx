@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getConstructorBike, MOTOGP_BIKE_PLACEHOLDER } from "@/lib/motogp/bike-images"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -66,28 +66,44 @@ const TopConstructorCard = ({
 
                 {/* Rank watermark */}
                 <div style={{
-                    position: "absolute", right: "-10px", bottom: "-20px",
+                    position: "absolute", right: "-0px", bottom: "-20px",
                     fontFamily: "var(--font-display)", fontSize: "12rem",
                     fontWeight: 900, lineHeight: 1,
-                    color: "rgba(0,0,0,0.3)", zIndex: 2,
+                    color: "rgba(0,0,0,0.4)", zIndex: 2,
                     userSelect: "none", pointerEvents: "none",
                 }}>
                     {rank}
                 </div>
 
-                {/* Constructor name as large background text */}
+                {/* Constructor name — top right */}
                 <div style={{
-                    position: "absolute", right: "12px", bottom: "12px",
+                    position: "absolute", right: "12px", top: "12px",
                     fontFamily: "var(--font-display)",
-                    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                    fontSize: "clamp(2rem, 5vw, 3rem)",
                     fontWeight: 900, lineHeight: 1,
-                    color: "rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.20)",
                     zIndex: 2, userSelect: "none",
                     textTransform: "uppercase",
                     whiteSpace: "nowrap",
                 }}>
                     {standing.constructor.name}
                 </div>
+
+                {/* Bike image */}
+                <img
+                    src={getConstructorBike(standing.constructor.name)}
+                    alt={standing.constructor.name}
+                    style={{
+                        position: "absolute",
+                        right: "40px", bottom: "10px",
+                        height: "75%", width: "auto",
+                        objectFit: "contain",
+                        zIndex: 3,
+                        filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
+                        opacity: 0.92,
+                    }}
+                    onError={e => { (e.target as HTMLImageElement).src = MOTOGP_BIKE_PLACEHOLDER }}
+                />
 
                 {/* Content */}
                 <div style={{
@@ -99,7 +115,7 @@ const TopConstructorCard = ({
                     {/* Top — rank label */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                         <div style={{
-                            width: "4px", height: "32px",
+                            width: "0px", height: "32px",
                             backgroundColor: "rgba(255,255,255,0.5)",
                         }} />
                         <span style={{
@@ -125,7 +141,7 @@ const TopConstructorCard = ({
                         </p>
                         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                             <p style={{
-                                fontFamily: "var(--font-display)",
+                                fontFamily: "var(--font-inter)",
                                 fontSize: "1rem", fontWeight: 700, margin: 0,
                             }}>
                                 {standing.points}{" "}
@@ -142,11 +158,14 @@ const TopConstructorCard = ({
     )
 }
 
-
+// ─── Main component ───────────────────────────────────────────────────────────
+type Category = "MotoGP" | "Moto2" | "Moto3"
 
 interface Props {
     standings: ConstructorStanding[]
     loading?: boolean
+    category: Category
+    onCategoryChange: (category: Category) => void
 }
 
 const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
@@ -158,11 +177,10 @@ const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
     const maxPts = standings[0]?.points ?? 1
 
     return (
-        <div style={{ marginBottom: "48px" }}>
-
+        <div className="bg-black p-6 mb-10">
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "center", marginBottom: "24px" }}>
-                <div style={{ width: "4px", height: "24px", backgroundColor: MOTOGP_RED, marginRight: "12px" }} />
+                <div style={{ width: "4px", height: "24px", backgroundColor: "var(--accent)", marginRight: "12px" }} />
                 <h2 style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "1.1rem", fontWeight: 700,
@@ -264,10 +282,10 @@ const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
                                             </div>
                                         </div>
                                         <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
-                                            {s.wins}
+                                            {s.wins} wins
                                         </span>
                                         <span style={{
-                                            fontFamily: "var(--font-display)",
+                                            fontFamily: "var(--font-inter)",
                                             fontSize: "0.9rem", fontWeight: 700,
                                             color: "#fff", textAlign: "right",
                                         }}>
@@ -305,7 +323,7 @@ const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
                                         <span style={{
                                             fontFamily: "var(--font-display)",
                                             fontSize: "0.9rem", fontWeight: 700,
-                                            color: "rgba(255,255,255,0.4)",
+                                            color: "rgba(255,255,255,0.5)",
                                         }}>
                                             {s.position}
                                         </span>
@@ -316,7 +334,7 @@ const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
                                         <div style={{ minWidth: 0 }}>
                                             <p style={{
                                                 fontSize: "0.85rem", fontWeight: 700,
-                                                color: "rgba(255,255,255,0.7)",
+                                                color: "rgba(255,255,255,0.5)",
                                                 margin: "0 0 3px 0",
                                                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                                             }}>
@@ -331,12 +349,13 @@ const MotoGPConstructorStandings = ({ standings, loading }: Props) => {
                                             </div>
                                         </div>
                                         <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
-                                            {s.wins}
+                                            {s.wins} wins
                                         </span>
                                         <span style={{
-                                            fontFamily: "var(--font-display)",
+                                            fontFamily: "var(--font-inter)",
                                             fontSize: "0.9rem", fontWeight: 700,
-                                            color: "rgba(255,255,255,0.7)", textAlign: "right",
+                                            color: "rgba(255,255,255,0.7)",
+                                            textAlign: "right",
                                         }}>
                                             {s.points}
                                         </span>

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FALLBACK_RIDER, MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+import { FALLBACK_RIDER } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 
@@ -213,6 +213,9 @@ const PodiumCard = ({ result, rank, eventId }: { result: RaceResult; rank: numbe
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
+
+
+type Category = "MotoGP" | "Moto2" | "Moto3"
 
 interface Props {
     event: Event | null
@@ -458,7 +461,7 @@ const MotoGPLastRace = ({ event, results }: Props) => {
 
                                 {/* Rider name */}
                                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                    <div style={{ width: "3px", height: "20px", backgroundColor: color, flexShrink: 0 }} />
+
                                     <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#fff", fontFamily: "var(--font-inter)", }}>
                                         {initial}. {lastName}
                                     </span>

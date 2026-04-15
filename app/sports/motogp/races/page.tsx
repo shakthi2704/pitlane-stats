@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_AVAILABLE_SEASONS, MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
 
 interface MotoGPEvent {
     id: string
@@ -81,7 +81,7 @@ export default function MotoGPRacesPage() {
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™
                             </p>
@@ -116,8 +116,8 @@ export default function MotoGPRacesPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -148,7 +148,7 @@ export default function MotoGPRacesPage() {
                                     padding: "10px 16px", background: "none", border: "none", cursor: "pointer",
                                     transition: "color 0.2s", marginBottom: "-1px",
                                     color: filter === tab.key ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: filter === tab.key ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: filter === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {tab.label}
@@ -189,10 +189,12 @@ export default function MotoGPRacesPage() {
                                             position: "relative",
                                             overflow: "hidden",
                                             background: isNext
-                                                ? `linear-gradient(180deg, ${MOTOGP_RED}14, rgba(0,0,0,0.9))`
+                                                ? "linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent), rgba(0,0,0,0.9))"
                                                 : "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.9))",
                                             border: "1px solid",
-                                            borderColor: isNext ? `${MOTOGP_RED}66` : "rgba(255,255,255,0.08)",
+                                            borderColor: isNext
+                                                ? "color-mix(in srgb, var(--accent) 40%, transparent)"
+                                                : "rgba(255,255,255,0.08)",
                                             transition: "all 0.25s ease",
                                             cursor: "pointer",
                                         }}
@@ -200,7 +202,7 @@ export default function MotoGPRacesPage() {
                                             const el = e.currentTarget as HTMLElement
                                             el.style.transform = "translateY(-6px) scale(1.01)"
                                             el.style.boxShadow = isNext
-                                                ? `0 20px 50px ${MOTOGP_RED}40`
+                                                ? "0 20px 50px color-mix(in srgb, var(--accent) 25%, transparent)"
                                                 : "0 16px 40px rgba(0,0,0,0.6)"
                                         }}
                                         onMouseLeave={e => {
@@ -213,7 +215,7 @@ export default function MotoGPRacesPage() {
                                         <div style={{
                                             height: "3px",
                                             backgroundColor: isNext
-                                                ? MOTOGP_RED
+                                                ? "var(--accent)"
                                                 : isPast
                                                     ? "rgba(255,255,255,0.08)"
                                                     : "rgba(255,255,255,0.04)",
@@ -256,8 +258,8 @@ export default function MotoGPRacesPage() {
                                                         fontFamily: "var(--font-display)", fontSize: "9px", fontWeight: 700,
                                                         letterSpacing: "0.12em", textTransform: "uppercase",
                                                         color: "#ffffff", padding: "3px 8px",
-                                                        background: `linear-gradient(135deg, ${MOTOGP_RED}, ${MOTOGP_RED}cc)`,
-                                                        boxShadow: `0 4px 12px ${MOTOGP_RED}66`,
+                                                        background: "linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 80%, transparent))",
+                                                        boxShadow: "0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent)",
                                                     }}>
                                                         NEXT
                                                     </span>
@@ -319,7 +321,7 @@ export default function MotoGPRacesPage() {
                                             <div style={{ paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                                                 <p style={{
                                                     fontFamily: "var(--font-display)", fontSize: "0.72rem",
-                                                    color: isNext ? MOTOGP_RED : "rgba(255,255,255,0.3)",
+                                                    color: isNext ? "var(--accent)" : "rgba(255,255,255,0.3)",
                                                     margin: 0, letterSpacing: "0.08em",
                                                 }}>
                                                     🗓 {formatDateRange(event.dateStart, event.dateEnd)}

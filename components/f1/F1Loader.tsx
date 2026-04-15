@@ -48,7 +48,7 @@ const F1Loader = ({
               left: 0,
               height: "4px",
               width: "40px",
-              backgroundColor: "var(--color-f1-red)",
+              backgroundColor: "var(--accent)",
               animation: "f1slide 1.2s ease-in-out infinite",
               borderRadius: "0 2px 2px 0",
             }}
@@ -62,7 +62,7 @@ const F1Loader = ({
               left: 0,
               height: "8px",
               width: "20px",
-              backgroundColor: "var(--color-f1-red)",
+              backgroundColor: "var(--accent)",
               animation: "f1slide 1.2s ease-in-out infinite",
               filter: "blur(6px)",
               opacity: 0.5,

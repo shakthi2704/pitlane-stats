@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import "leaflet/dist/leaflet.css";
 import { ThemeProvider } from "@/components/ThemeProvider/ThemeProvider"
-import Link from "next/link"
 import Footer from "@/components/layout/Footer"
 import Header from "@/components/layout/Header"
 

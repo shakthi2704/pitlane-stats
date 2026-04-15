@@ -1,13 +1,14 @@
-
 "use client"
 
 import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_RED, FALLBACK_RIDER } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getMotoGPCircuitStatic } from "@/lib/motogp/circuit-data"
 import Loader from "@/components/layout/Loader"
 import { MapPinCheckInside } from "lucide-react"
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,8 +33,10 @@ interface RaceHistory {
         constructorName?: string | null
         teamName?: string | null
         time?: string | null
+        photoUrl?: string | null
     } | null
 }
+
 
 // ─── Nation → ISO2 ───────────────────────────────────────────────────────────
 
@@ -63,7 +66,7 @@ function getNationalityFlag(iso2: string | null | undefined): string {
 
 const CIRCUIT_COORDS: Record<string, [number, number]> = {
     "Circuit de Barcelona-Catalunya": [41.5700, 2.2611],
-    "Circuito de Jerez": [36.7097, -6.0306],
+    "Circuito de Jerez - Ángel Nieto": [36.7104, -6.0329],
     "Circuit Ricardo Tormo": [39.4889, -0.6317],
     "Motorland Aragón": [41.1631, -0.2517],
     "Autodromo del Mugello": [43.9975, 11.3719],
@@ -82,7 +85,7 @@ const CIRCUIT_COORDS: Record<string, [number, number]> = {
     "Mobility Resort Motegi": [36.5372, 140.1997],
     "Sepang International Circuit": [2.7606, 101.7381],
     "Chang International Circuit": [14.9503, 102.9228],
-    "Losail International Circuit": [25.4900, 51.4542],
+    "Lusail International Circuit": [25.4900, 51.4542],
     "Sokol International Racetrack": [51.0833, 71.4167],
     "Mandalika International Street Circuit": [-8.8892, 116.3022],
     "Buddh International Circuit": [28.3487, 77.5313],
@@ -146,7 +149,7 @@ const CircuitMap = ({ circuitName, place }: { circuitName: string; place?: strin
 
                 L.circleMarker(coords, {
                     radius: 10,
-                    fillColor: MOTOGP_RED,
+                    fillColor: "var(--accent)",
                     color: "#fff",
                     weight: 2,
                     opacity: 1,
@@ -218,6 +221,7 @@ export default function MotoGPCircuitDetailPage() {
     const [loading, setLoading] = useState(true)
 
 
+
     useEffect(() => {
         if (!id) return
         fetch(`/api/motogp/circuits/${id}`)
@@ -236,44 +240,63 @@ export default function MotoGPCircuitDetailPage() {
 
     if (!circuit) return (
         <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-            <p style={{ fontFamily: "var(--font-display)", color: MOTOGP_RED, fontSize: "1.5rem", letterSpacing: "0.1em" }}>CIRCUIT NOT FOUND</p>
+            <p style={{ fontFamily: "var(--font-display)", color: "var(--accent)", fontSize: "1.5rem", letterSpacing: "0.1em" }}>CIRCUIT NOT FOUND</p>
             <Link href="/sports/motogp/circuits" style={{ fontFamily: "var(--font-sans)", color: "#555", fontSize: "0.85rem", textDecoration: "none" }}>← Back to Circuits</Link>
         </div>
     )
 
     const flag = getFlagEmoji(circuit.nation)
-    const firstYear = history.length > 0 ? history[history.length - 1].year : null
-    const lastYear = history.length > 0 ? history[0].year : null
 
-    // Most successful rider at this circuit
-    // const winnerCount: Record<string, { name: string; count: number; constructorName: string | null }> = {}
-    // for (const ev of history) {
-    //     if (!ev.winner) continue
-    //     const key = ev.winner.riderId
-    //     if (!winnerCount[key]) winnerCount[key] = { name: ev.winner.riderName, count: 0, constructorName: ev.winner.constructorName }
-    //     winnerCount[key].count++
-    // }
+    const validHistory = history
+        .filter(ev => ev.winner !== null)
+        .sort((a, b) => b.year - a.year) // latest first
+
+    const firstYear = validHistory.length > 0
+        ? validHistory[validHistory.length - 1].year
+        : null
+
+    const lastYear = validHistory.length > 0
+        ? validHistory[0].year
+        : null
+
     const winnerCount: Record<
         string,
         { name: string; count: number; constructorName: string | null }
     > = {}
 
-    for (const ev of history) {
+    for (const ev of validHistory) {
         if (!ev.winner) continue
-
         const key = ev.winner.riderId
-
         if (!winnerCount[key]) {
             winnerCount[key] = {
                 name: ev.winner.riderName,
                 count: 0,
-                constructorName: ev.winner.constructorName ?? null, // ✅ FIX
+                constructorName: ev.winner.constructorName ?? null,
             }
         }
-
         winnerCount[key].count++
     }
     const topWinner = Object.values(winnerCount).sort((a, b) => b.count - a.count)[0]
+
+    // Static track data
+    const staticData = getMotoGPCircuitStatic(circuit.name)
+
+    // Build StatBox items — richer when static data is available
+    const statBoxItems = staticData
+        ? [
+            { label: "Circuit Length", value: staticData.length },
+            { label: "Corners", value: staticData.corners },
+            { label: "First MotoGP Race", value: staticData.firstGP },
+            { label: "Most Recent", value: lastYear ?? "—" },
+            { label: "Total MotoGP Races", value: totalRaces },
+            { label: "Lap Record", value: staticData.lapRecord, sub: `${staticData.lapRecordHolder} (${staticData.lapRecordYear})` },
+        ]
+        : [
+            { label: "Total MotoGP Races", value: totalRaces },
+            { label: "First MotoGP Race", value: firstYear ?? "—" },
+            { label: "Most Recent", value: lastYear ?? "—" },
+            { label: "Nation", value: circuit.nation ? `${flag} ${circuit.nation}` : "—" },
+        ]
 
     return (
         <div>
@@ -406,13 +429,14 @@ export default function MotoGPCircuitDetailPage() {
                                 gap: "6px",
                             }}
                         >
-                            <StatBox label="Total MotoGP Races" value={totalRaces} />
-                            <StatBox label="First MotoGP Race" value={firstYear ?? "—"} />
-                            <StatBox label="Most Recent" value={lastYear ?? "—"} />
-                            <StatBox
-                                label="Nation"
-                                value={circuit.nation ? `${flag} ${circuit.nation}` : "—"}
-                            />
+                            {statBoxItems.map(item => (
+                                <StatBox
+                                    key={item.label}
+                                    label={item.label}
+                                    value={item.value}
+                                    sub={"sub" in item ? item.sub : undefined}
+                                />
+                            ))}
                         </div>
 
                         {/* Most successful rider */}
@@ -421,7 +445,7 @@ export default function MotoGPCircuitDetailPage() {
                                 style={{
                                     backgroundColor: "rgba(255,255,255,0.02)",
                                     border: "1px solid rgba(255,255,255,0.06)",
-                                    borderLeft: `3px solid ${getConstructorColor(topWinner.constructorName ?? "")}`,
+                                    borderLeft: "3px solid var(--accent)",
                                     padding: "16px",
                                 }}
                             >
@@ -486,7 +510,7 @@ export default function MotoGPCircuitDetailPage() {
                         style={{
                             width: "4px",
                             height: "22px",
-                            backgroundColor: MOTOGP_RED,
+                            backgroundColor: "var(--accent)",
                         }}
                     />
                     <h2
@@ -503,7 +527,7 @@ export default function MotoGPCircuitDetailPage() {
                     </h2>
                 </div>
 
-                {history.length === 0 ? (
+                {validHistory.length === 0 ? (
                     <div
                         style={{
                             padding: "60px",
@@ -534,7 +558,7 @@ export default function MotoGPCircuitDetailPage() {
                                 borderBottom: "1px solid rgba(255,255,255,0.06)",
                             }}
                         >
-                            {["YEAR", "WINNER", "CONSTRUCTOR", "TEAM", "TIME"].map((h) => (
+                            {["YEAR", "WINNER", "TEAM", "NATIONALITY", "TIME"].map((h) => (
                                 <span
                                     key={h}
                                     style={{
@@ -551,14 +575,19 @@ export default function MotoGPCircuitDetailPage() {
                             ))}
                         </div>
 
-                        {history.map((ev) => {
+                        {validHistory.map((ev) => {
+                            // const w = ev.winner
+                            // const color = w?.constructorName
+                            //     ? getConstructorColor(w.constructorName)
+                            //     : "rgba(255,255,255,0.15)"
+                            // const winnerLastName = w
+                            //     ? w.riderName.split(" ").slice(1).join(" ") || w.riderName
+                            //     : null
                             const w = ev.winner
+
                             const color = w?.constructorName
                                 ? getConstructorColor(w.constructorName)
                                 : "rgba(255,255,255,0.15)"
-                            const winnerLastName = w
-                                ? w.riderName.split(" ").slice(1).join(" ") || w.riderName
-                                : null
 
                             return (
                                 <Link
@@ -573,7 +602,7 @@ export default function MotoGPCircuitDetailPage() {
                                             alignItems: "center",
                                             padding: "12px 16px",
                                             borderBottom: "1px solid rgba(255,255,255,0.04)",
-                                            borderLeft: `3px solid ${color}`,
+                                            // borderLeft: `3px solid ${color}`,
                                             transition: "background-color 0.15s",
                                             cursor: "pointer",
                                         }}
@@ -602,48 +631,41 @@ export default function MotoGPCircuitDetailPage() {
 
                                         {/* Winner */}
                                         {w ? (
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "8px",
-                                                }}
-                                            >
-                                                <span style={{ fontSize: "14px" }}>
-                                                    {getNationalityFlag(w.nationality)}
-                                                </span>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+
+                                                {/* Rider Image */}
+                                                <img
+                                                    src={w.photoUrl || FALLBACK_RIDER}
+                                                    alt={w.riderName}
+                                                    onError={(e) => {
+                                                        const img = e.currentTarget
+                                                        img.src = FALLBACK_RIDER
+                                                    }}
+                                                    style={{
+                                                        width: "28px",
+                                                        height: "28px",
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        border: "1px solid rgba(255,255,255,0.2)",
+                                                    }}
+                                                />
+
+                                                {/* Name */}
                                                 <div>
                                                     <span
                                                         style={{
-                                                            fontFamily: "var(--font-display)",
+                                                            fontFamily: "var(--font-inter)",
                                                             fontSize: "0.85rem",
                                                             fontWeight: 700,
-                                                            color: "#fff",
+                                                            color: "#ffffff",
                                                         }}
                                                     >
-                                                        {winnerLastName?.toUpperCase()}
+                                                        {w.riderName}
                                                     </span>
-                                                    <div
-                                                        style={{
-                                                            fontSize: "0.68rem",
-                                                            color: "rgba(255,255,255,0.3)",
-                                                            marginTop: "1px",
-                                                        }}
-                                                    >
-                                                        {w.riderName.split(" ")[0]}
-                                                    </div>
                                                 </div>
                                             </div>
                                         ) : (
-                                            <span
-                                                style={{
-                                                    color: "rgba(255,255,255,0.2)",
-                                                    fontFamily: "var(--font-display)",
-                                                    fontSize: "0.8rem",
-                                                }}
-                                            >
-                                                —
-                                            </span>
+                                            <span style={{ color: "rgba(255,255,255,0.2)" }}>—</span>
                                         )}
 
                                         {/* Constructor */}
@@ -654,43 +676,46 @@ export default function MotoGPCircuitDetailPage() {
                                                 gap: "8px",
                                             }}
                                         >
-                                            {w?.constructorName && (
-                                                <div
-                                                    style={{
-                                                        width: "3px",
-                                                        height: "16px",
-                                                        backgroundColor: color,
-                                                        flexShrink: 0,
-                                                    }}
-                                                />
-                                            )}
+
                                             <span
                                                 style={{
                                                     fontSize: "0.8rem",
-                                                    color: "rgba(255,255,255,0.45)",
+                                                    color: "rgba(255,255,255,0.5)",
+                                                    fontFamily: "var(--font-inter)",
                                                 }}
                                             >
-                                                {w?.constructorName ?? "—"}
+                                                {/* {w?.constructorName ?? "—"} */}
+                                                {w?.teamName ?? "—"}
                                             </span>
                                         </div>
 
                                         {/* Team */}
-                                        <span
+
+                                        {/* <span
                                             style={{
                                                 fontSize: "0.78rem",
                                                 color: "rgba(255,255,255,0.3)",
                                             }}
                                         >
-                                            {w?.teamName ?? "—"}
-                                        </span>
+                                           {w?.teamName ?? "—"}
+                                            {w?.nationality ? getNationalityFlag(w.nationality) : "—"}
+                                        </span> */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                            <span style={{ fontSize: "14px" }}>
+                                                {getFlagEmoji(w?.nationality ?? "")}
+                                            </span>
+                                            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-inter)", }}>
+                                                {w?.nationality ?? "—"}
+                                            </span>
+                                        </div>
 
                                         {/* Time */}
                                         <span
                                             style={{
-                                                fontFamily: "var(--font-display)",
+                                                fontFamily: "var(--font-inter)",
                                                 fontSize: "0.75rem",
-                                                color: "rgba(255,255,255,0.35)",
-                                                textAlign: "right",
+                                                color: "rgba(255,255,255,0.5)",
+
                                             }}
                                         >
                                             {w?.time ?? "—"}

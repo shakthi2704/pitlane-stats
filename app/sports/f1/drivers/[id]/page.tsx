@@ -11,7 +11,7 @@ import {
   TEAM_LOGOS,
   FALLBACK_DRIVER,
   AVAILABLE_SEASONS,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 
 
 const SEASONS = AVAILABLE_SEASONS

@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getConstructorBike, MOTOGP_BIKE_PLACEHOLDER } from "@/lib/motogp/bike-images"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -308,7 +309,7 @@ export default function MotoGPConstructorStandingsPage() {
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™ World Championship
                             </p>
@@ -340,8 +341,8 @@ export default function MotoGPConstructorStandingsPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -365,7 +366,7 @@ export default function MotoGPConstructorStandingsPage() {
                                     padding: "10px 20px", background: "none", border: "none", cursor: "pointer",
                                     transition: "color 0.2s", marginBottom: "-1px",
                                     color: category === cat ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: category === cat ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: category === cat ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {cat}™
@@ -449,17 +450,20 @@ export default function MotoGPConstructorStandingsPage() {
                                                 background: "linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)",
                                             }} />
 
-                                            {/* Constructor name watermark */}
-                                            <div style={{
-                                                position: "absolute", right: "-8px", bottom: "-16px",
-                                                fontFamily: "var(--font-display)",
-                                                fontSize: "clamp(3rem, 10vw, 7rem)",
-                                                fontWeight: 900, color: "rgba(0,0,0,0.25)",
-                                                userSelect: "none", pointerEvents: "none",
-                                                textTransform: "uppercase", letterSpacing: "-0.03em",
-                                            }}>
-                                                {s.constructor.name}
-                                            </div>
+                                            {/* Bike image */}
+                                            <img
+                                                src={getConstructorBike(s.constructor.name)}
+                                                alt={s.constructor.name}
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "-10px", bottom: "24px",
+                                                    height: "60%", width: "auto",
+                                                    objectFit: "contain", zIndex: 2,
+                                                    filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
+                                                    opacity: 0.9,
+                                                }}
+                                                onError={e => { (e.target as HTMLImageElement).src = MOTOGP_BIKE_PLACEHOLDER }}
+                                            />
 
                                             {/* Content */}
                                             <div style={{
@@ -552,6 +556,6 @@ export default function MotoGPConstructorStandingsPage() {
                     </>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
