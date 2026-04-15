@@ -13,7 +13,7 @@ import {
   FALLBACK_DRIVER,
   AVAILABLE_SEASONS,
   CURRENT_SEASON,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 
 const SEASONS = AVAILABLE_SEASONS
 
@@ -733,7 +733,7 @@ export default function TeamDetailPage() {
         {/* ── RACE RESULTS TAB ── */}
         {tab === "results" && (
           <div>
-            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "6px" }}>
+            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "6px" }}>
               Formula 1
             </p>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 4px 0", lineHeight: 1, letterSpacing: "-0.02em" }}>
@@ -824,7 +824,7 @@ export default function TeamDetailPage() {
         {/* ── CAREER TAB ── */}
         {tab === "career" && (
           <div>
-            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--color-f1-red)", marginBottom: "6px" }}>
+            <p style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "6px" }}>
               Formula 1
             </p>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 700, color: "#ffffff", margin: "0 0 4px 0", lineHeight: 1, letterSpacing: "-0.02em" }}>

@@ -10,7 +10,7 @@ import {
   FALLBACK_DRIVER,
   CURRENT_SEASON,
   AVAILABLE_SEASONS
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
 
@@ -61,11 +61,11 @@ export default function DriverStandingsPage() {
               fontWeight: 600,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "var(--color-f1-red)",
+              color: "var(--accent)",
               marginBottom: "6px",
             }}
           >
-            Formula 1
+            Formula 1 World Championship
           </p>
           <h1
             style={{
@@ -87,7 +87,7 @@ export default function DriverStandingsPage() {
               marginTop: "8px",
             }}
           >
-            {season} FIA Formula One World Championship
+            {season} FIA Formula One World Championship - {standings.length} riders
           </p>
         </div>
         {/* <div
@@ -112,10 +112,10 @@ export default function DriverStandingsPage() {
                 transition: "all 0.2s",
                 borderColor:
                   season === s
-                    ? "var(--color-f1-red)"
+                    ? "var(--accent)"
                     : "rgba(255,255,255,0.1)",
                 backgroundColor:
-                  season === s ? "var(--color-f1-red)" : "transparent",
+                  season === s ? "var(--accent)" : "transparent",
                 color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
               }}
             >
@@ -172,10 +172,10 @@ export default function DriverStandingsPage() {
                   transition: "all 0.2s",
                   borderColor:
                     season === s
-                      ? "var(--color-f1-red)"
+                      ? "var(--accent)"
                       : "rgba(255,255,255,0.1)",
                   backgroundColor:
-                    season === s ? "var(--color-f1-red)" : "transparent",
+                    season === s ? "var(--accent)" : "transparent",
                   color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                 }}
               >
@@ -213,7 +213,7 @@ export default function DriverStandingsPage() {
                 marginBottom: "24px",
                 backgroundColor: "rgba(245,200,66,0.06)",
                 border: "1px solid rgba(245,200,66,0.2)",
-                borderLeft: "3px solid #F5C842",
+                borderLeft: "3px solid var(--color-yellow)",
               }}
             >
 
@@ -246,7 +246,7 @@ export default function DriverStandingsPage() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "11px",
-                    color: "#F5C842",
+                    color: "var(--color-yellow)",
                     letterSpacing: "0.15em",
                     textTransform: "uppercase",
                     margin: "0 0 2px 0",
@@ -256,26 +256,21 @@ export default function DriverStandingsPage() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.4rem",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    margin: 0,
+                    fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 400,
+                    color: "#fff", margin: "0 0 2px", letterSpacing: "0.05em",
                   }}
                 >
                   {leader.driver.givenName} {leader.driver.familyName}
                 </p>
                 <p
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.1rem",
-                    color: "rgba(192, 192, 192, 0.9)",
-                    margin: "2px 0 0 0",
+                    fontSize: "0.8rem", fontFamily: "var(--font-inter)", color: "rgba(255,255,255,0.90)", margin: 0
                   }}
                 >
-                  {leader.constructorName} ·{" "}
+
                   {getFlagEmoji(leader.driver.nationality ?? "")}{" "}
-                  {leader.driver.nationality}
+                  {leader.driver.nationality} -{" "}
+                  {leader.constructorName}
                 </p>
               </div>
               <div style={{ textAlign: "right" }}>
@@ -284,7 +279,7 @@ export default function DriverStandingsPage() {
                     fontFamily: "var(--font-display)",
                     fontSize: "2.5rem",
                     fontWeight: 400,
-                    color: "#F5C842",
+                    color: "var(--color-yellow)",
                     margin: 0,
                     lineHeight: 1,
                   }}
@@ -417,7 +412,7 @@ export default function DriverStandingsPage() {
                           fontFamily: "var(--font-display)",
                           fontSize: "1rem",
                           fontWeight: 700,
-                          color: isTop3 ? "#ffffff" : "rgba(255,255,255,0.35)",
+                          color: isTop3 ? "#ffffff" : "rgba(255,255,255,0.5)",
                         }}
                       >
                         {s.position}
@@ -473,14 +468,14 @@ export default function DriverStandingsPage() {
                         <div>
                           <p
                             style={{
-                              fontFamily: "var(--font-roboto-mono)",
+                              fontFamily: "var(--font-inter)",
                               fontSize: "0.9rem",
                               fontWeight: 700,
                               color: "#ffffff",
                               margin: 0,
                             }}
                           >
-                            {s.driver.givenName[0]}. {s.driver.familyName}
+                            {s.driver.givenName} {s.driver.familyName}
                           </p>
                         </div>
                       </div>
@@ -514,7 +509,7 @@ export default function DriverStandingsPage() {
                           gap: "8px",
                         }}
                       >
-                        {logoSrc && (
+                        {/* {logoSrc && (
                           <img
                             src={logoSrc}
                             alt={s.constructorName}
@@ -530,7 +525,7 @@ export default function DriverStandingsPage() {
                               "none")
                             }
                           />
-                        )}
+                        )} */}
                         <span
                           style={{
                             fontSize: "0.8rem",

@@ -339,7 +339,7 @@
 //       style={{
 //         width: "4px",
 //         height: "22px",
-//         backgroundColor: "var(--color-f1-red)",
+//         backgroundColor: "var(--color-accent)",
 //       }}
 //     />
 //     <h2
@@ -429,7 +429,7 @@
 //           <Link
 //             href="/sports/f1/races"
 //             style={{
-//               color: "var(--color-f1-red)",
+//               color: "var(--accent",
 //               textDecoration: "none",
 //               fontSize: "0.85rem",
 //             }}
@@ -541,7 +541,7 @@
 //                   fontWeight: 600,
 //                   letterSpacing: "0.2em",
 //                   textTransform: "uppercase",
-//                   color: "var(--color-f1-red)",
+//                   color: "var(--accent)",
 //                   margin: "0 0 6px 0",
 //                 }}
 //               >
@@ -568,7 +568,7 @@
 //                   display: "flex", alignItems: "center", gap: "4px"
 //                 }}
 //               >
-//                 <MapPinCheckInside size={16} className="text-f1-red" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
+//                 <MapPinCheckInside size={16} className="text-accent" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
 //                 {race.circuit.country}
 //               </p>
 //               <p
@@ -1284,7 +1284,7 @@
 //                 style={{
 //                   width: "4px",
 //                   height: "22px",
-//                   backgroundColor: "var(--color-f1-red)",
+//                   backgroundColor: "var(--accent)",
 //                 }}
 //               />
 //               <h2
@@ -1310,7 +1310,7 @@
 //                   letterSpacing: "0.15em",
 //                   textTransform: "uppercase",
 //                   color: "#ffffff",
-//                   backgroundColor: "var(--color-f1-red)",
+//                   backgroundColor: "var(--accent)",
 //                   border: "none",
 //                   padding: "8px 20px",
 //                   cursor: "pointer",
@@ -1348,11 +1348,11 @@
 //                     transition: "all 0.2s",
 //                     borderColor:
 //                       selectedDriver === "all"
-//                         ? "var(--color-f1-red)"
+//                         ? "var(--accent)"
 //                         : "rgba(255,255,255,0.1)",
 //                     backgroundColor:
 //                       selectedDriver === "all"
-//                         ? "var(--color-f1-red)"
+//                         ? "var(--accent)"
 //                         : "transparent",
 //                     color:
 //                       selectedDriver === "all"
@@ -1380,11 +1380,11 @@
 //                           transition: "all 0.2s",
 //                           borderColor:
 //                             selectedDriver === d.driverId
-//                               ? "var(--color-f1-red)"
+//                               ? "var(--accent)"
 //                               : "rgba(255,255,255,0.1)",
 //                           backgroundColor:
 //                             selectedDriver === d.driverId
-//                               ? "var(--color-f1-red)"
+//                               ? "var(--accent)"
 //                               : "transparent",
 //                           color:
 //                             selectedDriver === d.driverId
@@ -1698,9 +1698,9 @@ import {
   FALLBACK_DRIVER,
   TEAM_LOGOS,
   CURRENT_SEASON,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
-import { CIRCUIT_STATIC } from "@/lib/fi/circuit-data"
+import { CIRCUIT_STATIC } from "@/lib/f1/circuit-data"
 import { MapPinCheckInside } from "lucide-react"
 
 interface Circuit {
@@ -2029,7 +2029,7 @@ const SectionHeader = ({ title }: { title: string }) => (
       style={{
         width: "4px",
         height: "22px",
-        backgroundColor: "var(--color-f1-red)",
+        backgroundColor: "var(--accent)",
       }}
     />
     <h2
@@ -2119,7 +2119,7 @@ export default function RaceDetailPage() {
           <Link
             href="/sports/f1/races"
             style={{
-              color: "var(--color-f1-red)",
+              color: "var(--accent)",
               textDecoration: "none",
               fontSize: "0.85rem",
             }}
@@ -2231,7 +2231,7 @@ export default function RaceDetailPage() {
                   fontWeight: 600,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
-                  color: "var(--color-f1-red)",
+                  color: "var(--accent)",
                   margin: "0 0 6px 0",
                 }}
               >
@@ -2258,7 +2258,7 @@ export default function RaceDetailPage() {
                   display: "flex", alignItems: "center", gap: "4px"
                 }}
               >
-                <MapPinCheckInside size={16} className="text-f1-red" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
+                <MapPinCheckInside size={16} className="" />{race.circuit.circuitName} · {race.circuit.locality},{" "}
                 {race.circuit.country}
               </p>
               <p
@@ -2974,7 +2974,7 @@ export default function RaceDetailPage() {
                 style={{
                   width: "4px",
                   height: "22px",
-                  backgroundColor: "var(--color-f1-red)",
+                  backgroundColor: "var(--accent)",
                 }}
               />
               <h2
@@ -3000,7 +3000,7 @@ export default function RaceDetailPage() {
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
                   color: "#ffffff",
-                  backgroundColor: "var(--color-f1-red)",
+                  backgroundColor: "var(--accent)",
                   border: "none",
                   padding: "8px 20px",
                   cursor: "pointer",
@@ -3038,11 +3038,11 @@ export default function RaceDetailPage() {
                     transition: "all 0.2s",
                     borderColor:
                       selectedDriver === "all"
-                        ? "var(--color-f1-red)"
+                        ? "var(--accent)"
                         : "rgba(255,255,255,0.1)",
                     backgroundColor:
                       selectedDriver === "all"
-                        ? "var(--color-f1-red)"
+                        ? "var(--accent)"
                         : "transparent",
                     color:
                       selectedDriver === "all"
@@ -3070,11 +3070,11 @@ export default function RaceDetailPage() {
                           transition: "all 0.2s",
                           borderColor:
                             selectedDriver === d.driverId
-                              ? "var(--color-f1-red)"
+                              ? "var(--accent)"
                               : "rgba(255,255,255,0.1)",
                           backgroundColor:
                             selectedDriver === d.driverId
-                              ? "var(--color-f1-red)"
+                              ? "var(--accent)"
                               : "transparent",
                           color:
                             selectedDriver === d.driverId

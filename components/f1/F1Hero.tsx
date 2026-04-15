@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { Race } from "@/types/f1"
-import { CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import { CURRENT_SEASON } from "@/lib/f1/f1-constants"
 
 
 
@@ -119,7 +119,7 @@ const F1Hero = ({ nextRace }: { nextRace: Race | null }) => {
           </p>
         </div>
         {nextRace && (
-          <div className="bg-black/70 mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
+          <div className="bg-black/30 py-2 mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
             {/* Race info */}
             <div className="border-l-2 border-[var(--accent)] pl-4">
               <p className="text-[var(--accent))] text-[10px] font-semibold tracking-[0.25em] uppercase mb-1">
@@ -129,7 +129,7 @@ const F1Hero = ({ nextRace }: { nextRace: Race | null }) => {
                 className="text-white text-2xl leading-tight mb-0.5"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                {nextRace.raceName}
+                {nextRace.raceName.toUpperCase()}
               </p>
               <p className="text-white/80 text-sm">
                 {nextRace.circuit.locality}, {nextRace.circuit.country} ·{" "}
@@ -142,7 +142,7 @@ const F1Hero = ({ nextRace }: { nextRace: Race | null }) => {
             </div>
 
             {/* Countdown */}
-            <div className="flex items-center gap-1 sm:ml-auto">
+            <div className="flex items-center gap-1 sm:ml-auto ">
               {[
                 { value: countdown.days, label: "D" },
                 { value: countdown.hours, label: "H" },

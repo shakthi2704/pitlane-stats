@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

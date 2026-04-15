@@ -1,5 +1,5 @@
 import F1Footer from "@/components/f1/F1Footer"
-import F1navBar from "@/components/f1/F1navBar"
+import F1navBar from "@/components/f1/F1NavBar"
 
 export default function F1Layout({ children }: { children: React.ReactNode }) {
 

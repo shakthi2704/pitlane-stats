@@ -57,7 +57,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
         <div className="relative w-full overflow-hidden" style={{ minHeight: "520px" }}>
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url('/MotoGP/hero/hero-motogp-2.jpg')`, backgroundColor: "#0a0a0a" }}
+                style={{ backgroundImage: `url('/motogp/hero/hero-motogp-2.jpg')`, backgroundColor: "#0a0a0a" }}
             />
             <div
                 className="absolute inset-0"
@@ -114,7 +114,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                     </p>
                 </div>
                 {nextEvent && (
-                    <div className="mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
+                    <div className="bg-black/30 py-2 mt-10 flex flex-col sm:flex-row sm:items-end gap-6">
                         {/* Race info */}
                         <div className="pl-4" style={{ borderLeft: "2px solidvar(--accent)" }}>
                             <p
@@ -127,7 +127,7 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                                 className="text-white text-2xl leading-tight mb-0.5"
                                 style={{ fontFamily: "var(--font-display)" }}
                             >
-                                {nextEvent.sponsoredName ?? nextEvent.name}
+                                {(nextEvent.sponsoredName ?? nextEvent.name).toUpperCase()}
                             </p>
                             <p className="text-white/75 text-sm">
                                 {nextEvent.circuit?.place ?? nextEvent.circuit?.name ?? "—"}
@@ -150,18 +150,12 @@ const MotoGPHero = ({ nextEvent }: { nextEvent: MotoGPEvent | null }) => {
                             ].map((unit, i) => (
                                 <div key={unit.label} className="flex items-center">
                                     <div
-                                        className="text-center px-3 py-2 min-w-[56px]"
-                                        style={{
-                                            backgroundColor: "rgba(0,0,0,0.6)",
-                                            border: "1px solid rgba(255,255,255,0.1)",
-                                        }}
+                                        className="text-center px-3 py-2 bg-black/60 border border-white/10 min-w-[56px]"
+
                                     >
                                         <div
-                                            className="text-3xl font-bold tabular-nums leading-none"
-                                            style={{
-                                                fontFamily: "var(--font-display)",
-                                                color: "rgba(255,255,255,0.9)",
-                                            }}
+                                            className="text-3xl font-bold text-white/60 tabular-nums leading-none"
+                                            style={{ fontFamily: "var(--font-display)" }}
                                         >
                                             {String(unit.value).padStart(2, "0")}
                                         </div>

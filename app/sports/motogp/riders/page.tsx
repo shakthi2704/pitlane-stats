@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
+import { CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -327,7 +327,7 @@ export default function MotoGPRidersPage() {
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™
                             </p>
@@ -359,8 +359,8 @@ export default function MotoGPRidersPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -384,7 +384,7 @@ export default function MotoGPRidersPage() {
                                     padding: "10px 20px", background: "none", border: "none",
                                     cursor: "pointer", transition: "color 0.2s", marginBottom: "-1px",
                                     color: classFilter === cls ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: classFilter === cls ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: classFilter === cls ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {cls}™
@@ -415,7 +415,7 @@ export default function MotoGPRidersPage() {
                         {/* Championship leaders — P2 / P1 / P3 */}
                         <div style={{ marginBottom: "8px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                                <div style={{ width: "4px", height: "22px", backgroundColor: MOTOGP_RED }} />
+                                <div style={{ width: "4px", height: "22px", backgroundColor: "var(--accent)" }} />
                                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", fontWeight: 700, color: "#ffffff", margin: 0, letterSpacing: "0.05em" }}>
                                     CHAMPIONSHIP LEADERS
                                 </h2>

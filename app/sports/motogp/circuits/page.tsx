@@ -5,6 +5,7 @@ import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
 import { MOTOGP_RED, CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getMotoGPCircuitStatic } from "@/lib/motogp/circuit-data"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,8 +29,7 @@ interface Circuit {
     } | null
 }
 
-// ─── Nation → ISO2 map for flag emojis ───────────────────────────────────────
-// MotoGP uses 3-letter nation codes; map to ISO2 for flag emoji
+// ─── Nation → ISO2 ───────────────────────────────────────────────────────────
 
 const NATION_TO_ISO2: Record<string, string> = {
     SPA: "ES", ITA: "IT", FRA: "FR", GBR: "GB", GER: "DE",
@@ -62,78 +62,70 @@ function formatDateRange(start: string, end: string): string {
 
 const CircuitCard = ({ circuit, index }: { circuit: Circuit; index: number }) => {
     const flag = getFlagEmoji(circuit.nation)
+    const staticData = getMotoGPCircuitStatic(circuit.circuitName)
     const constructorColor = circuit.winner?.constructorName
         ? getConstructorColor(circuit.winner.constructorName)
-        : MOTOGP_RED
+        : "var(--accent)"
     const winnerParts = circuit.winner?.riderName.split(" ") ?? []
     const winnerLast = winnerParts.slice(1).join(" ") || winnerParts[0] || ""
+
+    const accentColor = circuit.isPast && circuit.winner
+        ? constructorColor
+        : circuit.isNext && !circuit.isPast
+            ? "var(--accent)"
+            : "rgba(255,255,255,0.08)"
 
     return (
         <Link href={`/sports/motogp/circuits/${circuit.circuitId}`} style={{ textDecoration: "none" }}>
             <div
                 style={{
-                    position: "relative",
                     overflow: "hidden",
-                    background: circuit.isNext && !circuit.isPast
-                        ? `linear-gradient(180deg, ${MOTOGP_RED}14, rgba(0,0,0,0.9))`
-                        : "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.9))",
-                    border: "1px solid",
-                    borderColor: circuit.isNext && !circuit.isPast
-                        ? `${MOTOGP_RED}55`
-                        : "rgba(255,255,255,0.07)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    borderTop: `3px solid ${accentColor}`,
                     cursor: "pointer",
                     transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
                 }}
                 onMouseEnter={e => {
                     const el = e.currentTarget as HTMLElement
                     el.style.transform = "translateY(-5px)"
-                    el.style.boxShadow = circuit.isNext && !circuit.isPast
-                        ? `0 16px 40px ${MOTOGP_RED}30`
-                        : "0 12px 32px rgba(0,0,0,0.6)"
-                    el.style.borderColor = circuit.isNext && !circuit.isPast
-                        ? `${MOTOGP_RED}88`
-                        : "rgba(255,255,255,0.15)"
+                    el.style.boxShadow = `0 16px 40px ${accentColor}30`
+                    el.style.borderColor = `${accentColor}70`
                 }}
                 onMouseLeave={e => {
                     const el = e.currentTarget as HTMLElement
                     el.style.transform = "translateY(0)"
                     el.style.boxShadow = "none"
-                    el.style.borderColor = circuit.isNext && !circuit.isPast
-                        ? `${MOTOGP_RED}55`
-                        : "rgba(255,255,255,0.07)"
+                    el.style.borderColor = "rgba(255,255,255,0.07)"
                 }}
             >
-                {/* Top accent bar */}
+                {/* Visual area */}
                 <div style={{
-                    height: "3px",
-                    backgroundColor: circuit.isNext && !circuit.isPast
-                        ? MOTOGP_RED
-                        : circuit.isPast
-                            ? "rgba(255,255,255,0.08)"
-                            : "rgba(255,255,255,0.04)",
-                }} />
-
-                {/* Flag area */}
-                <div style={{
-                    position: "relative", height: "110px",
+                    position: "relative", height: "150px",
                     backgroundColor: "rgba(255,255,255,0.02)",
                     overflow: "hidden",
                     display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                    {/* Giant blurred flag */}
-                    <div style={{ fontSize: "90px", opacity: circuit.isPast ? 0.1 : 0.15, filter: "blur(2px)", userSelect: "none" }}>
+                    <div style={{
+                        fontSize: "110px",
+                        opacity: circuit.isPast ? 0.07 : 0.12,
+                        filter: "blur(3px)",
+                        userSelect: "none",
+                        lineHeight: 1,
+                    }}>
                         {flag}
                     </div>
-                    {/* Gradient */}
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.3) 60%, rgba(10,10,10,0.05) 100%)" }} />
+                    <div style={{
+                        position: "absolute", inset: 0,
+                        background: "linear-gradient(0deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 55%, rgba(10,10,10,0.1) 100%)"
+                    }} />
 
-                    {/* Round number */}
+                    {/* Round badge */}
                     <div style={{ position: "absolute", top: "10px", left: "12px" }}>
                         <span style={{
                             fontFamily: "var(--font-display)", fontSize: "10px", fontWeight: 600,
                             letterSpacing: "0.1em", color: "rgba(255,255,255,0.6)",
-                            backgroundColor: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)",
-                            border: "1px solid rgba(255,255,255,0.1)", padding: "3px 8px",
+                            backgroundColor: "rgba(0,0,0,0.65)", padding: "3px 8px",
+                            border: "1px solid rgba(255,255,255,0.1)",
                         }}>
                             {String(index + 1).padStart(2, "0")}
                         </span>
@@ -152,55 +144,67 @@ const CircuitCard = ({ circuit, index }: { circuit: Circuit; index: number }) =>
                                 NEXT
                             </span>
                         )}
-                        {circuit.isPast && circuit.status === "FINISHED" && (
+                        {!circuit.isNext && staticData?.lapRecord && (
                             <span style={{
                                 fontFamily: "var(--font-display)", fontSize: "9px", fontWeight: 600,
-                                letterSpacing: "0.1em", textTransform: "uppercase",
-                                color: "rgba(255,255,255,0.4)", padding: "3px 8px",
-                                backgroundColor: "rgba(255,255,255,0.08)",
-                                border: "1px solid rgba(255,255,255,0.1)",
+                                letterSpacing: "0.08em", color: "#4ade80",
+                                backgroundColor: "rgba(0,0,0,0.65)", padding: "2px 7px",
+                                border: "1px solid rgba(74,222,128,0.3)",
                             }}>
-                                ✓ DONE
+                                🟢 {staticData.lapRecord}
                             </span>
                         )}
                     </div>
 
-                    {/* Nation + flag */}
-                    <div style={{ position: "absolute", bottom: "10px", left: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ fontSize: "20px" }}>{flag}</span>
-                        <span style={{
+                    {/* Nation label */}
+                    <div style={{ position: "absolute", bottom: "12px", left: "14px" }}>
+                        <p style={{
                             fontFamily: "var(--font-display)", fontSize: "1rem", fontWeight: 800,
                             color: circuit.isPast ? "rgba(255,255,255,0.55)" : "#fff",
+                            margin: 0, textTransform: "uppercase",
                         }}>
                             {circuit.nation ?? circuit.place ?? "—"}
-                        </span>
+                        </p>
                     </div>
                 </div>
 
                 {/* Content */}
                 <div style={{ padding: "14px" }}>
                     <p style={{
-                        fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700,
+                        fontFamily: "var(--font-display)", fontSize: "0.88rem", fontWeight: 700,
                         color: circuit.isPast ? "rgba(255,255,255,0.55)" : "#fff",
                         margin: "0 0 3px", lineHeight: 1.2,
                         whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                     }}>
                         {circuit.eventName}
                     </p>
-                    <p style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.3)", margin: "0 0 10px" }}>
-                        {circuit.circuitName}
-                        {circuit.place ? ` · ${circuit.place}` : ""}
+                    <p style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.35)", margin: "0 0 10px" }}>
+                        📍 {[circuit.circuitName, circuit.place].filter(Boolean).join(" · ")}
                     </p>
 
-                    {/* Footer */}
-                    <div style={{ paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                        {circuit.isPast && circuit.winner ? (
+                    {/* Stats row */}
+                    <div style={{ display: "flex", gap: "0", paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                        {staticData ? (
+                            <>
+                                {[
+                                    { label: "LENGTH", value: staticData.length },
+                                    { label: "CORNERS", value: staticData.corners },
+                                    { label: "FIRST GP", value: staticData.firstGP },
+                                ].map((s, i) => (
+                                    <div key={s.label} style={{ flex: 1, textAlign: "center", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.07)" : "none" }}>
+                                        <p style={{ fontFamily: "var(--font-display)", fontSize: "0.85rem", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1 }}>
+                                            {s.value}
+                                        </p>
+                                        <p style={{ fontFamily: "var(--font-display)", fontSize: "8px", fontWeight: 600, color: "rgba(255,255,255,0.25)", letterSpacing: "0.12em", margin: "3px 0 0", textTransform: "uppercase" }}>
+                                            {s.label}
+                                        </p>
+                                    </div>
+                                ))}
+                            </>
+                        ) : circuit.isPast && circuit.winner ? (
                             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <span style={{ fontSize: "12px" }}>🏆</span>
-                                <span style={{
-                                    fontFamily: "var(--font-display)", fontSize: "0.78rem", fontWeight: 700,
-                                    color: constructorColor,
-                                }}>
+                                <span style={{ fontFamily: "var(--font-display)", fontSize: "0.78rem", fontWeight: 700, color: constructorColor }}>
                                     {winnerLast.toUpperCase()}
                                 </span>
                                 {circuit.winner.constructorName && (
@@ -212,7 +216,7 @@ const CircuitCard = ({ circuit, index }: { circuit: Circuit; index: number }) =>
                         ) : (
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "0.7rem",
-                                color: circuit.isNext && !circuit.isPast ? MOTOGP_RED : "rgba(255,255,255,0.25)",
+                                color: circuit.isNext && !circuit.isPast ? "var(--accent)" : "rgba(255,255,255,0.25)",
                                 margin: 0, letterSpacing: "0.06em",
                             }}>
                                 🗓 {formatDateRange(circuit.dateStart, circuit.dateEnd)}
@@ -220,6 +224,33 @@ const CircuitCard = ({ circuit, index }: { circuit: Circuit; index: number }) =>
                             </p>
                         )}
                     </div>
+
+                    {/* Winner strip — below stats when static data is present */}
+                    {staticData && circuit.isPast && circuit.winner && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "8px", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            <span style={{ fontSize: "11px" }}>🏆</span>
+                            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.75rem", fontWeight: 700, color: constructorColor }}>
+                                {winnerLast.toUpperCase()}
+                            </span>
+                            {circuit.winner.constructorName && (
+                                <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.3)" }}>
+                                    · {circuit.winner.constructorName}
+                                </span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Upcoming date — below stats for known circuits */}
+                    {staticData && !circuit.isPast && (
+                        <p style={{
+                            fontFamily: "var(--font-display)", fontSize: "0.7rem",
+                            color: circuit.isNext && !circuit.isPast ? MOTOGP_RED : "rgba(255,255,255,0.25)",
+                            margin: "8px 0 0", letterSpacing: "0.06em",
+                        }}>
+                            🗓 {formatDateRange(circuit.dateStart, circuit.dateEnd)}
+                            {circuit.isNext && !circuit.isPast && " · Up Next"}
+                        </p>
+                    )}
                 </div>
             </div>
         </Link>
@@ -294,8 +325,8 @@ export default function MotoGPCircuitsPage() {
                                         style={{
                                             flex: "0 0 auto", fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#fff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -349,7 +380,7 @@ export default function MotoGPCircuitsPage() {
                         gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
                         gap: "12px",
                     }}>
-                        {filtered.map((c, i) => (
+                        {filtered.map((c) => (
                             <CircuitCard key={c.circuitId} circuit={c} index={circuits.indexOf(c)} />
                         ))}
                     </div>

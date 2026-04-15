@@ -11,7 +11,7 @@ import {
   AVAILABLE_SEASONS,
   CURRENT_SEASON,
   TEAM_LOGOS,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
 const SEASONS = AVAILABLE_SEASONS
@@ -589,7 +589,7 @@ export default function DriversPage() {
                   fontWeight: 600,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
-                  color: "var(--color-f1-red)",
+                  color: "var(--accent))",
                   marginBottom: "8px",
                 }}
               >
@@ -665,10 +665,10 @@ export default function DriversPage() {
                       transition: "all 0.2s",
                       borderColor:
                         season === s
-                          ? "var(--color-f1-red)"
+                          ? "var(--accent)"
                           : "rgba(255,255,255,0.1)",
                       backgroundColor:
-                        season === s ? "var(--color-f1-red)" : "transparent",
+                        season === s ? "var(--accent)" : "transparent",
                       color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                     }}
                   >
@@ -709,7 +709,7 @@ export default function DriversPage() {
                   style={{
                     width: "4px",
                     height: "22px",
-                    backgroundColor: "var(--color-f1-red)",
+                    backgroundColor: "var(--accent)",
                   }}
                 />
                 <h2

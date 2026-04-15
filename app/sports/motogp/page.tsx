@@ -129,9 +129,10 @@ export default function MotoGPPage() {
 
                 <MotoGPConstructorStandings
                     standings={constructorStandings}
+                    category={category}
+                    onCategoryChange={setCategory}
                     loading={standingsLoading}
                 />
-
                 <MotoGPLastRace
                     event={lastEvent}
                     results={lastRaceResults}

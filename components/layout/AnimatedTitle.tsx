@@ -75,7 +75,7 @@ export default function AnimatedTitle() {
             display: "inline-block",
             width: "3px",
             height: "0.85em",
-            backgroundColor: "var(--color-f1-red)",
+            backgroundColor: "var(--accent)",
             marginLeft: "4px",
             verticalAlign: "middle",
             animation: "cursor-blink 1s step-end infinite",

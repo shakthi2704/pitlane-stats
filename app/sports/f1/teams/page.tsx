@@ -11,7 +11,7 @@ import {
   AVAILABLE_SEASONS,
   CURRENT_SEASON,
   FALLBACK_CAR,
-} from "@/lib/fi/f1-constants"
+} from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 
 const SEASONS = AVAILABLE_SEASONS
@@ -28,9 +28,6 @@ const TopTeamCard = ({
 }) => {
   const teamColor = getTeamColor(standing.constructorId)
   const carSrc = TEAM_CARS[standing.constructorId] ?? FALLBACK_CAR
-  const logoSrc = TEAM_LOGOS[standing.constructorId] ?? DRIVER_IMAGES
-  const medalColors = ["#F5C842", "#C0C0C0", "#CD7F32"]
-
 
   return (
     <Link
@@ -100,6 +97,7 @@ const TopTeamCard = ({
               height: "55%",
               width: "auto",
               objectFit: "contain",
+
               zIndex: 3,
               filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
             }}
@@ -150,34 +148,8 @@ const TopTeamCard = ({
                 gap: "10px",
               }}
             >
-              {logoSrc ? (
-                <img
-                  src={logoSrc}
-                  alt={standing.constructor.name}
-                  style={{
-                    height: isLeader ? "48px" : "32px",
-                    width: "auto",
-                    objectFit: "contain",
-                    filter: "brightness(0) invert(1)",
-                    opacity: 0.9,
-                  }}
-                  onError={(e) => {
-                    ; (e.target as HTMLImageElement).src = FALLBACK_CAR
-                  }}
-                />
-              ) : (
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "10px",
-                    color: "#fff",
-                    background: "rgba(0,0,0,0.35)",
 
-                  }}
-                >
-                  {standing.constructor.name.slice(0, 3).toUpperCase()}
-                </span>
-              )}
+
 
               <span
                 style={{
@@ -630,7 +602,7 @@ export default function TeamsPage() {
                   fontWeight: 600,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
-                  color: "var(--color-f1-red)",
+                  color: "var(--accent)",
                   marginBottom: "8px",
                 }}
               >
@@ -705,10 +677,10 @@ export default function TeamsPage() {
                       transition: "all 0.2s",
                       borderColor:
                         season === s
-                          ? "var(--color-f1-red)"
+                          ? "var(--accent)"
                           : "rgba(255,255,255,0.1)",
                       backgroundColor:
-                        season === s ? "var(--color-f1-red)" : "transparent",
+                        season === s ? "var(--accent)" : "transparent",
                       color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                     }}
                   >
@@ -753,7 +725,7 @@ export default function TeamsPage() {
                   style={{
                     width: "4px",
                     height: "22px",
-                    backgroundColor: "var(--color-f1-red)",
+                    backgroundColor: "var(--accent)",
                   }}
                 />
                 <h2

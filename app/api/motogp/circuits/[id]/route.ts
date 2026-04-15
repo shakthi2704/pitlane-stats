@@ -52,6 +52,7 @@ export async function GET(
                 constructorName: winner.constructor?.name ?? null,
                 teamName: winner.team?.name ?? null,
                 time: winner.time,
+                photoUrl: winner.rider.photoUrl ?? null,
             } : null,
         }
     })

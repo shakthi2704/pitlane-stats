@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -308,7 +308,7 @@ export default function MotoGPConstructorStandingsPage() {
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™ World Championship
                             </p>
@@ -340,8 +340,8 @@ export default function MotoGPConstructorStandingsPage() {
                                             flex: "0 0 auto",
                                             fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -365,7 +365,7 @@ export default function MotoGPConstructorStandingsPage() {
                                     padding: "10px 20px", background: "none", border: "none", cursor: "pointer",
                                     transition: "color 0.2s", marginBottom: "-1px",
                                     color: category === cat ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: category === cat ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: category === cat ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {cat}™

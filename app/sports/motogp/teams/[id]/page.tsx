@@ -4,8 +4,9 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
+import { MOTOGP_AVAILABLE_SEASONS, CURRENT_SEASON } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getTeamBike, MOTOGP_BIKE_PLACEHOLDER } from "@/lib/motogp/bike-images"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -138,14 +139,14 @@ export default function MotoGPTeamDetailPage() {
 
     if (loading) return (
         <div>
-            <div style={{ display: "none" }}>{seasonSelector(MOTOGP_RED)}</div>
+            <div style={{ display: "none" }}>{seasonSelector("var(--accent)")}</div>
             <F1Loader message="LOADING TEAM..." />
         </div>
     )
 
     if (!profile) return (
         <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-            <p style={{ fontFamily: "var(--font-display)", color: MOTOGP_RED, fontSize: "1.5rem", letterSpacing: "0.1em" }}>TEAM NOT FOUND</p>
+            <p style={{ fontFamily: "var(--font-display)", color: "var(--accent)", fontSize: "1.5rem", letterSpacing: "0.1em" }}>TEAM NOT FOUND</p>
             <Link href="/sports/motogp/teams" style={{ fontFamily: "var(--font-sans)", color: "#555", fontSize: "0.85rem", textDecoration: "none" }}>
                 ← Back to Teams
             </Link>
@@ -239,21 +240,16 @@ export default function MotoGPTeamDetailPage() {
                         )}
                     </div>
 
-                    {/* Right: bike placeholder + rider photos */}
+                    {/* Right: bike + rider photos */}
                     <div style={{ position: "relative", width: "380px", flexShrink: 0, alignSelf: "stretch" }}>
-                        {/* Bike placeholder — top 60% */}
-                        <div style={{
-                            position: "absolute", top: "10%", left: 0, right: 0, height: "50%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            opacity: 0.15,
-                        }}>
-                            <div style={{
-                                fontFamily: "var(--font-display)", fontSize: "7rem", fontWeight: 900,
-                                color: color, textTransform: "uppercase", letterSpacing: "-0.05em",
-                                userSelect: "none",
-                            }}>
-                                {team.name.slice(0, 3).toUpperCase()}
-                            </div>
+                        {/* Bike image — top area */}
+                        <div style={{ position: "absolute", top: "5%", left: 0, right: 0, height: "52%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <img
+                                src={getTeamBike(team.name)}
+                                alt={team.name}
+                                style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain", filter: "drop-shadow(0 8px 32px rgba(0,0,0,0.6))", opacity: 0.9 }}
+                                onError={e => { (e.target as HTMLImageElement).src = MOTOGP_BIKE_PLACEHOLDER }}
+                            />
                         </div>
 
                         {/* Rider photos — bottom 45% */}
@@ -447,7 +443,7 @@ export default function MotoGPTeamDetailPage() {
                                                     {lastName.toUpperCase()}
                                                     {r.riderNumber != null && <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: "4px" }}>#{r.riderNumber}</span>}
                                                 </span>
-                                                <span style={{ fontFamily: "var(--font-display)", fontSize: "0.72rem", letterSpacing: "0.08em", color: isSprint ? MOTOGP_RED : "rgba(255,255,255,0.4)" }}>
+                                                <span style={{ fontFamily: "var(--font-display)", fontSize: "0.72rem", letterSpacing: "0.08em", color: isSprint ? "var(--accent)" : "rgba(255,255,255,0.4)" }}>
                                                     {r.sessionType}
                                                 </span>
                                                 <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", fontWeight: 700, color: isRetired ? "#f87171" : posColor(r.position) }}>
@@ -555,6 +551,6 @@ export default function MotoGPTeamDetailPage() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }

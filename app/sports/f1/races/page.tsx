@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { AVAILABLE_SEASONS, CIRCUIT_IMAGES, CURRENT_SEASON } from "@/lib/fi/f1-constants"
+import { AVAILABLE_SEASONS, CIRCUIT_IMAGES, CURRENT_SEASON } from "@/lib/f1/f1-constants"
 import F1Loader from "@/components/f1/F1Loader"
 import { getCountryFlag } from "@/types/f1/f1-api"
 
@@ -99,7 +99,7 @@ export default function RacesPage() {
                   fontWeight: 600,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
-                  color: "var(--color-f1-red)",
+                  color: "var(--accent)",
                   marginBottom: "8px",
                 }}
               >
@@ -161,8 +161,8 @@ export default function RacesPage() {
                       flex: "0 0 auto",
                       fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                       padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                      borderColor: season === s ? "var(--color-f1-red)" : "rgba(255,255,255,0.1)",
-                      backgroundColor: season === s ? "var(--color-f1-red)" : "transparent",
+                      borderColor: season === s ? "var(--color-)" : "rgba(255,255,255,0.1)",
+                      backgroundColor: season === s ? "var(--accent)" : "transparent",
                       color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                     }}
                   >
@@ -217,7 +217,7 @@ export default function RacesPage() {
                     filter === tab.key ? "#ffffff" : "rgba(255,255,255,0.3)",
                   borderBottom:
                     filter === tab.key
-                      ? "2px solid var(--color-f1-red)"
+                      ? "2px solid var(--accent)"
                       : "2px solid transparent",
                 }}
               >
@@ -284,7 +284,7 @@ export default function RacesPage() {
                       style={{
                         height: "3px",
                         backgroundColor: next
-                          ? "var(--color-f1-red)"
+                          ? "var(--accent)"
                           : past
                             ? "rgba(255,255,255,0.08)"
                             : "rgba(255,255,255,0.04)",
@@ -512,7 +512,7 @@ export default function RacesPage() {
                               fontFamily: "var(--font-display)",
                               fontSize: "0.72rem",
                               color: next
-                                ? "var(--color-f1-red)"
+                                ? "var(--accent)"
                                 : "rgba(255, 255, 255, 0.25)",
                               margin: 0,
                               letterSpacing: "0.1em",

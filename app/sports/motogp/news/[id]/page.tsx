@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
-import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
 import Loader from "@/components/layout/Loader"
 
 
@@ -77,7 +75,7 @@ export default function MotoGPNewsDetailPage() {
 
     if (notFound || !article) return (
         <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-            <p style={{ fontFamily: "var(--font-display)", color: MOTOGP_RED, fontSize: "1.5rem", letterSpacing: "0.1em" }}>ARTICLE NOT FOUND</p>
+            <p style={{ fontFamily: "var(--font-display)", color: "var(--accent)", fontSize: "1.5rem", letterSpacing: "0.1em" }}>ARTICLE NOT FOUND</p>
             <Link href="/sports/motogp/news" style={{ fontFamily: "var(--font-sans)", color: "#555", fontSize: "0.85rem", textDecoration: "none" }}>
                 ← Back to News
             </Link>

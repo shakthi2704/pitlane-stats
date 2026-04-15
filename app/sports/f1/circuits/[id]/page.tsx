@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { getTeamColor, getFlagEmoji } from "@/types/f1/f1-api"
-import { DRIVER_IMAGES, FALLBACK_DRIVER } from "@/lib/fi/f1-constants"
-import { CIRCUIT_STATIC } from "@/lib/fi/circuit-data"
+import { DRIVER_IMAGES, FALLBACK_DRIVER } from "@/lib/f1/f1-constants"
+import { CIRCUIT_STATIC } from "@/lib/f1/circuit-data"
 import { MapPinCheckInside } from "lucide-react"
 import Loader from "@/components/layout/Loader"
 interface Circuit {
@@ -236,16 +236,17 @@ const SectionHeader = ({ title }: { title: string }) => (
       style={{
         width: "4px",
         height: "22px",
-        backgroundColor: "var(--color-f1-red)",
+        backgroundColor: "var(--accent)",
       }}
     />
     <h2
       style={{
         fontFamily: "var(--font-display)",
-        fontSize: "1.2rem",
+        fontSize: "1.1rem",
         fontWeight: 700,
-        color: "#ffffff",
+        color: "#fff",
         margin: 0,
+        letterSpacing: "0.05em",
       }}
     >
       {title}
@@ -299,7 +300,7 @@ export default function CircuitDetailPage() {
           <Link
             href="/sports/f1/circuits"
             style={{
-              color: "var(--color-f1-red)",
+              color: "var(--accent)",
               textDecoration: "none",
               fontSize: "0.85rem",
             }}
@@ -610,23 +611,16 @@ export default function CircuitDetailPage() {
                         gap: "6px",
                       }}
                     >
-                      <div
-                        style={{
-                          width: "3px",
-                          height: "18px",
-                          backgroundColor: teamColor,
-                          flexShrink: 0,
-                        }}
-                      />
+
                       <span
                         style={{
-                          fontFamily: "var(--font-roboto-mono)",
+                          fontFamily: "var(--font-inter)",
                           fontSize: "0.85rem",
                           fontWeight: 700,
                           color: "#ffffff",
                         }}
                       >
-                        {winner.driver.givenName[0]}. {winner.driver.familyName}
+                        {winner.driver.givenName} {winner.driver.familyName}
                       </span>
                     </div>
                   </div>
@@ -635,7 +629,8 @@ export default function CircuitDetailPage() {
                   <span
                     style={{
                       fontSize: "0.8rem",
-                      color: "rgba(255,255,255,0.4)",
+                      color: "rgba(255,255,255,0.5)",
+                      fontFamily: "var(--font-inter)",
                     }}
                   >
                     {winner.constructor.name}
@@ -655,7 +650,8 @@ export default function CircuitDetailPage() {
                     <span
                       style={{
                         fontSize: "0.8rem",
-                        color: "rgba(255,255,255,0.4)",
+                        color: "rgba(255,255,255,0.5)",
+                        fontFamily: "var(--font-inter)",
                       }}
                     >
                       {winner.driver.nationality}
@@ -665,10 +661,10 @@ export default function CircuitDetailPage() {
                   {/* Time */}
                   <span
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-inter)",
                       fontSize: "0.78rem",
                       color: "rgba(255,255,255,0.4)",
-                      textAlign: "right",
+
                     }}
                   >
                     {winner.time ?? "—"}

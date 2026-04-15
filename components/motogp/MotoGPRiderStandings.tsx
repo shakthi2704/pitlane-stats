@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { MOTOGP_RED } from "@/lib/motogp/motogp-constants"
+import { FALLBACK_RIDER } from "@/lib/motogp/motogp-constants"
 
 // ─── Constructor colors ───────────────────────────────────────────────────────
 
@@ -64,7 +64,7 @@ interface RiderStanding {
 const TopRiderCard = ({ standing, rank }: { standing: RiderStanding; rank: number }) => {
     const color = getConstructorColor(standing.constructorName ?? "")
     // const photoUrl = getRiderPhotoUrl(standing.rider.id)
-    const photoUrl = standing.rider.photoUrl ?? "/F1/drivers/placeholder.svg"
+    const photoUrl = standing.rider.photoUrl ?? FALLBACK_RIDER
     const nameParts = standing.rider.fullName.split(" ")
     const firstName = nameParts[0]
     const lastName = nameParts.slice(1).join(" ")
@@ -125,7 +125,7 @@ const TopRiderCard = ({ standing, rank }: { standing: RiderStanding; rank: numbe
                         zIndex: 2,
                     }}
                     onError={e => {
-                        (e.target as HTMLImageElement).src = "/F1/drivers/placeholder.svg"
+                        (e.target as HTMLImageElement).src = FALLBACK_RIDER
                     }}
                 />
 
@@ -236,12 +236,18 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "4px", height: "24px", backgroundColor: MOTOGP_RED }} />
+                    <div style={{
+                        width: "4px",
+                        height: "24px",
+                        backgroundColor: "var(--accent)",
+                    }} />
                     <h2 style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "1.1rem", fontWeight: 700,
-                        letterSpacing: "0.08em", textTransform: "uppercase",
-                        color: "#ffffff", margin: 0,
+                        fontSize: "1.5rem",
+                        fontWeight: 700,
+                        color: "#ffffff",
+                        margin: 0,
+                        textTransform: "uppercase",
                     }}>
                         Rider Standings
                     </h2>
@@ -288,7 +294,7 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                     <div style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
 
                         {/* Table header */}
-                        <div style={{
+                        {/* <div style={{
                             display: "grid",
                             gridTemplateColumns: "3rem 1.5rem 1fr 5rem 5rem 4rem",
                             padding: "10px 16px",
@@ -305,8 +311,28 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                                     {h}
                                 </span>
                             ))}
+                        </div> 
+                        
+                        */}
+                        {/* Table header */}
+                        <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "3rem 2.5rem 1fr 1fr 1fr 4rem",
+                            padding: "10px 16px",
+                            backgroundColor: "rgba(255,255,255,0.03)",
+                            borderBottom: "1px solid rgba(255,255,255,0.06)",
+                        }}>
+                            {["POS.", "", "RIDER", "NATIONALITY", "TEAM", "PTS"].map(h => (
+                                <span key={h} style={{
+                                    fontFamily: "var(--font-display)",
+                                    fontSize: "10px", fontWeight: 600,
+                                    letterSpacing: "0.15em", textTransform: "uppercase",
+                                    color: "rgba(255,255,255,0.4)",
+                                }}>
+                                    {h}
+                                </span>
+                            ))}
                         </div>
-
                         {/* Top 3 rows */}
                         {top3.map((s, i) => {
                             const color = getConstructorColor(s.constructorName ?? "")
@@ -317,10 +343,11 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                                     href={`/sports/motogp/riders/${s.rider.id}`}
                                     style={{ textDecoration: "none", display: "block" }}
                                 >
+
                                     <div
                                         style={{
                                             display: "grid",
-                                            gridTemplateColumns: "3rem 1.5rem 1fr 5rem 5rem 4rem",
+                                            gridTemplateColumns: "3rem 2.5rem 1fr 1fr 1fr 4rem",
                                             alignItems: "center",
                                             padding: "12px 16px",
                                             borderBottom: "1px solid rgba(255,255,255,0.04)",
@@ -330,38 +357,69 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                                         onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.03)"}
                                         onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"}
                                     >
+                                        {/* Position */}
                                         <span style={{
                                             fontFamily: "var(--font-display)",
                                             fontSize: "0.9rem", fontWeight: 700, color: "#fff",
                                         }}>
                                             {s.position}
                                         </span>
+
+                                        {/* Avatar */}
                                         <div style={{
-                                            width: "10px", height: "10px",
-                                            borderRadius: "50%", backgroundColor: color,
-                                        }} />
-                                        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                                            <span style={{
-                                                fontSize: "0.85rem", fontWeight: 700,
-                                                color: "#fff", whiteSpace: "nowrap",
-                                                overflow: "hidden", textOverflow: "ellipsis",
-                                            }}>
-                                                {s.rider.fullName}
-                                            </span>
-                                            <div style={{
-                                                height: "2px", marginTop: "4px",
-                                                backgroundColor: "rgba(255,255,255,0.05)",
-                                                maxWidth: "160px", overflow: "hidden",
-                                            }}>
-                                                <div style={{ height: "100%", width: `${pct}%`, backgroundColor: color }} />
+                                            width: "28px", height: "28px",
+                                            borderRadius: "50%", overflow: "hidden",
+                                            backgroundColor: `${color}40`,
+                                            border: `1px solid ${color}60`,
+                                        }}>
+                                            <img
+                                                src={s.rider.photoUrl ?? FALLBACK_RIDER}
+                                                alt={s.rider.fullName}
+                                                style={{
+                                                    width: "100%", height: "100%",
+                                                    objectFit: "cover", objectPosition: "top",
+                                                }}
+                                                onError={e => { (e.target as HTMLImageElement).src = FALLBACK_RIDER }}
+                                            />
+                                        </div>
+
+                                        {/* Rider name + bar */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
+
+                                            <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                                                <span style={{
+                                                    fontSize: "0.85rem", fontWeight: 700,
+                                                    color: "#fff", whiteSpace: "nowrap",
+                                                    overflow: "hidden", textOverflow: "ellipsis",
+                                                }}>
+                                                    {s.rider.fullName}
+                                                </span>
+                                                {/* <div style={{
+                                                    height: "2px", marginTop: "4px",
+                                                    backgroundColor: "rgba(255,255,255,0.05)",
+                                                    maxWidth: "160px", overflow: "hidden",
+                                                }}>
+                                                    <div style={{ height: "100%", width: `${pct}%`, backgroundColor: color }} />
+                                                </div> */}
                                             </div>
                                         </div>
-                                        <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
-                                            {s.raceWins}
+
+                                        {/* Nationality */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                            <span style={{ fontSize: "14px" }}>
+                                                {getFlagEmoji(s.rider.nationality ?? "")}
+                                            </span>
+                                            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>
+                                                {s.rider.nationality ?? "—"}
+                                            </span>
+                                        </div>
+
+                                        {/* Team */}
+                                        <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
+                                            {s.teamName ?? "—"}
                                         </span>
-                                        <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
-                                            {s.podiums}
-                                        </span>
+
+                                        {/* Points */}
                                         <span style={{
                                             fontFamily: "var(--font-display)",
                                             fontSize: "0.9rem", fontWeight: 700,
@@ -387,10 +445,11 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                                     href={`/sports/motogp/riders/${s.rider.id}`}
                                     style={{ textDecoration: "none", display: "block" }}
                                 >
+
                                     <div
                                         style={{
                                             display: "grid",
-                                            gridTemplateColumns: "3rem 1.5rem 1fr 5rem 5rem 4rem",
+                                            gridTemplateColumns: "3rem 2.5rem 1fr 1fr 1fr 4rem",
                                             alignItems: "center",
                                             padding: "12px 16px",
                                             borderBottom: "1px solid rgba(255,255,255,0.04)",
@@ -400,43 +459,74 @@ const MotoGPRiderStandings = ({ standings, category, onCategoryChange, loading }
                                         onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.03)"}
                                         onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"}
                                     >
+                                        {/* Position */}
                                         <span style={{
                                             fontFamily: "var(--font-display)",
                                             fontSize: "0.9rem", fontWeight: 700,
-                                            color: "rgba(255,255,255,0.4)",
+                                            color: "#fff",
                                         }}>
                                             {s.position}
                                         </span>
+
+                                        {/* Avatar */}
                                         <div style={{
-                                            width: "10px", height: "10px",
-                                            borderRadius: "50%", backgroundColor: color,
-                                        }} />
-                                        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                                            <span style={{
-                                                fontSize: "0.85rem", fontWeight: 700,
-                                                color: "rgba(255,255,255,0.7)",
-                                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                                            }}>
-                                                {s.rider.fullName}
-                                            </span>
-                                            <div style={{
-                                                height: "2px", marginTop: "4px",
-                                                backgroundColor: "rgba(255,255,255,0.05)",
-                                                maxWidth: "160px", overflow: "hidden",
-                                            }}>
-                                                <div style={{ height: "100%", width: `${pct}%`, backgroundColor: color }} />
+                                            width: "28px", height: "28px",
+                                            borderRadius: "50%", overflow: "hidden",
+                                            backgroundColor: `${color}40`,
+                                            border: `1px solid ${color}60`,
+                                        }}>
+                                            <img
+                                                src={s.rider.photoUrl ?? FALLBACK_RIDER}
+                                                alt={s.rider.fullName}
+                                                style={{
+                                                    width: "100%", height: "100%",
+                                                    objectFit: "cover", objectPosition: "top",
+                                                }}
+                                                onError={e => { (e.target as HTMLImageElement).src = FALLBACK_RIDER }}
+                                            />
+                                        </div>
+
+                                        {/* Rider name + bar */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
+
+                                            <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                                                <span style={{
+                                                    fontSize: "0.85rem", fontWeight: 700,
+                                                    color: "#fff",
+                                                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                                                }}>
+                                                    {s.rider.fullName}
+                                                </span>
+                                                {/* <div style={{
+                                                    height: "2px", marginTop: "4px",
+                                                    backgroundColor: "rgba(255,255,255,0.05)",
+                                                    maxWidth: "160px", overflow: "hidden",
+                                                }}>
+                                                    <div style={{ height: "100%", width: `${pct}%`, backgroundColor: color }} />
+                                                </div> */}
                                             </div>
                                         </div>
+
+                                        {/* Nationality */}
+                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                            <span style={{ fontSize: "14px" }}>
+                                                {getFlagEmoji(s.rider.nationality ?? "")}
+                                            </span>
+                                            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
+                                                {s.rider.nationality ?? "—"}
+                                            </span>
+                                        </div>
+
+                                        {/* Team */}
                                         <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
-                                            {s.raceWins}
+                                            {s.teamName ?? "—"}
                                         </span>
-                                        <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)" }}>
-                                            {s.podiums}
-                                        </span>
+
+                                        {/* Points */}
                                         <span style={{
-                                            fontFamily: "var(--font-display)",
+                                            fontFamily: "var(--font-inter)",
                                             fontSize: "0.9rem", fontWeight: 700,
-                                            color: "rgba(255,255,255,0.7)", textAlign: "right",
+                                            color: "#fff", textAlign: "right",
                                         }}>
                                             {s.points}
                                         </span>

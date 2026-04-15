@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import F1Loader from "@/components/f1/F1Loader"
-import { MOTOGP_RED, CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
+import { CURRENT_SEASON, MOTOGP_AVAILABLE_SEASONS } from "@/lib/motogp/motogp-constants"
 import { getConstructorColor } from "@/components/motogp/MotoGPRiderStandings"
+import { getTeamBike, MOTOGP_BIKE_PLACEHOLDER } from "@/lib/motogp/bike-images"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,8 +33,7 @@ type ClassFilter = "MotoGP" | "Moto2" | "Moto3"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const FALLBACK_PHOTO = "/F1/drivers/placeholder.svg"
-const BIKE_PLACEHOLDER = "/motogp/bikes/placeholder.svg" // swap for real bike images when available
+
 const MEDAL_COLORS = ["#F5C842", "#C0C0C0", "#CD7F32"]
 const CLASS_TABS: ClassFilter[] = ["MotoGP", "Moto2", "Moto3"]
 
@@ -44,11 +44,23 @@ function getFlagEmoji(iso: string): string {
     )
 }
 
-function teamColor(team: Team): string {
-    // Prefer DB color, fall back to constructor color map
-    return team.color ?? getConstructorColor(team.name)
-}
+// function teamColor(team: Team): string {
+//     // Prefer DB color, fall back to constructor color map
+//     return team.color ?? getConstructorColor(team.name)
+// }
 
+function teamColor(team: Team): string {
+    const name = team.name.toLowerCase()
+
+    if (name.includes("ducati")) return getConstructorColor("Ducati")
+    if (name.includes("yamaha")) return getConstructorColor("Yamaha")
+    if (name.includes("honda")) return getConstructorColor("Honda")
+    if (name.includes("ktm")) return getConstructorColor("KTM")
+    if (name.includes("aprilia")) return getConstructorColor("Aprilia")
+    if (name.includes("suzuki")) return getConstructorColor("Suzuki")
+
+    return "#444444"
+}
 // ─── Top 3 Card ───────────────────────────────────────────────────────────────
 
 const TopTeamCard = ({ team, isLeader }: { team: Team; isLeader: boolean }) => {
@@ -97,27 +109,23 @@ const TopTeamCard = ({ team, isLeader }: { team: Team; isLeader: boolean }) => {
                     {team.position}
                 </div>
 
-                {/* Rider photos — show up to 2 */}
-                {team.riders.slice(0, 2).map((r, i) => (
-                    <img
-                        key={r.id}
-                        src={BIKE_PLACEHOLDER}
-                        alt={r.fullName}
-                        style={{
-                            position: "absolute",
-                            right: i === 0 ? "0px" : "80px",
-                            bottom: 0,
-                            height: isLeader ? "88%" : "80%",
-                            width: "auto",
-                            objectFit: "contain",
-                            objectPosition: "bottom",
-                            zIndex: 3,
-                            opacity: i === 0 ? 1 : 0.55,
-                            filter: i === 1 ? "grayscale(20%)" : "none",
-                        }}
-                        onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                ))}
+                {/* Team bike */}
+                <img
+                    src={getTeamBike(team.name)}
+                    alt={team.name}
+                    style={{
+                        position: "absolute",
+                        right: "-10px", bottom: "20px",
+                        height: isLeader ? "75%" : "68%",
+                        width: "auto",
+                        objectFit: "contain",
+                        objectPosition: "bottom right",
+                        zIndex: 3,
+                        filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
+                        opacity: 0.92,
+                    }}
+                    onError={e => { (e.target as HTMLImageElement).src = MOTOGP_BIKE_PLACEHOLDER }}
+                />
 
                 {/* Content */}
                 <div style={{
@@ -230,24 +238,21 @@ const TeamCard = ({ team }: { team: Team }) => {
                     {team.position}
                 </div>
 
-                {/* Rider photos */}
-                {team.riders.slice(0, 2).map((r, i) => (
-                    <img
-                        key={r.id}
-                        src={BIKE_PLACEHOLDER}
-                        alt={r.fullName}
-                        style={{
-                            position: "absolute",
-                            right: i === 0 ? "0px" : "60px",
-                            bottom: 0, height: "80%", width: "auto",
-                            objectFit: "contain", objectPosition: "bottom",
-                            zIndex: 3,
-                            opacity: i === 0 ? 1 : 0.45,
-                            filter: i === 1 ? "grayscale(30%)" : "none",
-                        }}
-                        onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                ))}
+                {/* Team bike */}
+                <img
+                    src={getTeamBike(team.name)}
+                    alt={team.name}
+                    style={{
+                        position: "absolute",
+                        right: "-8px", bottom: "16px",
+                        height: "68%", width: "auto",
+                        objectFit: "contain", objectPosition: "bottom right",
+                        zIndex: 3,
+                        filter: "drop-shadow(0 6px 16px rgba(0,0,0,0.5))",
+                        opacity: 0.9,
+                    }}
+                    onError={e => { (e.target as HTMLImageElement).src = MOTOGP_BIKE_PLACEHOLDER }}
+                />
 
                 {/* Content */}
                 <div style={{
@@ -347,7 +352,7 @@ export default function MotoGPTeamsPage() {
                             <p style={{
                                 fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 600,
                                 letterSpacing: "0.2em", textTransform: "uppercase",
-                                color: MOTOGP_RED, marginBottom: "8px",
+                                color: "var(--accent)", marginBottom: "8px",
                             }}>
                                 MotoGP™
                             </p>
@@ -375,8 +380,8 @@ export default function MotoGPTeamsPage() {
                                         style={{
                                             flex: "0 0 auto", fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 600,
                                             padding: "6px 14px", cursor: "pointer", border: "1px solid", transition: "all 0.2s",
-                                            borderColor: season === s ? MOTOGP_RED : "rgba(255,255,255,0.1)",
-                                            backgroundColor: season === s ? MOTOGP_RED : "transparent",
+                                            borderColor: season === s ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: season === s ? "var(--accent)" : "transparent",
                                             color: season === s ? "#ffffff" : "rgba(255,255,255,0.4)",
                                         }}
                                     >
@@ -400,7 +405,7 @@ export default function MotoGPTeamsPage() {
                                     padding: "10px 20px", background: "none", border: "none",
                                     cursor: "pointer", transition: "color 0.2s", marginBottom: "-1px",
                                     color: classFilter === cls ? "#ffffff" : "rgba(255,255,255,0.3)",
-                                    borderBottom: classFilter === cls ? `2px solid ${MOTOGP_RED}` : "2px solid transparent",
+                                    borderBottom: classFilter === cls ? "2px solid var(--accent)" : "2px solid transparent",
                                 }}
                             >
                                 {cls}™
@@ -427,7 +432,7 @@ export default function MotoGPTeamsPage() {
                         {/* Championship leaders — P2 / P1 / P3 */}
                         <div style={{ marginBottom: "8px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-                                <div style={{ width: "4px", height: "22px", backgroundColor: MOTOGP_RED }} />
+                                <div style={{ width: "4px", height: "22px", backgroundColor: "var(--accent)" }} />
                                 <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", fontWeight: 700, color: "#ffffff", margin: 0, letterSpacing: "0.05em" }}>
                                     CHAMPIONSHIP LEADERS
                                 </h2>
