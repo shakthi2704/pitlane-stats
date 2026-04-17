@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { syncDriverStandings, syncConstructorStandings, syncRaceSchedule } from "@/lib/sync-service"
+import { syncDriverStandings, syncConstructorStandings, syncRaceSchedule } from "@/lib/f1-sync"
 
 /**
  * Cron endpoint — call this on a schedule (e.g. every hour).

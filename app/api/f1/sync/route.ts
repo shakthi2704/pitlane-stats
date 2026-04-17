@@ -6,7 +6,7 @@ import {
     syncRaceResults,
     syncLapTimes,
     syncFullSeason,
-} from "@/lib/sync-service"
+} from "@/lib/f1-sync"
 
 export async function POST(req: NextRequest) {
     try {

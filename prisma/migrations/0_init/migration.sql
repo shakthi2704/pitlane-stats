@@ -170,6 +170,7 @@ CREATE TABLE "motogp_riders" (
     "number" INTEGER,
     "legacyId" INTEGER,
     "categoryId" TEXT NOT NULL,
+    "photoUrl" TEXT,
 
     CONSTRAINT "motogp_riders_pkey" PRIMARY KEY ("id")
 );
