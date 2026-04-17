@@ -430,3 +430,214 @@ model MotoGPTeamStanding {
   @@index([seasonId, categoryId, position])
   @@map("motogp_team_standings")
 }
+
+// ─── Football Reference Data ─────────────────────────────────────────────────
+
+// Competition = a league or tournament (PL, CL, PD, WC …)
+// type: "LEAGUE" | "CUP" | "TOURNAMENT"
+// plan: "TIER_ONE" competitions are Phase 1; others seeded as Coming Soon
+model FootballCompetition {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique   // "PL" | "CL" | "PD" | "WC" | "BL1" etc
+  name        String            // "Premier League"
+  shortName   String?           // "PL"
+  emblemUrl   String?
+  country     String?           // "England" | null for international
+  countryCode String?           // "ENG" | "ESP" | null
+  type        String            // "LEAGUE" | "CUP" | "TOURNAMENT"
+  plan        String            // "TIER_ONE" = Phase 1 active; "TIER_TWO" = Coming Soon
+  isCurrent   Boolean @default(false)
+
+  seasons  FootballSeason[]
+
+  @@map("football_competitions")
+}
+
+// One row per competition-year.
+// startDate / endDate from API. currentMatchday updated on each sync.
+model FootballSeason {
+  id              Int     @id       // API integer id
+  competitionId   Int
+  competition     FootballCompetition @relation(fields: [competitionId], references: [id])
+  year            Int               // 2024 (represents 2024/25 or just 2024 for WC)
+  startDate       String?           // "2024-08-16"
+  endDate         String?           // "2025-05-25"
+  currentMatchday Int?
+  isCurrent       Boolean @default(false)
+
+  standings FootballStanding[]
+  matches   FootballMatch[]
+  scorers   FootballScorer[]
+
+  @@unique([competitionId, year])
+  @@index([competitionId, isCurrent])
+  @@map("football_seasons")
+}
+
+// Club/national team — reused across competitions and seasons
+model FootballTeam {
+  id          Int     @id       // API integer id
+  name        String            // "Manchester City FC"
+  shortName   String?           // "Man City"
+  tla         String?           // "MCI"
+  crestUrl    String?
+  country     String?
+  founded     Int?
+  venue       String?
+  website     String?
+  colors      String?           // "sky blue / white"
+
+  players      FootballPlayer[]
+  homeMatches  FootballMatch[]   @relation("HomeTeam")
+  awayMatches  FootballMatch[]   @relation("AwayTeam")
+  standings    FootballStanding[]
+  scorers      FootballScorer[]
+
+  @@map("football_teams")
+}
+
+// Player — full profile, linked to a team (current squad assignment)
+model FootballPlayer {
+  id            Int     @id       // API integer id
+  teamId        Int?
+  team          FootballTeam? @relation(fields: [teamId], references: [id])
+  name          String
+  firstName     String?
+  lastName      String?
+  dateOfBirth   String?           // "1990-05-24"
+  nationality   String?
+  position      String?           // "Goalkeeper" | "Defence" | "Midfield" | "Offence"
+  shirtNumber   Int?
+  marketValue   String?           // if available
+  photoUrl      String?           // constructed or from API
+
+  matchEvents FootballMatchEvent[]
+  scorerRows  FootballScorer[]
+
+  @@index([teamId])
+  @@map("football_players")
+}
+
+// ─── Season Data ─────────────────────────────────────────────────────────────
+
+// One row per team per competition-season.
+// group is null for leagues; "A" | "B" … for WC/CL group stage.
+// stage: "GROUP_STAGE" | "FINAL" etc — used for WC knockout rounds.
+model FootballStanding {
+  id          Int    @id @default(autoincrement())
+  seasonId    Int
+  season      FootballSeason @relation(fields: [seasonId], references: [id])
+  teamId      Int
+  team        FootballTeam   @relation(fields: [teamId], references: [id])
+
+  stage       String  @default("GROUP_STAGE")  // "GROUP_STAGE" for leagues too
+  group       String?                           // "A" … "H" for WC/CL groups; null for PL/PD
+  type        String  @default("TOTAL")         // "TOTAL" | "HOME" | "AWAY"
+
+  position    Int
+  playedGames Int     @default(0)
+  won         Int     @default(0)
+  draw        Int     @default(0)
+  lost        Int     @default(0)
+  points      Int     @default(0)
+  goalsFor    Int     @default(0)
+  goalsAgainst Int    @default(0)
+  goalDiff    Int     @default(0)
+  form        String?                           // "W,W,D,L,W"
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, teamId, stage, group, type])
+  @@index([seasonId, stage, group, position])
+  @@map("football_standings")
+}
+
+// A single fixture or result.
+// stage: "GROUP_STAGE" | "ROUND_OF_16" | "QUARTER_FINALS" | "SEMI_FINALS" | "FINAL"
+//        For leagues: "REGULAR_SEASON"
+// status: "TIMED" | "SCHEDULED" | "LIVE" | "IN_PLAY" | "PAUSED" | "FINISHED" | "POSTPONED" etc
+model FootballMatch {
+  id            Int    @id       // API integer id
+  seasonId      Int
+  season        FootballSeason @relation(fields: [seasonId], references: [id])
+  homeTeamId    Int
+  homeTeam      FootballTeam   @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId    Int
+  awayTeam      FootballTeam   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+
+  utcDate       String                        // "2024-08-17T14:00:00Z"
+  status        String                        // "TIMED" | "FINISHED" etc
+  matchday      Int?
+  stage         String  @default("REGULAR_SEASON")
+  group         String?                       // WC/CL group "A"…"H"
+  lastUpdated   String?
+
+  // Scores — stored flat for fast access
+  scoreFullHome    Int?
+  scoreFullAway    Int?
+  scoreHalfHome    Int?
+  scoreHalfAway    Int?
+  scoreExtraHome   Int?
+  scoreExtraAway   Int?
+  scorePenHome     Int?
+  scorePenAway     Int?
+  winner           String?                    // "HOME_TEAM" | "AWAY_TEAM" | "DRAW"
+
+  // Referee
+  refereeId     Int?
+  refereeName   String?
+
+  events  FootballMatchEvent[]
+
+  @@index([seasonId, matchday])
+  @@index([seasonId, stage])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@map("football_matches")
+}
+
+// Goals, cards, substitutions — one row per event per match
+// type: "GOAL" | "OWN_GOAL" | "PENALTY" | "YELLOW_CARD" | "RED_CARD"
+//       "YELLOW_RED_CARD" | "SUBSTITUTION"
+model FootballMatchEvent {
+  id          Int    @id @default(autoincrement())
+  matchId     Int
+  match       FootballMatch  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  playerId    Int?
+  player      FootballPlayer? @relation(fields: [playerId], references: [id])
+
+  minute      Int?
+  extraMinute Int?
+  type        String          // "GOAL" | "YELLOW_CARD" | "SUBSTITUTION" etc
+  detail      String?         // "Normal Goal" | "Penalty" | "Own Goal"
+  teamSide    String?         // "HOME" | "AWAY"
+  playerName  String?         // denormalised — player may not be in DB yet
+  assistName  String?         // for goals
+
+  @@index([matchId])
+  @@index([playerId])
+  @@map("football_match_events")
+}
+
+// Top scorers snapshot — refreshed from /competitions/{code}/scorers each sync
+model FootballScorer {
+  id          Int    @id @default(autoincrement())
+  seasonId    Int
+  season      FootballSeason @relation(fields: [seasonId], references: [id])
+  playerId    Int
+  player      FootballPlayer @relation(fields: [playerId], references: [id])
+  teamId      Int?
+  team        FootballTeam?  @relation(fields: [teamId], references: [id])
+
+  position    Int?
+  goals       Int     @default(0)
+  assists     Int?
+  penalties   Int?
+  playedMatches Int?
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, playerId])
+  @@index([seasonId, goals])
+  @@map("football_scorers")
+}

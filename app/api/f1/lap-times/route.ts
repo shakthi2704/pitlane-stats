@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { isStale, syncLapTimes } from "@/lib/sync-service"
+import { isStale, syncLapTimes } from "@/lib/f1-sync"
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
