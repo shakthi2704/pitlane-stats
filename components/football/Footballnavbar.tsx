@@ -154,16 +154,16 @@ const FootballNavBar = () => {
                     </Link>
 
                     {/* Competitions back link */}
-                    <NavItem
+                    {/* <NavItem
                         label="Competitions"
                         href="/sports/football"
                         isActive={false}
-                    />
+                    /> */}
 
                     {/* Competition breadcrumb + sub-links */}
                     {activeCode && (
                         <>
-                            <span
+                            {/* <span
                                 className="shrink-0 mx-1"
                                 style={{
                                     color: "rgba(255,255,255,0.2)",
@@ -172,7 +172,7 @@ const FootballNavBar = () => {
                                 }}
                             >
                                 /
-                            </span>
+                            </span> */}
 
                             {/* Competition name pill */}
                             <span
