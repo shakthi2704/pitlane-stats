@@ -1,12 +1,10 @@
-
+import FootballNavBar from "@/components/football/Footballnavbar"
 
 export default function FootballLayout({ children }: { children: React.ReactNode }) {
-    ; <a href="tel:+"></a>
     return (
-        <>
-
+        <div data-sport="football">
+            <FootballNavBar />
             {children}
-
-        </>
+        </div>
     )
 }
