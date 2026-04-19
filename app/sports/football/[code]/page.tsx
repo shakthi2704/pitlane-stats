@@ -759,7 +759,8 @@ export default function CompetitionOverviewPage() {
                                     margin: "0 0 6px",
                                 }}
                             >
-                                {season?.year ?? ""} Season
+                                {/* {season?.year ?? ""} Season */}
+                                {season?.year ? `${season.year}/${String(season.year + 1).slice(2)} Season` : ""}
                             </p>
                             <h1
                                 style={{
